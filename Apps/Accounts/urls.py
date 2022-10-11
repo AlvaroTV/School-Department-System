@@ -19,6 +19,7 @@ urlpatterns = [
     path('expediente/', expediente, name='expediente'),
     path('registroAnteproyecto/', crearAnteproyeco, name='registroAnteproyecto'),
     path('verAnteproyecto/', verAnteproyeco, name='verAnteproyecto'),
+    path('reportes/', reportes, name='reportes'),
     
     path('createStudent/', createStudent, name='createStudent'),    
     path('deleteStudent/<int:pk>', deleteStudent, name='deleteStudent'),

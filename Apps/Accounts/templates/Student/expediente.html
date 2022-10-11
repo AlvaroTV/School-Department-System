@@ -149,7 +149,6 @@
   </div>
 
   <div class="container px-6 mx-auto grid">
-
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Reportes parciales
     </h2>
@@ -158,61 +157,35 @@
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte parcial 1
         </h4>
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form1.reporteDoc.errors }}
-          {% if r1.reporteDoc %}
+        {% if r1.reporteDoc %}
 
-          <a class="text-green-500" href="{{r1.reporteDoc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Parcial 1 PDF
-          </a>
+        <a class="text-green-500" href="{{r1.reporteDoc.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Parcial 1 PDF
+        </a>
 
-          {% elif expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
-
-          {{ form1.reporteDoc }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-
-          {% else %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">No puede enviar este archivo aun</p>
-          {% endif %}
-        </form>
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Sin envio</p>
+        {% endif %}
       </div>
 
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte parcial 2
         </h4>
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form2.reporteDoc.errors }}
-          {% if r2.reporteDoc %}
+        {% if r2.reporteDoc %}
 
-          <a class="text-green-500" href="{{r2.reporteDoc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Parcial 2 PDF
-          </a>
+        <a class="text-green-500" href="{{r2.reporteDoc.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Parcial 2 PDF
+        </a>
 
-          {% elif not r1.reporteDoc %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">No puede enviar este archivo aun</p>
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Sin envio</p>
 
-          {% else %}
-          {{ form2.reporteDoc }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
+        {% endif %}
       </div>
 
     </div>
@@ -222,35 +195,20 @@
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte final
         </h4>
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ formF.reporteDoc.errors }}
-          {% if rF.reporteDoc %}
+        {% if rF.reporteDoc %}
+        <a class="text-green-500" href="{{rF.reporteDoc.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Final PDF
+        </a>
 
-          <a class="text-green-500" href="{{rF.reporteDoc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Final PDF
-          </a>
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Sin envio</p>
 
-          {% elif not r2.reporteDoc %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">No puede enviar este archivo aun</p>
-
-          {% else %}
-          {{ formF.reporteDoc }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
+        {% endif %}
       </div>
-
-
-
     </div>
+  </div>
 
 </main>
 

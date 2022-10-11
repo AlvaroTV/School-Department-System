@@ -134,10 +134,7 @@ def expediente(request):
     expediente = estudiante.expediente 
     r1 = None    
     r2 = None
-    rF = None
-    form1 = None
-    form2 = None
-    formF = None
+    rF = None    
                                 
     if expediente is None:                        
         formE = ExpedienteForm()        
@@ -155,46 +152,58 @@ def expediente(request):
         r2 = expediente.reporteParcial2
         rF = expediente.reporteFinal
                 
-        formE = ExpedienteForm(instance=expediente)        
-        form1 = Reporte1Form(instance = r1)            
-        form2 = Reporte2Form(instance = r2)           
-        formF = ReporteFinalForm(instance = rF)        
+        formE = ExpedienteForm(instance=expediente)                
         if request.method == 'POST':            
-            formE = ExpedienteForm(request.POST, request.FILES, instance=expediente)                
-            form1 = Reporte1Form(request.POST, request.FILES, instance=r1)
-            form2 = Reporte2Form(request.POST, request.FILES, instance=r2)
-            formF = ReporteFinalForm(request.POST, request.FILES, instance=rF)
-                 
-            #! Falta revisar porque se guarda el mismo archivo en los tres reportes.
-            #! Creo que es un posible fallo en el HTML.
-                 
-            print(f'{formE.is_valid()}')            
+            formE = ExpedienteForm(request.POST, request.FILES, instance=expediente)                                                         
+                             
             if formE.is_valid():                
-                formE.save()                  
-            print(f'{form1.is_valid()}')    
+                formE.save()                              
+            
+            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
+    
+    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF}
+    return render(request, 'Student/expediente.html', context)
+
+
+
+def reportes(request):
+    expediente = request.user.estudiante.expediente
+    r1 = None    
+    r2 = None
+    rF = None
+    form1 = None
+    form2 = None
+    formF = None    
+                
+    if not expediente is None:        
+        r1 = expediente.reporteParcial1
+        r2 = expediente.reporteParcial2
+        rF = expediente.reporteFinal
+        if request.method == 'POST':            
+            form1 = Reporte1Form(instance = r1)            
+            form2 = Reporte2Form(instance = r2)           
+            formF = ReporteFinalForm(instance = rF)        
+                        
             if form1.is_valid():                
                 f1 = form1.save()                
                 expediente.reporteParcial1 = f1                
-                expediente.save()                        
-            print(f'{form2.is_valid()}')
+                expediente.save()
+                                                    
             if form2.is_valid():
                 f2 = form2.save()
                 expediente.reporteParcial2 = f2
                 expediente.save()
-                form2.save()            
+                        
             print(f'{formF.is_valid()}')                
             if formF.is_valid():
                 fF = formF.save()
                 expediente.reporteFinal = fF
-                expediente.save()
-                formF.save()
+                expediente.save()                
             
-            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
+            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                     
     
-    context = {'form': formE, 'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF}
-    return render(request, 'Student/expediente.html', context)
-
-
+    context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF}
+    return render(request, 'Student/reportes.html', context)
 
 def deleteStudent(request, pk):
 
