@@ -1,0 +1,273 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<main class="h-full pb-16 overflow-y-auto">
+  <!-- Remove everything INSIDE this div to a really blank page -->
+  <div class="container px-6 mx-auto grid ">
+
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      Datos del anteproyecto
+    </h2>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+
+      <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Datos generales
+      </h4>
+
+      <div class="relative">
+        <button
+          class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          Editar información
+        </button>
+      </div>
+
+    </div>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-1">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
+
+
+
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
+          <label class="block text-sm">
+            <span class="text-gray-700 dark:text-gray-400">Nombre del proyecto</span>
+            <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="Sistema" disabled="true" />
+
+          </label>
+
+
+          <label class="block mt-4 text-sm">
+            <span class="text-gray-700 dark:text-gray-400">
+              Tipo de proyecto
+            </span>
+            <select
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+              disabled="true">
+              <option>Propuesta propia</option>
+              <option>Banco de proyectos</option>
+              <option>Trabajador</option>
+            </select>
+          </label>
+          <br>
+          <label class="block text-sm">
+            <span class="text-gray-700 dark:text-gray-400">Número de integrantes</span>
+            <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="0" type="number" min="0" disabled="true" />
+          </label>
+          <br>
+          <label class="block text-sm">
+            <span class="text-gray-700 dark:text-gray-400">Periodo proyectado</span>
+            <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="21 de febrero al 21 de julio del 2022" disabled="true" />
+
+          </label>
+
+        </div>
+        <!-- With actions -->
+
+
+      </div>
+    </div>
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+      Datos de los integrantes
+    </h4>
+    <div class="w-full overflow-hidden rounded-lg shadow-xs">
+      <div class="w-full overflow-x-auto">
+        <table class="w-full whitespace-no-wrap">
+          <thead>
+            <tr
+              class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+              <th class="px-4 py-3">Estudiante</th>
+              <th class="px-4 py-3">Número de control</th>
+              <th class="px-4 py-3">E-mail</th>
+              <th class="px-4 py-3">Número teléfonico</th>
+
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400">
+              <td class="px-4 py-3">
+                <div class="flex items-center text-sm">
+                  <!-- Avatar with inset shadow -->
+                  <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                    <img class="object-cover w-full h-full rounded-full"
+                      src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                      alt="" loading="lazy" />
+                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                  </div>
+                  <div>
+                    <p class="font-semibold">Jorgue Ramos</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-md">
+                17161233
+              </td>
+              <td class="px-4 py-3 text-md">
+                17161233@itoaxaca.edu.mx
+              </td>
+              <td class="px-4 py-3 text-md">
+                9512348123
+              </td>
+
+            </tr>
+
+            <tr class="text-gray-700 dark:text-gray-400">
+              <td class="px-4 py-3">
+                <div class="flex items-center text-sm">
+                  <!-- Avatar with inset shadow -->
+                  <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                    <img class="object-cover w-full h-full rounded-full"
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&facepad=3&fit=facearea&s=707b9c33066bf8808c934c8ab394dff6"
+                      alt="" loading="lazy" />
+                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                  </div>
+                  <div>
+                    <p class="font-semibold">Julian Casablancas</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-md">
+                17162299
+              </td>
+              <td class="px-4 py-3 text-md">
+                17162299@itoaxaca.edu.mx
+              </td>
+              <td class="px-4 py-3 text-md">
+                9513489222
+              </td>
+
+            </tr>
+
+
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <br>
+      <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Datos de la dependencia
+      </h4>
+      <div class="grid gap-6 mb-8 md:grid-cols-1">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
+
+
+
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">Nombre de la empresa</span>
+              <input
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="" disabled="true" />
+
+            </label>
+            <br>
+
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">Nombre del titular</span>
+              <input
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="" disabled="true" />
+
+            </label>
+
+            <br>
+
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">Puesto del titular</span>
+              <input
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="" disabled="true" />
+
+            </label>
+
+
+            <label class="block mt-4 text-sm">
+              <span class="text-gray-700 dark:text-gray-400">
+                Giro, ramo o sector
+              </span>
+              <select
+                class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+                disabled="true">
+                <option>Industrial</option>
+                <option>Servicios</option>
+                <option>Público</option>
+                <option>Privado</option>
+                <option>Otros</option>
+              </select>
+            </label>
+            <br>
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">RFC</span>
+              <input
+                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="" disabled="true" />
+
+            </label>
+
+            <br>
+
+
+            <div class="grid gap-6 mb-8 md:grid-cols-2">
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Calle</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="" disabled="true" />
+
+              </label>
+
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Colonia</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="" disabled="true" />
+
+              </label>
+
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Ciudad</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="" disabled="true" />
+
+              </label>
+
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">C.P.</span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="" disabled="true" />
+
+              </label>
+
+            </div>
+
+          </div>
+          <!-- With actions -->
+
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+</main>
+
+{% endblock %}
