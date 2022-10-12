@@ -86,3 +86,36 @@ class ReporteFinalForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
         #self.fields['reporteDocFinal'].widget.attrs['name'] = 'reporteFDoc'
+
+class DocenteForm(ModelForm):
+    class Meta:
+        model = Docente
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(Docente, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+            
+class AnteproyectoEstForm(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = '__all__'
+        exclude = ['docente']
+
+    def __init__(self, *args, **kwargs):
+        super(Anteproyecto, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+            
+class AnteproyectoForm(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(Anteproyecto, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            
+                        

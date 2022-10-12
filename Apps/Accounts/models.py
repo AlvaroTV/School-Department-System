@@ -34,13 +34,42 @@ class Expediente(models.Model):
     reporteParcial1 = models.ForeignKey(ReporteParcial1, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteParcial2 = models.ForeignKey(ReporteParcial2, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
-     
+        
     cartaPresentacion = models.FileField(upload_to='records/cartaP/', null=True, blank=True)        
     cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)        
     cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True)        
     residenciaDoc = models.FileField(upload_to='records/resiDoc/', null=True, blank=True)        
-    manualDoc = models.FileField(upload_to='records/manual/', null=True, blank=True)  
-        
+    manualDoc = models.FileField(upload_to='records/manual/', null=True, blank=True)          
+
+class Docente(models.Model):
+    ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACIONES'), ('INACTIVO', 'INACTIVO'))
+    
+    nombre = models.CharField(max_length=100)
+    apellidoP = models.CharField(max_length=70)
+    apellidoM = models.CharField(max_length=70)
+    numCelular = models.CharField(max_length=20)
+    correoElectronico = models.CharField(max_length=200, null=True, blank=True)        
+    curp = models.CharField(max_length=18, null=True, blank=True)
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+    estatus = models.CharField(max_length=15, choices=ESTATUS, default='ACTIVO', blank=True)     
+    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/teachers/',null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)        
+
+
+class Anteproyecto(models.Model):
+    TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'))
+    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    
+    # Llave foranea
+    docente = models.ManyToManyField(Docente, blank=True)
+    
+    nombre = models.CharField(max_length=300)
+    tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='ACTIVO')     
+    fechaEntrega = models.DateTimeField()
+    numIntegrantes = models.IntegerField()
+    estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
+    codigoUnion = models.CharField(max_length=10)
+    observaciones = models.CharField(max_length=500, null=True, blank=True)
 
 class Estudiante(models.Model):
     #user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -52,9 +81,10 @@ class Estudiante(models.Model):
     SISTEMAS = 'Ingenieria Sistemas Computacionales'
     SEMESTRES = ((8, '8'), (9, '9'), (10, '10'), (11, '11'), (12, '12'), (13, '13'), (14, '14'))
     
-    # Llaves Foranes
+    # Llaves Foraneas
     domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True)    
     expediente = models.OneToOneField(Expediente, on_delete=models.CASCADE, null=True, blank=True)
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.CASCADE, null=True, blank=True)
     
     # Atributos
     nombre = models.CharField(max_length=100)
@@ -62,13 +92,13 @@ class Estudiante(models.Model):
     apellidoM = models.CharField(max_length=70)
     numCelular = models.CharField(max_length=20)
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
-    numControl = models.CharField(max_length=8, unique=True, blank=True)
+    numControl = models.CharField(max_length=8, unique=True, blank=True, error_messages = {"unique":"Existe otro alumno con este numero de control."})
     carrera = models.CharField(max_length=200, choices=CARRERA, default=SISTEMAS)
     semestre = models.IntegerField(choices=SEMESTRES) 
     curp = models.CharField(max_length=18, null=True, blank=True)
     institutoSeguridadSocial = models.CharField(max_length=200, blank=True)                    
     numSeguridadSocial = models.CharField(max_length=70, null=True, blank=True)        
-    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/',null=True, blank=True)
+    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/students/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     #docs = models.FileField(upload_to='docs/', null=True, blank=True)
     

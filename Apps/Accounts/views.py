@@ -17,12 +17,14 @@ def home(request):
     return render(request, 'Global/dashboard.html', context)
 
 
+@login_required(login_url='login')
 def studentPage(request):
     
     context = {}
     return render(request, 'Student/dashboard.html', context)
 
 
+@login_required(login_url='login')
 def teacherPage(request):
     
     context = {}

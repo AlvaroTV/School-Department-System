@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 '''
@@ -17,7 +18,8 @@ def admin_only(view_func):
         elif group == 'admin':
             return view_func(request, *args, **kwargs)    
         else:
-            redirect('errorPage')
+            logout(request)
+            return redirect('404')
     return wrapper_func            
 
    
