@@ -15,9 +15,9 @@
                 </h4>
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form1.reporteDoc.errors }}
-                    {% if r1.reporteDoc %}
-                    <a class="text-green-500" href="{{r1.reporteDoc.url}}" target="_blank">
+                    {{ form1.reporte1Doc.errors }}
+                    {% if r1.reporte1Doc %}
+                    <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         Reporte Parcial 1 PDF
@@ -26,7 +26,7 @@
                     <p>Califiacion: {{r1.calificacion}}</p>
 
                     {% elif expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
-                    {{ form1.reporteDoc }}
+                    {{ form1.reporte1Doc }}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -53,9 +53,9 @@
                 </h4>
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form2.reporteDoc.errors }}
-                    {% if r2.reporteDoc %}
-                    <a class="text-green-500" href="{{r2.reporteDoc.url}}" target="_blank">
+                    {{ form2.reporte2Doc.errors }}
+                    {% if r2.reporte2Doc %}
+                    <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         Reporte Parcial 2 PDF
@@ -63,13 +63,13 @@
                     <p>Estatus: {{r2.estatus}}</p>
                     <p>Califiacion: {{r2.calificacion}}</p>
 
-                    {% elif not r1.reporteDoc %}
+                    {% elif not r1.reporte1Doc %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1</p>
 
                     {% else %}
-                    {{ form2.reporteDoc }}
+                    {{ form2.reporte2Doc }}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -88,9 +88,9 @@
                 </h4>
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ formF.reporteDoc.errors }}
-                    {% if rF.reporteDoc %}
-                    <a class="text-green-500" href="{{rF.reporteDoc.url}}" target="_blank">
+                    {{ formF.reporteDocFinal.errors }}
+                    {% if rF.reporteDocFinal %}
+                    <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         Reporte Final PDF
@@ -98,13 +98,13 @@
                     <p>Estatus: {{rF.estatus}}</p>
                     <p>Califiacion: {{rF.calificacion}}</p>
 
-                    {% elif not r2.reporteDoc %}
+                    {% elif not r2.reporte2Doc %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1 y 2</p>
 
                     {% else %}
-                    {{ formF.reporteDoc }}
+                    {{ formF.reporteDocFinal }}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"

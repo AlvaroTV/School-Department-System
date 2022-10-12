@@ -1,16 +1,15 @@
 from django.urls import path
 from .views import *
 
-urlpatterns = [
-    path('register/', registerPage, name='register'),
+urlpatterns = [    
     path('login/', loginPage, name='login'),
     path('logout/', logoutUser, name='logout'),
     path('404/', errorPage, name='404'),
     
     path('', home, name='home'),    
-    path('user/', studentPage, name='user'),
-    
-    path('account/', accountSettings, name='accountSettings'),
+    path('student/', studentPage, name='student'),
+    path('teacher/', teacherPage, name='teacher'),
+        
         
     path('student/<int:pk>', student, name='student'),
     path('students/', students, name='students'),

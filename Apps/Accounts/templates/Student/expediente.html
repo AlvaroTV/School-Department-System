@@ -157,16 +157,16 @@
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte parcial 1
         </h4>
-        {% if r1.reporteDoc %}
+        {% if r1.reporte1Doc %}
 
-        <a class="text-green-500" href="{{r1.reporteDoc.url}}" target="_blank">
+        <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
           <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
           Reporte Parcial 1 PDF
         </a>
 
         {% else %}
         <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Sin envio</p>
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
         {% endif %}
       </div>
 
@@ -174,16 +174,16 @@
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte parcial 2
         </h4>
-        {% if r2.reporteDoc %}
+        {% if r2.reporte2Doc %}
 
-        <a class="text-green-500" href="{{r2.reporteDoc.url}}" target="_blank">
+        <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
           <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
           Reporte Parcial 2 PDF
         </a>
 
         {% else %}
         <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Sin envio</p>
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
 
         {% endif %}
       </div>
@@ -195,15 +195,15 @@
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Reporte final
         </h4>
-        {% if rF.reporteDoc %}
-        <a class="text-green-500" href="{{rF.reporteDoc.url}}" target="_blank">
+        {% if rF.reporteDocFinal %}
+        <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
           <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
           Reporte Final PDF
         </a>
 
         {% else %}
         <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Sin envio</p>
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
 
         {% endif %}
       </div>

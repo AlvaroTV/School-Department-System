@@ -16,19 +16,19 @@ class ReporteParcial1(models.Model):
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     calificacion = models.IntegerField(null=True, blank=True)
-    reporteDoc = models.FileField(upload_to='records/reporte1/')
+    reporte1Doc = models.FileField(upload_to='records/reporte1/')
     
 class ReporteParcial2(models.Model):
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     calificacion = models.IntegerField(null=True, blank=True)
-    reporteDoc = models.FileField(upload_to='records/reporte2/')
+    reporte2Doc = models.FileField(upload_to='records/reporte2/')
     
 class ReporteFinal(models.Model):
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     calificacion = models.IntegerField(null=True, blank=True)
-    reporteDoc = models.FileField(upload_to='records/reporteF/')            
+    reporteDocFinal = models.FileField(upload_to='records/reporteF/')            
 
 class Expediente(models.Model):    
     reporteParcial1 = models.ForeignKey(ReporteParcial1, on_delete=models.SET_NULL, null=True, blank=True)    
