@@ -53,18 +53,6 @@ def errorPage(request):
     return render(request, 'Global/404.html')
 
 
-# * Pagina que regresa datos de un alumno
-def student(request, pk):
-
-    context = {}
-    return render(request, 'customer.html', context)
-
-# * Regresa datos de todos los estudiantes
-def students(request):
-
-    context = {}
-    return render(request, 'products.html', context)
-
 # * Se crea el estudiante
 def createStudent(request):
     data = ['id_fotoUsuario', 'id_institutoSeguridadSocial',
@@ -259,10 +247,7 @@ def reportes(request):
         #            rF = formF.save()  
         #            expediente.reporteFinal = rF
         #            expediente.save()
-        #            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-        
-        
-    
+        #            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                    
     
     context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF}
     return render(request, 'Student/reportes.html', context)
@@ -272,6 +257,18 @@ def deleteStudent(request, pk):
     # Te redirecciona a la misma pagina
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+
+def anteproyecto(request):
+    data = ['id_observaciones', 'id_codigoUnion']
+    anteproyecto = request.user.estudiante.anteproyecto
+    form = AnteproyectoEstForm()
+    
+    if anteproyecto is None:
+        print('Es NONE :V')
+    
+    context = {'form': form, 'data': data}
+    return render(request, 'Student/anteproyecto.html', context)
+    
 
 def crearAnteproyeco(request):
     

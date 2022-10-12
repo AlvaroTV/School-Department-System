@@ -11,13 +11,14 @@ urlpatterns = [
     path('teacher/', teacherPage, name='teacher'),
         
         
-    path('student/<int:pk>', student, name='student'),
-    path('students/', students, name='students'),
+    #path('student/<int:pk>', student, name='student'),
+    #path('students/', students, name='students'),
     path('profile/', estudianteViewProfile, name='studentProfile'),
     path('settings/', estudianteSettings, name='studentSettings'),
     path('expediente/', expediente, name='expediente'),
-    path('registroAnteproyecto/', crearAnteproyeco, name='registroAnteproyecto'),
-    path('verAnteproyecto/', verAnteproyeco, name='verAnteproyecto'),
+    #path('registroAnteproyecto/', crearAnteproyeco, name='registroAnteproyecto'),
+    #path('verAnteproyecto/', verAnteproyeco, name='verAnteproyecto'),
+    path('anteproyecto/', anteproyecto, name='anteproyecto'),
     path('reportes/', reportes, name='reportes'),
     
     path('createStudent/', createStudent, name='createStudent'),    

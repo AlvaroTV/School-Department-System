@@ -65,7 +65,7 @@ class Anteproyecto(models.Model):
     
     nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='ACTIVO')     
-    fechaEntrega = models.DateTimeField()
+    fechaEntrega = models.DateTimeField(auto_now_add=True)
     numIntegrantes = models.IntegerField()
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     codigoUnion = models.CharField(max_length=10)
