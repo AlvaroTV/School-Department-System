@@ -10,6 +10,13 @@ class EstudianteForm(ModelForm):
         model = Estudiante
         fields = '__all__'
         exclude = ['domicilio', 'user']
+        labels = {
+            'nombre': 'Nombre(s)',
+            'apellidoP': 'Apellido Paterno',
+            'apellidoM': 'Apellido Materno',
+            'numCelular': 'Numero de celular',
+            'numControl': 'Numero de control',                  
+        }
 
     def __init__(self, *args, **kwargs):
         super(EstudianteForm, self).__init__(*args, **kwargs)
@@ -21,6 +28,10 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+        labels = {
+            'email': 'Correo institucional',
+            'password1': 'Password'            
+        }
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
@@ -101,12 +112,13 @@ class AnteproyectoEstForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['docente']
+        exclude = ['docente', 'estudiante']
         labels = {
             'nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
             'fechaEntrega': 'Fecha de entrega',
-            'numIntegrantes': 'Numero de integrantes',            
+            'numIntegrantes': 'Numero de integrantes',
+            'periodo': 'Periodo proyectado'            
         }
 
     def __init__(self, *args, **kwargs):
@@ -114,15 +126,32 @@ class AnteproyectoEstForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             
+class AnteproyectoViewForm(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = '__all__'        
+        labels = {
+            'nombre': 'Nombre del Anteproyecto',
+            'tipoProyecto': 'Tipo de Proyecto',
+            'fechaEntrega': 'Fecha de entrega',
+            'numIntegrantes': 'Numero de integrantes',
+            'periodo': 'Periodo proyectado'            
+        }        
+
+    def __init__(self, *args, **kwargs):
+        super(AnteproyectoViewForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            self.fields[myField].widget.attrs['disabled'] = True
+
 class AnteproyectoForm(ModelForm):
     class Meta:
         model = Anteproyecto
-        fields = '__all__'
-        
+        fields = '__all__'        
 
     def __init__(self, *args, **kwargs):
         super(AnteproyectoForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                        
             
                         

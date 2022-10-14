@@ -13,6 +13,32 @@
     <div class="grid gap-6 mb-8 md:grid-cols-2">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Anteproyecto
+        </h4>
+        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.anteproyecto.errors }}
+          {% if expediente.anteproyecto %}
+          <a class="text-green-500" href="{{expediente.anteproyecto.url}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            Anteproyecto PDF
+          </a>
+
+          {% else %}
+
+          {{ form.anteproyecto }}
+          <div class="relative">
+            <br>
+            <input type="submit" value="Enviar"
+              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            <br>
+          </div>
+          {% endif %}
+        </form>
+      </div>
+
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Carta de presentación
         </h4>
         <form name="formulario" method="POST" action="" enctype="multipart/form-data">
@@ -36,6 +62,11 @@
           {% endif %}
         </form>
       </div>
+    </div>
+
+
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
 
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
@@ -61,9 +92,8 @@
           {% endif %}
         </form>
       </div>
-    </div>
 
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
+
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Cronograma
@@ -90,7 +120,11 @@
         </form>
       </div>
 
+    </div>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Documento de residencia
         </h4>
@@ -112,10 +146,9 @@
           </div>
           {% endif %}
         </form>
-      </div>
-    </div>
 
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
+      </div>
+
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
           Manual de residencia
@@ -143,9 +176,6 @@
       </div>
 
     </div>
-
-
-
   </div>
 
   <div class="container px-6 mx-auto grid">

@@ -25,7 +25,7 @@
                     <p>Estatus: {{r1.estatus}}</p>
                     <p>Califiacion: {{r1.calificacion}}</p>
 
-                    {% elif expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
+                    {% elif expediente.anteproyecto and expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
                     {{ form1.reporte1Doc }}
                     <div class="relative">
                         <br>
@@ -39,6 +39,7 @@
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">Necesita subir los siguiente documentos:</p>
                     <ul class="list-disc">
+                        <li class="text-blue-500">* Anteproyecto</li>
                         <li class="text-blue-500">* Carta de presentacion</li>
                         <li class="text-blue-500">* Carta compromiso</li>
                         <li class="text-blue-500">* Cronograma</li>

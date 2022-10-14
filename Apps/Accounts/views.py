@@ -3,6 +3,9 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+#from django.db.models import Count
+import string  
+import random  
 from .models import *
 from .forms import *
 from .decorators import *
@@ -56,7 +59,7 @@ def errorPage(request):
 # * Se crea el estudiante
 def createStudent(request):
     data = ['id_fotoUsuario', 'id_institutoSeguridadSocial',
-            'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp']
+            'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp', 'id_anteproyecto']
     formE = EstudianteForm()
     formU = CreateUserForm()
 
@@ -255,20 +258,69 @@ def reportes(request):
 def deleteStudent(request, pk):
 
     # Te redirecciona a la misma pagina
-    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-
-
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
+    
+    
 def anteproyecto(request):
-    data = ['id_observaciones', 'id_codigoUnion']
-    anteproyecto = request.user.estudiante.anteproyecto
-    form = AnteproyectoEstForm()
+    data = ['id_observaciones', 'id_codigoUnion', 'id_estatus', 'id_docentes']
+    estudiante = request.user.estudiante         
+    anteproyecto = estudiante.anteproyecto       
+    anteproyectos = Anteproyecto.objects.all()    
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)
+    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')    
+    codigo = '0000000000'     
+    mensaje = ''                                       
     
-    if anteproyecto is None:
-        print('Es NONE :V')
+    if anteproyecto is None:     
+        form = AnteproyectoEstForm()   
+        print('No tiene anteproyecto')        
+        if request.method == 'POST':                        
+            form = AnteproyectoEstForm(request.POST)
+            
+            try:
+                codigoU = request.POST['codigoAnteproyecto']
+            except:
+                codigoU = None
+                        
+                        
+            if codigoU is not None:                
+                for i in enviados:                    
+                    if i.codigoUnion == codigoU:                        
+                        numIntegrantes = Estudiante.objects.filter(anteproyecto=i).count()                                                
+                        if numIntegrantes < i.numIntegrantes:
+                            estudiante.anteproyecto = i
+                            estudiante.save()
+                            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+                        else:
+                            mensaje = 'El anteproyecto esta lleno'                            
+                            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                                                
+                    
+                mensaje = 'Codigo invalido'                                                        
+                                    
+            if form.is_valid():            
+                anteproyecto = form.save()
+                if int(request.POST['numIntegrantes']) > 1:  
+                    codigo = obtenerCodigo()                                                            
+                                                
+                print(codigo)                
+                anteproyecto.codigoUnion=codigo
+                anteproyecto.save()
+                estudiante.anteproyecto=anteproyecto
+                estudiante.save()                                
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+                    
+    else:
+        data.clear()
+        data.append('id_docentes')         
+        if anteproyecto.numIntegrantes == 1:
+            data.append('id_codigoUnion')
+                                                
+        form = AnteproyectoViewForm(instance = anteproyecto)                                
     
-    context = {'form': form, 'data': data}
+    context = {'form': form, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes}
     return render(request, 'Student/anteproyecto.html', context)
     
+
 
 def crearAnteproyeco(request):
     
@@ -300,3 +352,22 @@ def deleteTeacher(request, pk):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+    
+def generarCodigo():            
+    length = 10
+    letters = string.ascii_uppercase
+    code = ''.join(random.choice(letters + string.digits) for i in range(length))                        
+    return code   
+
+def obtenerCodigo():
+    while True:        
+        codigo = generarCodigo()
+        if not buscarCodigo(codigo):
+            return codigo        
+     
+def buscarCodigo(codigo):
+    proyectos = Anteproyecto.objects.exclude(codigoUnion='0000000000').filter(estatus='Enviado')     
+    for p in proyectos:
+        if p.codigoUnion == codigo:
+            return True
+    return False

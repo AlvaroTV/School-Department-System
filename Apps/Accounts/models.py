@@ -35,6 +35,7 @@ class Expediente(models.Model):
     reporteParcial2 = models.ForeignKey(ReporteParcial2, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
         
+    anteproyecto = models.FileField(upload_to='records/anteproyecto/', null=True, blank=True)        
     cartaPresentacion = models.FileField(upload_to='records/cartaP/', null=True, blank=True)        
     cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)        
     cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True)        
@@ -55,21 +56,22 @@ class Docente(models.Model):
     fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)        
 
-
 class Anteproyecto(models.Model):
-    TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'))
+    TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     
     # Llave foranea
-    docente = models.ManyToManyField(Docente, blank=True)
+    docentes = models.ManyToManyField(Docente, blank=True)
+    #estudiante = models.ForeignKey(Estudiante, blank=True)
     
     nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='ACTIVO')     
     fechaEntrega = models.DateTimeField(auto_now_add=True)
     numIntegrantes = models.IntegerField()
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
-    codigoUnion = models.CharField(max_length=10)
-    observaciones = models.CharField(max_length=500, null=True, blank=True)
+    codigoUnion = models.CharField(max_length=10, null=True, blank=True)
+    periodo = models.CharField(max_length=50, null=True, blank=True)
+    observaciones = models.CharField(max_length=500, null=True, blank=True)    
 
 class Estudiante(models.Model):
     #user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
