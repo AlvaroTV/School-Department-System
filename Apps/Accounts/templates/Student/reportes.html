@@ -1,0 +1,123 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<main class="h-full pb-16 overflow-y-auto">
+    <div class="container px-6 mx-auto grid">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Reportes Parciales
+        </h2>
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Reporte Parcial 1
+                </h4>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form1.reporte1Doc.errors }}
+                    {% if r1.reporte1Doc %}
+                    <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        Reporte Parcial 1 PDF
+                    </a>
+                    <p>Estatus: {{r1.estatus}}</p>
+                    <p>Califiacion: {{r1.calificacion}}</p>
+
+                    {% elif expediente.anteproyecto and expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
+                    {{ form1.reporte1Doc }}
+                    <div class="relative">
+                        <br>
+                        <input type="submit" value="Enviar"
+                            class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <br>
+                    </div>
+
+                    {% else %}
+                    <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+                    <p class="text-red-600">No puede enviar este archivo aun</p>
+                    <p class="text-teal-500">Necesita subir los siguiente documentos:</p>
+                    <ul class="list-disc">
+                        <li class="text-blue-500">* Anteproyecto</li>
+                        <li class="text-blue-500">* Carta de presentacion</li>
+                        <li class="text-blue-500">* Carta compromiso</li>
+                        <li class="text-blue-500">* Cronograma</li>
+                    </ul>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Reporte Parcial 2
+                </h4>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form2.reporte2Doc.errors }}
+                    {% if r2.reporte2Doc %}
+                    <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        Reporte Parcial 2 PDF
+                    </a>
+                    <p>Estatus: {{r2.estatus}}</p>
+                    <p>Califiacion: {{r2.calificacion}}</p>
+
+                    {% elif not r1.reporte1Doc %}
+                    <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+                    <p class="text-red-600">No puede enviar este archivo aun</p>
+                    <p class="text-teal-500">* Necesita subir el Reporte parcial 1</p>
+
+                    {% else %}
+                    {{ form2.reporte2Doc }}
+                    <div class="relative">
+                        <br>
+                        <input type="submit" value="Enviar"
+                            class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <br>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Reporte Final
+                </h4>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ formF.reporteDocFinal.errors }}
+                    {% if rF.reporteDocFinal %}
+                    <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        Reporte Final PDF
+                    </a>
+                    <p>Estatus: {{rF.estatus}}</p>
+                    <p>Califiacion: {{rF.calificacion}}</p>
+
+                    {% elif not r2.reporte2Doc %}
+                    <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+                    <p class="text-red-600">No puede enviar este archivo aun</p>
+                    <p class="text-teal-500">* Necesita subir el Reporte parcial 1 y 2</p>
+
+                    {% else %}
+                    {{ formF.reporteDocFinal }}
+                    <div class="relative">
+                        <br>
+                        <input type="submit" value="Enviar"
+                            class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <br>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
