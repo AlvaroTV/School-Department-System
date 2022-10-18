@@ -15,11 +15,20 @@
       <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
         Datos generales
       </h4>
-
+      {% if anteproyecto.estatus != 'ACEPTADO' %}
       <div class="relative">
         <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
           href="{% url 'editarAnteproyecto' %}">Editar Informacion</a>
       </div>
+      {% endif %}
+
+      {% if anteproyecto.estatus == 'ACEPTADO' %}
+      <div class="relative">
+        <p class="mb-1 text-lg font-semibold text-gray-600 dark:text-gray-300">No olvides subir tu documento del Anteproyecto!</p>
+        <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+          href="{% url 'expediente' %}">Subir documento</a>
+      </div>
+      {% endif %}
 
     </div>
     <div class="grid gap-6 mb-8 md:grid-cols-1">
