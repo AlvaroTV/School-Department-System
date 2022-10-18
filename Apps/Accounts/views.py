@@ -191,16 +191,7 @@ def reportes(request):
                     expediente.save()
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:             
-            form1 = Reporte1Form(auto_id='id_reporte1_%s', instance = r1)
-        #    if request.method == 'POST':
-        #        form1 = Reporte1Form(request.POST, request.FILES, instance = r1)                                                                                     
-        #        if form1.is_valid():                                        
-        #            print('r1 is not None and form1 is valid')                    
-        #            r1 = form1.save()  
-        #            expediente.reporteParcial1 = r1
-        #            expediente.save()
-        #            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-                                                                      
+            form1 = Reporte1Form(auto_id='id_reporte1_%s', instance = r1)                                                                              
             
         if r2 is None:             
             form2 = Reporte2Form(auto_id='id_reporte2_%s')
@@ -212,16 +203,7 @@ def reportes(request):
                     expediente.save()
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:             
-            form2 = Reporte2Form(auto_id='id_reporte2_%s', instance = r2)
-        #    if request.method == 'POST':
-        #        form2 = Reporte2Form(request.POST, request.FILES, instance = r2)     
-        #        if form2.is_valid():    
-        #            print('r2 is not None and form2 is valid')                                    
-        #            r2 = form2.save()  
-        #            expediente.reporteParcial2 = r2
-        #            expediente.save()
-        #            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-            
+            form2 = Reporte2Form(auto_id='id_reporte2_%s', instance = r2)                    
             
         if rF is None:             
             formF = ReporteFinalForm(auto_id='id_reporteF_%s')
@@ -234,14 +216,7 @@ def reportes(request):
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:             
             formF = ReporteFinalForm(auto_id='id_reporteF_%s', instance = rF)
-        #    if request.method == 'POST':
-        #        formF = Reporte1Form(request.POST, request.FILES, instance = rF)                                                
-        #        if formF.is_valid():
-        #            print('rF is not None and formF is valid')                    
-        #            rF = formF.save()  
-        #            expediente.reporteFinal = rF
-        #            expediente.save()
-        #            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                    
+        
     
     context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF}
     return render(request, 'Student/reportes.html', context)
@@ -327,8 +302,7 @@ def anteproyecto(request):
         data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular'])         
         if anteproyecto.numIntegrantes == 1:
             data.append('id_codigoUnion')  
-        
-        #anteproyecto = estudiante.anteproyecto    
+                
         dependencia = anteproyecto.dependencia                  
         formA = AnteproyectoViewForm(instance = anteproyecto)                                
         formD = DependenciaViewForm(instance = dependencia)

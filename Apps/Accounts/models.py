@@ -22,23 +22,21 @@ class TitularDependencia(models.Model):
     def __str__(self):
         return f'{self.t_nombre} {self.t_apellidoP} {self.t_apellidoM}'
 
-class ReporteParcial1(models.Model):
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
-    estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
-    calificacion = models.IntegerField(null=True, blank=True)
-    reporte1Doc = models.FileField(upload_to='records/reporte1/')
+class ReporteParcial1(models.Model):    
+    r1_hojaRevisores = models.FileField(upload_to='records/reporte1/hojaRevisores/', null=True, blank=True)            
+    r1_formatoEvaluacion = models.FileField(upload_to='records/reporte1/formatoEvaluacion/', null=True, blank=True)            
+    r1_fechaEntrega = models.DateField(null=True, default=date.today)
     
-class ReporteParcial2(models.Model):
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
-    estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
-    calificacion = models.IntegerField(null=True, blank=True)
-    reporte2Doc = models.FileField(upload_to='records/reporte2/')
+class ReporteParcial2(models.Model):    
+    r2_hojaRevisores = models.FileField(upload_to='records/reporte2/hojaRevisores/', null=True, blank=True)            
+    r2_formatoEvaluacion = models.FileField(upload_to='records/reporte2/formatoEvaluacion/', null=True, blank=True)            
+    r2_fechaEntrega = models.DateField(null=True, default=date.today)    
     
-class ReporteFinal(models.Model):
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
-    estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
-    calificacion = models.IntegerField(null=True, blank=True)
-    reporteDocFinal = models.FileField(upload_to='records/reporteF/')            
+class ReporteFinal(models.Model):    
+    rf_hojaRevisores = models.FileField(upload_to='records/reporteF/hojaRevisores/', null=True, blank=True)            
+    rf_formatoEvaluacion = models.FileField(upload_to='records/reporteF/formatoEvaluacion/', null=True, blank=True)            
+    rf_fechaEntrega = models.DateField(null=True, default=date.today)    
+    calificacion = models.IntegerField(null=True, blank=True)    
 
 class Expediente(models.Model):    
     reporteParcial1 = models.ForeignKey(ReporteParcial1, on_delete=models.SET_NULL, null=True, blank=True)    
@@ -46,11 +44,17 @@ class Expediente(models.Model):
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
         
     anteproyecto = models.FileField(upload_to='records/anteproyecto/', null=True, blank=True)        
+    dictamen = models.FileField(upload_to='records/dictamen/', null=True, blank=True)            
+    horario = models.FileField(upload_to='records/horario/', null=True, blank=True)            
+    cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True) 
+    solicitudResidencia = models.FileField(upload_to='records/solicitudResidencia/', null=True, blank=True)     
     cartaPresentacion = models.FileField(upload_to='records/cartaP/', null=True, blank=True)        
-    cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)        
-    cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True)        
-    residenciaDoc = models.FileField(upload_to='records/resiDoc/', null=True, blank=True)        
-    manualDoc = models.FileField(upload_to='records/manual/', null=True, blank=True)              
+    cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)                               
+    cartaAceptacion = models.FileField(upload_to='records/cartaAceptacion/', null=True, blank=True)            
+    constanciaTerminacion = models.FileField(upload_to='records/constanciaTerminacion/', null=True, blank=True)            
+    actaCalificaciones = models.FileField(upload_to='records/actaCalificaciones/', null=True, blank=True)            
+    cartaTerminacion = models.FileField(upload_to='records/cartaTerminacion/', null=True, blank=True)            
+    actaResidencia = models.FileField(upload_to='records/actaResidencia/', null=True, blank=True)            
 
 class Docente(models.Model):
     ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACIONES'), ('INACTIVO', 'INACTIVO'))
