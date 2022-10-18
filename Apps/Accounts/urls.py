@@ -19,6 +19,7 @@ urlpatterns = [
     #path('registroAnteproyecto/', crearAnteproyeco, name='registroAnteproyecto'),
     #path('verAnteproyecto/', verAnteproyeco, name='verAnteproyecto'),
     path('anteproyecto/', anteproyecto, name='anteproyecto'),
+    path('editAnteproyecto/', editarAnteproyecto, name='editarAnteproyecto'),
     path('reportes/', reportes, name='reportes'),
     
     path('createStudent/', createStudent, name='createStudent'),    

@@ -65,11 +65,8 @@ def createStudent(request):
 
     if request.method == 'POST':
         formE = EstudianteForm(request.POST)
-        formU = CreateUserForm(request.POST)
-        print(f'Estuidante: {formE.is_valid()}')
-        print(formE.errors)
-        print(f'User: {formU.is_valid()}')
-        if formE.is_valid() & formU.is_valid():
+        formU = CreateUserForm(request.POST)        
+        if formE.is_valid() and formU.is_valid():
             student = formE.save()
             user = formU.save()
             username = formU.cleaned_data.get('username')
@@ -122,10 +119,7 @@ def estudianteSettings(request):
         if request.method == 'POST':
             formD = DomicilioForm(request.POST, instance=domicilio)
             formE = EstudianteForm(
-                request.POST, request.FILES, instance=estudiante)
-            print(f'Estudiante: {formE.is_valid()}')
-            print(formE.errors)
-            print(formE.changed_data)
+                request.POST, request.FILES, instance=estudiante)            
             if formE.is_valid():
                 formE.save()
                 if formD.is_valid():
@@ -191,8 +185,7 @@ def reportes(request):
             form1 = Reporte1Form(auto_id='id_reporte1_%s')
             if request.method == 'POST':
                 form1 = Reporte1Form(request.POST, request.FILES)                   
-                if form1.is_valid():
-                    print('r1 is None & form1 is valid')                    
+                if form1.is_valid():                    
                     r1 = form1.save()
                     expediente.reporteParcial1 = r1
                     expediente.save()
@@ -202,7 +195,7 @@ def reportes(request):
         #    if request.method == 'POST':
         #        form1 = Reporte1Form(request.POST, request.FILES, instance = r1)                                                                                     
         #        if form1.is_valid():                                        
-        #            print('r1 is not None & form1 is valid')                    
+        #            print('r1 is not None and form1 is valid')                    
         #            r1 = form1.save()  
         #            expediente.reporteParcial1 = r1
         #            expediente.save()
@@ -213,8 +206,7 @@ def reportes(request):
             form2 = Reporte2Form(auto_id='id_reporte2_%s')
             if request.method == 'POST':
                 form2 = Reporte2Form(request.POST, request.FILES)                
-                if form2.is_valid(): 
-                    print('r2 is None & form2 is valid')                                              
+                if form2.is_valid():                     
                     r2 = form2.save()
                     expediente.reporteParcial2 = r2
                     expediente.save()
@@ -224,7 +216,7 @@ def reportes(request):
         #    if request.method == 'POST':
         #        form2 = Reporte2Form(request.POST, request.FILES, instance = r2)     
         #        if form2.is_valid():    
-        #            print('r2 is not None & form2 is valid')                                    
+        #            print('r2 is not None and form2 is valid')                                    
         #            r2 = form2.save()  
         #            expediente.reporteParcial2 = r2
         #            expediente.save()
@@ -235,8 +227,7 @@ def reportes(request):
             formF = ReporteFinalForm(auto_id='id_reporteF_%s')
             if request.method == 'POST':
                 formF = ReporteFinalForm(request.POST, request.FILES)                                                                
-                if formF.is_valid():  
-                    print('rF is None & formF is valid')                                
+                if formF.is_valid():                      
                     rF = formF.save()
                     expediente.reporteFinal = rF
                     expediente.save()
@@ -246,7 +237,7 @@ def reportes(request):
         #    if request.method == 'POST':
         #        formF = Reporte1Form(request.POST, request.FILES, instance = rF)                                                
         #        if formF.is_valid():
-        #            print('rF is not None & formF is valid')                    
+        #            print('rF is not None and formF is valid')                    
         #            rF = formF.save()  
         #            expediente.reporteFinal = rF
         #            expediente.save()
@@ -262,27 +253,29 @@ def deleteStudent(request, pk):
     
     
 def anteproyecto(request):
-    data = ['id_observaciones', 'id_codigoUnion', 'id_estatus', 'id_docentes']
-    estudiante = request.user.estudiante         
-    anteproyecto = estudiante.anteproyecto       
-    anteproyectos = Anteproyecto.objects.all()    
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)
-    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')    
+    data = ['id_observaciones', 'id_codigoUnion', 'id_estatus', 'id_docentes', 'id_dependencia', 'id_asesorExterno']
+    estudiante = request.user.estudiante                    
+    anteproyectos = Anteproyecto.objects.all()                          
+    anteproyecto = estudiante.anteproyecto                                                   
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)    
+    dependencia = None
+    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')        
     codigo = '0000000000'     
-    mensaje = ''                                       
+    mensaje = ''                                    
     
-    if anteproyecto is None:     
-        form = AnteproyectoEstForm()   
-        print('No tiene anteproyecto')        
-        if request.method == 'POST':                        
-            form = AnteproyectoEstForm(request.POST)
-            
+    if anteproyecto is None:             
+        formA = AnteproyectoEstForm()
+        formD = DependenciaForm()  
+        formT = TitularForm()
+        formDom = DomicilioForm()
+        formAE = AsesorEForm()         
+                
+        if request.method == 'POST':          
             try:
                 codigoU = request.POST['codigoAnteproyecto']
             except:
                 codigoU = None
-                        
-                        
+                                                
             if codigoU is not None:                
                 for i in enviados:                    
                     if i.codigoUnion == codigoU:                        
@@ -293,34 +286,117 @@ def anteproyecto(request):
                             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
                         else:
                             mensaje = 'El anteproyecto esta lleno'                            
-                            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                                                
+                                                        
+                if not mensaje: mensaje = 'Codigo invalido'                                                        
+            else:                
+                              
+                formA = AnteproyectoEstForm(request.POST)
+                formD = DependenciaForm(request.POST)
+                formT = TitularForm(request.POST)
+                formDom = DomicilioForm(request.POST)
+                formAE = AsesorEForm(request.POST)                        
+                                        
+                if formA.is_valid() and formD.is_valid() and formT.is_valid() and formAE.is_valid() and formDom.is_valid():                                
+                    fecha_inicio = formA['periodoInicio'].value()
+                    fecha_fin = formA['periodoFin'].value()                    
+                    if fecha_inicio < fecha_fin:                                            
+                        anteproyecto = formA.save()
+                        dependencia = formD.save()
+                        titular = formT.save()
+                        domicilio = formDom.save()
+                        asesorE = formAE.save()                        
+                        dependencia.domicilio = domicilio
+                        dependencia.titular = titular
+                        dependencia.save()                        
+                        asesorE.dependencia = dependencia
+                        asesorE.save()
+                        anteproyecto.dependencia = dependencia
+                        anteproyecto.asesorExterno = asesorE
+                        if int(request.POST['numIntegrantes']) > 1:  
+                            codigo = obtenerCodigo()                                                                                                                                    
+                        anteproyecto.codigoUnion=codigo
+                        anteproyecto.save()
+                        estudiante.anteproyecto=anteproyecto
+                        estudiante.save()                                
+                        return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
                     
-                mensaje = 'Codigo invalido'                                                        
-                                    
-            if form.is_valid():            
-                anteproyecto = form.save()
-                if int(request.POST['numIntegrantes']) > 1:  
-                    codigo = obtenerCodigo()                                                            
-                                                
-                print(codigo)                
-                anteproyecto.codigoUnion=codigo
-                anteproyecto.save()
-                estudiante.anteproyecto=anteproyecto
-                estudiante.save()                                
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+                    mensaje = 'Fecha de fin del Anteproyecto erronea'
                     
     else:
         data.clear()
-        data.append('id_docentes')         
+        data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular'])         
         if anteproyecto.numIntegrantes == 1:
-            data.append('id_codigoUnion')
-                                                
-        form = AnteproyectoViewForm(instance = anteproyecto)                                
-    
-    context = {'form': form, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes}
+            data.append('id_codigoUnion')  
+        
+        #anteproyecto = estudiante.anteproyecto    
+        dependencia = anteproyecto.dependencia                  
+        formA = AnteproyectoViewForm(instance = anteproyecto)                                
+        formD = DependenciaViewForm(instance = dependencia)
+        formT = TitularViewForm(instance = dependencia.titular)
+        formDom = DomicilioViewForm(instance = dependencia.domicilio)
+        formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)         
+            
+    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia}
     return render(request, 'Student/anteproyecto.html', context)
     
-
+def editarAnteproyecto(request):    
+    data = ['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_observaciones', 'id_estatus', 'id_codigoUnion', 'id_domicilio', 'id_titular']
+    estudiante = request.user.estudiante         
+    anteproyecto = estudiante.anteproyecto
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()    
+    #anteproyectos = Anteproyecto.objects.all()                          
+    dependencia = anteproyecto.dependencia
+    asesorExterno = anteproyecto.asesorExterno
+    titular = dependencia.titular
+    domicilio = dependencia.domicilio
+    codigo = anteproyecto.codigoUnion
+    numIntegrantes = anteproyecto.numIntegrantes
+    mensaje = ''
+    
+    formA = AnteproyectoEstForm(instance = anteproyecto)                                
+    formD = DependenciaForm(instance = dependencia)
+    formT = TitularForm(instance = titular)
+    formDom = DomicilioForm(instance = domicilio)
+    formAE = AsesorEForm(instance = asesorExterno)                 
+    
+    if request.method == 'POST':                
+        
+        formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                
+        formD = DependenciaForm(request.POST, instance = dependencia)
+        formT = TitularForm(request.POST, instance = titular)
+        formDom = DomicilioForm(request.POST, instance = domicilio)
+        formAE = AsesorEForm(request.POST, instance = asesorExterno)   
+                  
+        if formA.is_valid() and formD.is_valid() and formT.is_valid() and formAE.is_valid() and formDom.is_valid():
+            numIntegrantes2 = int(formA['numIntegrantes'].value())                        
+            
+            if numIntegrantes2 < 1:
+                mensaje = 'El numero de integrantes no puede ser menor a 1'
+            else:                
+                if numIntegrantes == 1 and numIntegrantes2 >= 2:                    
+                    codigo = obtenerCodigo()                    
+                elif numIntegrantes >= 2 and numIntegrantes2 == 1 and estudiantes == 1:                    
+                    codigo = '0000000000'                     
+                                                                                                                                                                        
+                if numIntegrantes > numIntegrantes2 and estudiantes > numIntegrantes2:                                        
+                    mensaje = 'No se puede reducir el numero de integrantes. No se pueden eliminar integrantes'                    
+                else:                                                
+                    domicilio = formDom.save()                  
+                    titular = formT.save()              
+                    asesorExterno = formAE.save()      
+                    dependencia = formD.save()            
+                    anteproyecto = formA.save()
+                    anteproyecto.dependencia = dependencia
+                    anteproyecto.asesorExterno = asesorExterno
+                    anteproyecto.codigoUnion = codigo
+                    asesorExterno.dependencia = dependencia
+                    asesorExterno.save()                                    
+                    anteproyecto.save() 
+                    return redirect('anteproyecto')                               
+    
+    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje}
+    
+    return render(request, 'Student/editarAnteproyecto.html', context)
 
 def crearAnteproyeco(request):
     

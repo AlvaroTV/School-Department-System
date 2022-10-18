@@ -17,22 +17,17 @@
       </h4>
 
       <div class="relative">
-        <button
-          class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-          Editar información
-        </button>
+        <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+          href="{% url 'editarAnteproyecto' %}">Editar Informacion</a>
       </div>
 
     </div>
-
     <div class="grid gap-6 mb-8 md:grid-cols-1">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-
-
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {% for field in form %}
+            {% for field in formA %}
             {% if not field.id_for_label in data %}
             <label class="block mt-4 text-sm">
               <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
@@ -43,13 +38,8 @@
             {% endfor %}
 
             <br>
-
           </form>
         </div>
-
-
-
-
       </div>
     </div>
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
@@ -80,8 +70,8 @@
                   </div>
                   <div>
                     <p class="font-semibold">{{student.nombre}}</p>
-                  </div>                  
-                </div>                
+                  </div>
+                </div>
               </td>
               <td class="px-4 py-3 text-md">{{student.numControl}}</td>
               <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
@@ -99,110 +89,67 @@
       </h4>
       <div class="grid gap-6 mb-8 md:grid-cols-1">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-
-
-
-
           <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <form action="" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% for field in formD %}
+              {% if not field.id_for_label in data %}
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                {{ field }}
+              </label>
+              <p id="messages" class="text-red-600">{{ field.errors }}</p>
+              {% endif %}
+              {% endfor %}
 
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Nombre de la empresa</span>
-              <input
-                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                placeholder="" disabled="true" />
+              {% for field in formDom %}
+              {% if not field.id_for_label in data %}
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                {{ field }}
+              </label>
+              <p id="messages" class="text-red-600">{{ field.errors }}</p>
+              {% endif %}
+              {% endfor %}
 
-            </label>
-            <br>
-
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Nombre del titular</span>
-              <input
-                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                placeholder="" disabled="true" />
-
-            </label>
-
-            <br>
-
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Puesto del titular</span>
-              <input
-                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                placeholder="" disabled="true" />
-
-            </label>
-
-
-            <label class="block mt-4 text-sm">
-              <span class="text-gray-700 dark:text-gray-400">
-                Giro, ramo o sector
-              </span>
-              <select
-                class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-                disabled="true">
-                <option>Industrial</option>
-                <option>Servicios</option>
-                <option>Público</option>
-                <option>Privado</option>
-                <option>Otros</option>
-              </select>
-            </label>
-            <br>
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">RFC</span>
-              <input
-                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                placeholder="" disabled="true" />
-
-            </label>
-
-            <br>
-
-
-            <div class="grid gap-6 mb-8 md:grid-cols-2">
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Calle</span>
-                <input
+              <br>
+              <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                Titular de la dependencia
+              </h4>
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
+                <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="" disabled="true" />
-
+                  disabled="" required="" id="id_t_nombre">
+              </label>
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Puesto:</label></span>
+                <input type="text" name="t_nombre" value="{{dependencia.titular.t_puesto}}" maxlength="100"
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  disabled="" required="" id="id_t_nombre">
               </label>
 
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Colonia</span>
-                <input
+              <br>
+              <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                Asesor Externo
+              </h4>
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
+                <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno}}" maxlength="100"
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="" disabled="true" />
-
+                  disabled="" required="" id="id_t_nombre">
               </label>
-
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Ciudad</span>
-                <input
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Puesto:</label></span>
+                <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno.puesto}}" maxlength="100"
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="" disabled="true" />
-
+                  disabled="" required="" id="id_t_nombre">
               </label>
-
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">C.P.</span>
-                <input
-                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="" disabled="true" />
-
-              </label>
-
-            </div>
-
+              <br>
+            </form>
           </div>
-          <!-- With actions -->
-
-
         </div>
-      </div>
-
-
-
+      </div>    
     </div>
   </div>
 

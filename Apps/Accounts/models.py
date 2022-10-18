@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
 import os
@@ -11,6 +12,15 @@ class Domicilio(models.Model):
     municipio = models.CharField(max_length=200, null=True, blank=True)
     codigoPostal = models.CharField(max_length=5, null=True, blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Oaxaca')
+
+class TitularDependencia(models.Model):
+    t_nombre = models.CharField(max_length=100)
+    t_apellidoP = models.CharField(max_length=70)
+    t_apellidoM = models.CharField(max_length=70)
+    t_puesto = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return f'{self.t_nombre} {self.t_apellidoP} {self.t_apellidoM}'
 
 class ReporteParcial1(models.Model):
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
@@ -40,7 +50,7 @@ class Expediente(models.Model):
     cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)        
     cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True)        
     residenciaDoc = models.FileField(upload_to='records/resiDoc/', null=True, blank=True)        
-    manualDoc = models.FileField(upload_to='records/manual/', null=True, blank=True)          
+    manualDoc = models.FileField(upload_to='records/manual/', null=True, blank=True)              
 
 class Docente(models.Model):
     ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACIONES'), ('INACTIVO', 'INACTIVO'))
@@ -56,21 +66,49 @@ class Docente(models.Model):
     fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)        
 
+class Dependencia(models.Model):
+    OPCIONES = (('INDUSTRIAL', 'INDUSTRIAL'), ('SERVICIOS', 'SERVICIOS'), ('PUBLICO', 'PUBLICO'), ('PRIVADO', 'PRIVADO'), ('OTRO', 'OTRO'),)
+    
+    # Llaves foraneas
+    domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True)
+    titular = models.OneToOneField(TitularDependencia, on_delete=models.CASCADE, null=True)
+        
+    d_nombre = models.CharField(max_length=100)
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+    giro = models.CharField(max_length=20, choices=OPCIONES, default='PUBLICO', blank=True)    
+    numCelular = models.CharField(max_length=20)
+    correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
+    mision = models.CharField(max_length=200)
+
+class AsesorExterno(models.Model):
+    # Llaves foraneas
+    dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    nombre = models.CharField(max_length=100)
+    apellidoP = models.CharField(max_length=70)
+    apellidoM = models.CharField(max_length=70)
+    puesto = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
+
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     
     # Llave foranea
-    docentes = models.ManyToManyField(Docente, blank=True)
-    #estudiante = models.ForeignKey(Estudiante, blank=True)
+    docentes = models.ManyToManyField(Docente, blank=True)    
+    dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
+    asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
     
-    nombre = models.CharField(max_length=300)
+    a_nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='ACTIVO')     
     fechaEntrega = models.DateTimeField(auto_now_add=True)
-    numIntegrantes = models.IntegerField()
+    numIntegrantes = models.IntegerField(default=1)
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)
-    periodo = models.CharField(max_length=50, null=True, blank=True)
+    periodoInicio = models.DateField(null=True, default=date.today)
+    periodoFin = models.DateField(null=True)
     observaciones = models.CharField(max_length=500, null=True, blank=True)    
 
 class Estudiante(models.Model):
@@ -84,7 +122,7 @@ class Estudiante(models.Model):
     SEMESTRES = ((8, '8'), (9, '9'), (10, '10'), (11, '11'), (12, '12'), (13, '13'), (14, '14'))
     
     # Llaves Foraneas
-    domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True)    
+    domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True, blank=True)    
     expediente = models.OneToOneField(Expediente, on_delete=models.CASCADE, null=True, blank=True)
     anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.CASCADE, null=True, blank=True)
     
