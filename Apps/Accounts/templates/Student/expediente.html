@@ -10,23 +10,22 @@
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Expediente de usuario
     </h2>
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Anteproyecto
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.anteproyecto.errors }}
-          {% if expediente.anteproyecto %}
-          <a class="text-green-500" href="{{expediente.anteproyecto.url}}" target="_blank">
+    <form name="formulario" method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="grid gap-6 mb-8 md:grid-cols-2">
+        {% for field in form %}
+        {% if field.id_for_label in data %}
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          {% if field.value %}
+          <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
             <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Anteproyecto PDF
+            {{field.label}} PDF
           </a>
-
           {% else %}
-
-          {{ form.anteproyecto }}
+          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+            {{field.label_tag}}
+          </h4>
+          {{field}}
           <div class="relative">
             <br>
             <input type="submit" value="Enviar"
@@ -34,211 +33,97 @@
             <br>
           </div>
           {% endif %}
-        </form>
-      </div>
-
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Carta de presentación
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.cartaPresentacion.errors }}
-          {% if expediente.cartaPresentacion %}
-          <a class="text-green-500" href="{{expediente.cartaPresentacion.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Carta de Presentacion PDF
-          </a>
-
-          {% else %}
-
-          {{ form.cartaPresentacion }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
-      </div>
-    </div>
-
-
-
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Carta compromiso
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.cartaCompromiso.errors }}
-          {% if expediente.cartaCompromiso %}
-          <a class="text-green-500" href="{{expediente.cartaCompromiso.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Carta de Presentacion PDF
-          </a>
-
-          {% else %}
-          {{ form.cartaCompromiso }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
-      </div>
-
-
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Cronograma
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.cronograma.errors }}
-          {% if expediente.cronograma %}
-
-          <a class="text-green-500" href="{{expediente.cronograma.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Carta de Presentacion PDF
-          </a>
-
-          {% else %}
-          {{ form.cronograma }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
-      </div>
-
-    </div>
-
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Documento de residencia
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.residenciaDoc.errors }}
-          {% if expediente.residenciaDoc %}
-          <a class="text-green-500" href="{{expediente.residenciaDoc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Documento de Residencia PDF
-          </a>
-          {% else %}
-          {{ form.residenciaDoc }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
-
-      </div>
-
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Manual de residencia
-        </h4>
-        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.manualDoc.errors }}
-          {% if expediente.manualDoc %}
-
-          <a class="text-green-500" href="{{expediente.manualDoc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Manual de Residencia PDF
-          </a>
-
-          {% else %}
-          {{ form.manualDoc }}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
-          </div>
-          {% endif %}
-        </form>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="container px-6 mx-auto grid">
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Reportes parciales
-    </h2>
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Reporte parcial 1
-        </h4>
-        {% if r1.reporte1Doc %}
-
-        <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
-          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-          Reporte Parcial 1 PDF
-        </a>
-
-        {% else %}
-        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+        </div>
         {% endif %}
-      </div>
+        {% endfor %}
 
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Reporte parcial 2
-        </h4>
-        {% if r2.reporte2Doc %}
-
-        <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
-          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-          Reporte Parcial 2 PDF
-        </a>
-
-        {% else %}
-        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
-
+        {% for field in form %}
+        {% if not field.id_for_label in data %}
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          {% if field.value %}
+          <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            {{field.label}} PDF
+          </a>
+          {% else %}
+          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+            {{field.label_tag}}
+          </h4>
+          {{field}}
+          <div class="relative">
+            <br>
+            <input type="submit" value="Enviar"
+              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            <br>
+          </div>
+          {% endif %}
+        </div>
         {% endif %}
+        {% endfor %}
+      </div>
+    </form>
+
+    <div class="container px-6 mx-auto grid">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Reportes parciales
+      </h2>
+      <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+            Reporte parcial 1
+          </h4>
+          {% if r1.reporte1Doc %}
+
+          <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            Reporte Parcial 1 PDF
+          </a>
+
+          {% else %}
+          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+          {% endif %}
+        </div>
+
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+            Reporte parcial 2
+          </h4>
+          {% if r2.reporte2Doc %}
+
+          <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            Reporte Parcial 2 PDF
+          </a>
+
+          {% else %}
+          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+
+          {% endif %}
+        </div>
+
       </div>
 
-    </div>
+      <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+            Reporte final
+          </h4>
+          {% if rF.reporteDocFinal %}
+          <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            Reporte Final PDF
+          </a>
 
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-          Reporte final
-        </h4>
-        {% if rF.reporteDocFinal %}
-        <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
-          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-          Reporte Final PDF
-        </a>
+          {% else %}
+          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
 
-        {% else %}
-        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
-
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
 
 </main>
 

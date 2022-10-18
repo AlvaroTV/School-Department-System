@@ -132,6 +132,7 @@ def estudianteSettings(request):
 
 
 def expediente(request):
+    data = ['id_anteproyecto', 'id_horario', 'id_solicitudResidencia', 'id_cartaCompromiso', 'id_constanciaTerminacion', 'id_cartaTerminacion']
     estudiante = request.user.estudiante
     expediente = estudiante.expediente 
     r1 = None    
@@ -163,7 +164,7 @@ def expediente(request):
             
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
-    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF}
+    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data}
     return render(request, 'Student/expediente.html', context)
 
 

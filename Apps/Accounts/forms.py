@@ -66,7 +66,17 @@ class ExpedienteForm(ModelForm):
     class Meta:
         model = Expediente
         fields = '__all__'
-        #exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
+        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
+        labels = {
+            'solicitudResidencia': 'Solicitud Residencia',
+            'cartaPresentacion': 'Carta Presentacion',
+            'cartaCompromiso': 'Carta Compromiso',
+            'cartaAceptacion': 'Carta Aceptacion',
+            'constanciaTerminacion': 'Constancia Terminacion',            
+            'actaCalificaciones': 'Acta Calificaciones',            
+            'cartaTerminacion': 'Carta Terminacion',            
+            'actaResidencia': 'Acta Residencia',            
+        }
 
     def __init__(self, *args, **kwargs):
         super(ExpedienteForm, self).__init__(*args, **kwargs)
