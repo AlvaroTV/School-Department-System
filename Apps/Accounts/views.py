@@ -134,26 +134,35 @@ def estudianteSettings(request):
 
 def expediente(request):
     data = ['id_anteproyecto', 'id_horario', 'id_solicitudResidencia', 'id_cartaCompromiso', 'id_constanciaTerminacion', 'id_cartaTerminacion']
+    data2 = ['id_cartaAceptacion', 'id_cartaCompromiso', 'id_cartaPresentacion']
     estudiante = request.user.estudiante
     expediente = estudiante.expediente 
+    anteproyecto = estudiante.anteproyecto
+    estatus = anteproyecto.estatus
     r1 = None    
     r2 = None
     rF = None
-    r1_fechaEntrega = None            
-    r2_fechaEntrega = None            
-    rF_fechaEntrega = None    
+    fecha20d = None            
+    fecha6w = None                
+    
+    if anteproyecto and estatus == 'ACEPTADO':            
+        fecha20d = anteproyecto.periodoInicio + timedelta(days=20)
+        fecha6w = anteproyecto.periodoInicio + timedelta(weeks=5)            
                                 
     if expediente is None:                        
-        formE = ExpedienteForm()        
-        if request.method == 'POST':
-            formE = ExpedienteForm(request.POST, request.FILES)                        
-            if formE.is_valid():                                
-                expediente = formE.save()                
-                estudiante.expediente = expediente                                
-                expediente.save() 
-                estudiante.save()                                
-                
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+        if estatus == 'ACEPTADO':
+            formE = ExpedienteForm()        
+            if request.method == 'POST':
+                formE = ExpedienteForm(request.POST, request.FILES)                        
+                if formE.is_valid():                                
+                    expediente = formE.save()                
+                    estudiante.expediente = expediente                                
+                    expediente.save() 
+                    estudiante.save()                                
+                    
+                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+        else:
+            formE = ExpedienteViewForm()
     else:        
         r1 = expediente.reporteParcial1
         r2 = expediente.reporteParcial2
@@ -168,7 +177,7 @@ def expediente(request):
             
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
-    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data}
+    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'data2': data2, 'estatus': estatus}
     return render(request, 'Student/expediente.html', context)
 
 

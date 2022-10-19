@@ -82,6 +82,28 @@ class ExpedienteForm(ModelForm):
         super(ExpedienteForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+            
+class ExpedienteViewForm(ModelForm):
+    class Meta:
+        model = Expediente
+        fields = '__all__'
+        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
+        labels = {
+            'solicitudResidencia': 'Solicitud Residencia',
+            'cartaPresentacion': 'Carta Presentacion',
+            'cartaCompromiso': 'Carta Compromiso',
+            'cartaAceptacion': 'Carta Aceptacion',
+            'constanciaTerminacion': 'Constancia Terminacion',            
+            'actaCalificaciones': 'Acta Calificaciones',            
+            'cartaTerminacion': 'Carta Terminacion',            
+            'actaResidencia': 'Acta Residencia',            
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ExpedienteViewForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            self.fields[myField].widget.attrs['disabled'] = True
 
 
 class Reporte1Form(ModelForm):

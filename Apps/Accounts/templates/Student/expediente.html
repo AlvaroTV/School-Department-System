@@ -14,6 +14,9 @@
       {% csrf_token %}
       <div class="grid gap-6 mb-8 md:grid-cols-2">
         {% for field in form %}
+
+
+
         {% if field.id_for_label in data %}
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           {% if field.value %}
@@ -25,6 +28,11 @@
           <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
             {{field.label_tag}}
           </h4>
+
+          {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
+          <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>          
+          {% endif %}
+          
           {{field}}
           <div class="relative">
             <br>
@@ -49,6 +57,14 @@
           <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
             {{field.label_tag}}
           </h4>
+
+          {% if field.id_for_label in data2  and estatus == 'ACEPTADO'%}
+          <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
+          {% elif field.id_for_label == 'id_cronograma' and estatus == 'ACEPTADO'%}
+          <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
+          {% endif %}
+
+
           {{field}}
           <div class="relative">
             <br>
