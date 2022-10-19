@@ -88,37 +88,48 @@ class Reporte1Form(ModelForm):
     class Meta:
         model = ReporteParcial1
         fields = '__all__'
+        exclude = ['r1_fechaEntrega']
+        labels = {
+            'r1_hojaRevisores': 'Hoja Revisores',
+            'r1_formatoEvaluacion': 'Formato Evaluacion',
+        }
         
     def __init__(self, *args, **kwargs):
         super(Reporte1Form, self).__init__(*args, **kwargs)        
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-        #self.fields['reporteDoc'].widget.attrs['name'] = 'reporte1Doc'
-        #self.fields['reporteDoc'].label = "reporte1Doc"
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
 
 
 class Reporte2Form(ModelForm):
     class Meta:
         model = ReporteParcial2
         fields = '__all__'
+        exclude = ['r2_fechaEntrega']
+        labels = {
+            'r2_hojaRevisores': 'Hoja Revisores',
+            'r2_formatoEvaluacion': 'Formato Evaluacion',
+        }
 
     def __init__(self, *args, **kwargs):
         super(Reporte2Form, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-        #self.fields['reporteDoc'].widget.attrs['name'] = 'reporte2Doc'
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
 
 
 class ReporteFinalForm(ModelForm):
     class Meta:
         model = ReporteFinal
         fields = '__all__'
+        exclude = ['rf_fechaEntrega', 'calificacion']
+        labels = {
+            'rf_hojaRevisores': 'Hoja Revisores',
+            'rf_formatoEvaluacion': 'Formato Evaluacion',
+        }
 
     def __init__(self, *args, **kwargs):
         super(ReporteFinalForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-        #self.fields['reporteDocFinal'].widget.attrs['name'] = 'reporteFDoc'
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
 
 class DocenteForm(ModelForm):
     class Meta:

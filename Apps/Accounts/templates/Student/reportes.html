@@ -9,68 +9,73 @@
             Reportes Parciales
         </h2>
         <div class="grid gap-6 mb-8 md:grid-cols-2">
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-                    Reporte Parcial 1
-                </h4>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form1.reporte1Doc.errors }}
-                    {% if r1.reporte1Doc %}
-                    <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        Reporte parcial 1
+                    </h4>
+                    {% if r1_fechaEntrega and not r1.r1_hojaRevisores and not r1.r1_formatoEvaluacion %}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{r1_fechaEntrega}} </p>
+                    {% endif %}
+                    {% for field in form1 %}
+                    <br>
+                    <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                        {{field.label}}
+                    </p>                    
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
-                        Reporte Parcial 1 PDF
+                        {{field.label}} PDF
                     </a>
-                    <p>Estatus: {{r1.estatus}}</p>
-                    <p>Califiacion: {{r1.calificacion}}</p>
-
-                    {% elif expediente.anteproyecto and expediente.cartaPresentacion and expediente.cartaCompromiso and expediente.cronograma %}
-                    {{ form1.reporte1Doc }}
+                    <br>
+                    {% elif estatus == 'ACEPTADO' %}
+                    {{field}}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
                             class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <br>
                     </div>
-
                     {% else %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
-                    <p class="text-teal-500">Necesita subir los siguiente documentos:</p>
-                    <ul class="list-disc">
-                        <li class="text-blue-500">* Anteproyecto</li>
-                        <li class="text-blue-500">* Carta de presentacion</li>
-                        <li class="text-blue-500">* Carta compromiso</li>
-                        <li class="text-blue-500">* Cronograma</li>
-                    </ul>
+                    <p class="text-teal-500">* Podra subirlo una vez su anteproyecto haya sido ACEPTADO</p>
+                    
                     {% endif %}
-                </form>
-            </div>
+                    {% endfor %}
+                </div>
+            </form>
 
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-                    Reporte Parcial 2
-                </h4>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form2.reporte2Doc.errors }}
-                    {% if r2.reporte2Doc %}
-                    <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        Reporte parcial 2
+                    </h4>
+                    {% if r2_fechaEntrega and not r2.r2_hojaRevisores and not r2.r2_formatoEvaluacion %}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{r2_fechaEntrega}} </p>
+                    {% endif %}
+                    {% for field in form2 %}
+                    <br>
+                    <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                        {{field.label}}
+                    </p>
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
-                        Reporte Parcial 2 PDF
+                        {{field.label}} PDF
                     </a>
-                    <p>Estatus: {{r2.estatus}}</p>
-                    <p>Califiacion: {{r2.calificacion}}</p>
-
-                    {% elif not r1.reporte1Doc %}
+                    <br>
+                    {% elif not r1.r1_hojaRevisores or not r1.r1_formatoEvaluacion %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1</p>
-
                     {% else %}
-                    {{ form2.reporte2Doc }}
+                    {{field}}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -78,34 +83,40 @@
                         <br>
                     </div>
                     {% endif %}
-                </form>
-            </div>
-        </div>
+                    {% endfor %}
+                </div>
+            </form>
 
-        <div class="grid gap-6 mb-8 md:grid-cols-2">
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-                    Reporte Final
-                </h4>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ formF.reporteDocFinal.errors }}
-                    {% if rF.reporteDocFinal %}
-                    <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        Reporte Final
+                    </h4>
+                    {% if rF_fechaEntrega and not rF.rf_formatoEvaluacion and not rF.rf_hojaRevisores %}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{rF_fechaEntrega}} </p>
+                    {% endif %}                    
+                    {% if rF.calificacion %}
+                    <p class="text-green-500"><strong>Calificacion:</strong> {{rF.calificacion}}</p>
+                    {% endif %}
+                    {% for field in formF %}
+                    <br>
+                    <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                        {{field.label}}
+                    </p>                    
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
-                        Reporte Final PDF
+                        {{field.label}} PDF
                     </a>
-                    <p>Estatus: {{rF.estatus}}</p>
-                    <p>Califiacion: {{rF.calificacion}}</p>
-
-                    {% elif not r2.reporte2Doc %}
+                    <br>
+                    {% elif not r2.r2_hojaRevisores or not r2.r2_formatoEvaluacion %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1 y 2</p>
-
                     {% else %}
-                    {{ formF.reporteDocFinal }}
+                    {{field}}
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -113,9 +124,10 @@
                         <br>
                     </div>
                     {% endif %}
-                </form>
-            </div>
-        </div>
+                    {% endfor %}
+                </div>
+            </form>            
+        </div>        
     </div>
 
 </main>
