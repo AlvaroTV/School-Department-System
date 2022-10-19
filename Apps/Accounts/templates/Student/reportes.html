@@ -56,7 +56,9 @@
                         Reporte parcial 2
                     </h4>
                     {% if r2_fechaEntrega and not r2.r2_hojaRevisores and not r2.r2_formatoEvaluacion %}
+                    {% if r1.r1_hojaRevisores or r1.r1_formatoEvaluacion %}
                     <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{r2_fechaEntrega}} </p>
+                    {% endif %}
                     {% endif %}
                     {% for field in form2 %}
                     <br>
@@ -94,7 +96,9 @@
                         Reporte Final
                     </h4>
                     {% if rF_fechaEntrega and not rF.rf_formatoEvaluacion and not rF.rf_hojaRevisores %}
+                    {% if r1.r1_hojaRevisores or r1.r1_formatoEvaluacion %}
                     <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{rF_fechaEntrega}} </p>
+                    {% endif %}                    
                     {% endif %}                    
                     {% if rF.calificacion %}
                     <p class="text-green-500"><strong>Calificacion:</strong> {{rF.calificacion}}</p>

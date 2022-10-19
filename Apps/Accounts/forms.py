@@ -121,7 +121,6 @@ class Reporte1Form(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
 
-
 class Reporte2Form(ModelForm):
     class Meta:
         model = ReporteParcial2
@@ -135,8 +134,7 @@ class Reporte2Form(ModelForm):
     def __init__(self, *args, **kwargs):
         super(Reporte2Form, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
-
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                    
 
 class ReporteFinalForm(ModelForm):
     class Meta:
@@ -151,7 +149,7 @@ class ReporteFinalForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReporteFinalForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                    
 
 class DocenteForm(ModelForm):
     class Meta:

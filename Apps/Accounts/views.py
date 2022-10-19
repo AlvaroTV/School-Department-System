@@ -137,19 +137,23 @@ def expediente(request):
     data2 = ['id_cartaAceptacion', 'id_cartaCompromiso', 'id_cartaPresentacion']
     estudiante = request.user.estudiante
     expediente = estudiante.expediente 
-    anteproyecto = estudiante.anteproyecto
-    estatus = anteproyecto.estatus
+    anteproyecto = estudiante.anteproyecto    
     r1 = None    
     r2 = None
     rF = None
     fecha20d = None            
     fecha6w = None                
     
+    try:
+        estatus = anteproyecto.estatus                       
+    except:
+        estatus = None
+    
     if anteproyecto and estatus == 'ACEPTADO':            
         fecha20d = anteproyecto.periodoInicio + timedelta(days=20)
         fecha6w = anteproyecto.periodoInicio + timedelta(weeks=5)            
                                 
-    if expediente is None:                        
+    if expediente is None:         
         if estatus == 'ACEPTADO':
             formE = ExpedienteForm()        
             if request.method == 'POST':
@@ -185,8 +189,7 @@ def expediente(request):
 def reportes(request):
     estudiante = request.user.estudiante
     expediente = estudiante.expediente
-    anteproyecto = estudiante.anteproyecto
-    estatus = anteproyecto.estatus
+    anteproyecto = estudiante.anteproyecto    
     r1 = None    
     r2 = None
     rF = None
@@ -195,7 +198,12 @@ def reportes(request):
     formF = None    
     r1_fechaEntrega = None            
     r2_fechaEntrega = None            
-    rF_fechaEntrega = None        
+    rF_fechaEntrega = None  
+    
+    try:
+        estatus = anteproyecto.estatus                       
+    except:
+        estatus = None      
         
     if anteproyecto and estatus == 'ACEPTADO':            
         fechaInicio = anteproyecto.periodoInicio            
@@ -271,7 +279,10 @@ def reportes(request):
                         expediente.reporteFinal = rF
                         expediente.save()
                         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))      
-                       
+    else:
+        form1 = Reporte1Form()                       
+        form2 = Reporte2Form()                       
+        formF = ReporteFinalForm()
             
     context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF, 'r1_fechaEntrega': r1_fechaEntrega, 'r2_fechaEntrega': r2_fechaEntrega, 'rF_fechaEntrega': rF_fechaEntrega, 'estatus': estatus}
     return render(request, 'Student/reportes.html', context)
