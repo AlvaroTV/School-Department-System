@@ -43,7 +43,7 @@ class Expediente(models.Model):
     reporteParcial2 = models.ForeignKey(ReporteParcial2, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
         
-    anteproyecto = models.FileField(upload_to='records/anteproyecto/', null=True, blank=True)        
+    anteproyecto = models.FileField(upload_to='records/anteproyectoAceptado/', null=True, blank=True)        
     dictamen = models.FileField(upload_to='records/dictamen/', null=True, blank=True)            
     horario = models.FileField(upload_to='records/horario/', null=True, blank=True)            
     cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True) 
@@ -96,6 +96,22 @@ class AsesorExterno(models.Model):
     def __str__(self):
         return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
 
+class Residencia(models.Model):
+    TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
+    ESTADOS = (('EN PROCESO', 'EN PROCESO'), ('PROROGA', 'PROROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
+    
+    # Llaves foraneas
+    dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
+    asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    nombre = models.CharField(max_length=300)
+    tipoProyecto = models.CharField(max_length=25, choices=TIPOS)         
+    numIntegrantes = models.IntegerField(default=1)
+    estatus = models.CharField(max_length=15, choices=ESTADOS, default='EN PROCESO', blank=True)    
+    periodoInicio = models.DateField(null=True)
+    periodoFin = models.DateField(null=True)
+    observaciones = models.CharField(max_length=500, null=True, blank=True)    
+
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
@@ -104,19 +120,28 @@ class Anteproyecto(models.Model):
     docentes = models.ManyToManyField(Docente, blank=True)    
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
     asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
-    
+        
     a_nombre = models.CharField(max_length=300)
-    tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='ACTIVO')     
+    tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='PROPUESTA PROPIA')     
     fechaEntrega = models.DateTimeField(auto_now_add=True)
     numIntegrantes = models.IntegerField(default=1)
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)
     periodoInicio = models.DateField(null=True, default=date.today)
-    periodoFin = models.DateField(null=True)
-    observaciones = models.CharField(max_length=500, null=True, blank=True)    
+    periodoFin = models.DateField(null=True)    
+    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', null=True, blank=True)                    
 
-class Estudiante(models.Model):
-    #user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+class Observacion(models.Model):
+    
+    # Llaves foraneas
+    docente = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True)
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    fechaObservacion = models.DateField(null=True, default=date.today)
+    observacion = models.CharField(max_length=500, null=True, blank=True)        
+    
+
+class Estudiante(models.Model):    
     CARRERA = (
         ('Ingenieria Sistemas Computacionales', 'Ingenieria Sistemas Computacionales'),
         ('Ingenieria Civil', 'Ingenieria Civil'),
@@ -129,6 +154,7 @@ class Estudiante(models.Model):
     domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True, blank=True)    
     expediente = models.OneToOneField(Expediente, on_delete=models.CASCADE, null=True, blank=True)
     anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.CASCADE, null=True, blank=True)
+    residencia = models.ForeignKey(Residencia, on_delete=models.CASCADE, null=True, blank=True)
     
     # Atributos
     nombre = models.CharField(max_length=100)
@@ -143,8 +169,7 @@ class Estudiante(models.Model):
     institutoSeguridadSocial = models.CharField(max_length=200, blank=True)                    
     numSeguridadSocial = models.CharField(max_length=70, null=True, blank=True)        
     fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/students/',null=True, blank=True)
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    #docs = models.FileField(upload_to='docs/', null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)    
     
     def __str__(self):
         return f'({self.id}) | {self.nombre} {self.apellidoP} {self.apellidoM}'

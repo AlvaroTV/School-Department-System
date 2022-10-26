@@ -5,6 +5,7 @@
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif;
 }
+
 /*:::::Pie de Pagina*/
 .grupo-1{
     min-height: calc(100vh -100px -300px);

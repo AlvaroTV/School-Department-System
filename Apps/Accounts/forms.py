@@ -11,7 +11,7 @@ class EstudianteForm(ModelForm):
     class Meta:
         model = Estudiante
         fields = '__all__'
-        exclude = ['domicilio', 'user']
+        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'numControl']
         labels = {
             'nombre': 'Nombre(s)',
             'apellidoP': 'Apellido Paterno',
@@ -31,10 +31,19 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
         labels = {
+            'username': 'Numero de control',
             'email': 'Correo institucional',
             'password1': 'Password'            
         }
-
+        
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        domain = data.split('@')[1]
+        domain_list = ["itoaxaca.edu.mx", "hotmail.com",]
+        if domain not in domain_list:
+            raise forms.ValidationError("Solo se acepta el correo institucional")
+        return data
+        
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
@@ -168,7 +177,7 @@ class AnteproyectoEstForm(ModelForm):
         YEARSF= [x for x in range(today.year,today.year+3)]
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['docente', 'estudiante']
+        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -195,7 +204,8 @@ class AnteproyectoEstForm(ModelForm):
 class AnteproyectoViewForm(ModelForm):
     class Meta:
         model = Anteproyecto
-        fields = '__all__'        
+        fields = '__all__'     
+        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -216,6 +226,7 @@ class AnteproyectoForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'
+        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
         labels = {
             'a_nombre': 'Nombre del anteproyecto',
         }        
@@ -224,6 +235,40 @@ class AnteproyectoForm(ModelForm):
         super(AnteproyectoForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                        
+            
+class AnteproyectoDocForm(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = ['anteproyectoDoc']        
+        labels = {
+            'anteproyectoDoc': 'Anteproyecto',
+        }        
+
+    def __init__(self, *args, **kwargs):
+        super(AnteproyectoDocForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                                    
+
+class ResidenciaViewForm(ModelForm):
+    class Meta:
+        model = Residencia
+        fields = '__all__'
+        exclude = ['dependencia', 'asesorExterno']
+        labels = {
+            'nombre': 'Nombre del proyecto de Residencia',
+            'tipoProyecto': 'Tipo de Proyecto',
+            'fechaEntrega': 'Fecha de entrega',
+            'numIntegrantes': 'Numero de integrantes',            
+            'periodoInicio': 'Fecha inicio',            
+            'periodoFin': 'Fecha Fin',            
+        }   
+    
+    def __init__(self, *args, **kwargs):
+        super(ResidenciaViewForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                             
+            self.fields[myField].widget.attrs['disabled'] = True
+        
             
 class DependenciaForm(ModelForm):
     class Meta:
@@ -246,6 +291,7 @@ class DependenciaViewForm(ModelForm):
     class Meta:
         model = Dependencia
         fields = '__all__'
+        exclude = ['domicilio', 'titular']
         labels = {
             'd_nombre': 'Nombre',
             'rfc': 'RFC',

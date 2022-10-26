@@ -1,0 +1,160 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+<main class="h-full pb-16 overflow-y-auto">
+    <!-- Remove everything INSIDE this div to a really blank page -->
+    <div class="container px-6 mx-auto grid ">
+        
+        {% if estatus == 'ACEPTADO' %}
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Datos del proyecto de residencia
+        </h2>
+        <div class="grid gap-6 mb-8 md:grid-cols-1">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in formR %}
+                        {% if not field.id_for_label in data %}
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                        {% endif %}
+                        {% endfor %}
+
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Datos de los integrantes
+        </h4>
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Estudiante</th>
+                            <th class="px-4 py-3">Número de control</th>
+                            <th class="px-4 py-3">E-mail</th>
+                            <th class="px-4 py-3">Número teléfonico</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for student in estudiantes %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-sm">
+                                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                        <img class="object-cover w-full h-full rounded-full"
+                                            src="{{student.fotoUsuario.url}}" alt="" loading="lazy" />
+                                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">{{student.nombre}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-md">{{student.numControl}}</td>
+                            <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
+                            <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Datos de la dependencia
+            </h4>
+            <div class="grid gap-6 mb-8 md:grid-cols-1">
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for field in formD %}
+                            {% if not field.id_for_label in data %}
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                {{ field }}
+                            </label>
+                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                            {% endif %}
+                            {% endfor %}
+
+                            {% for field in formDom %}
+                            {% if not field.id_for_label in data %}
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                {{ field }}
+                            </label>
+                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                            {% endif %}
+                            {% endfor %}
+
+                            <br>
+                            <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                                Titular de la dependencia
+                            </h4>
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400"><label
+                                        for="id_t_nombre">Nombre:</label></span>
+                                <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_t_nombre">
+                            </label>
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400"><label
+                                        for="id_t_nombre">Puesto:</label></span>
+                                <input type="text" name="t_nombre" value="{{dependencia.titular.t_puesto}}"
+                                    maxlength="100"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_t_nombre">
+                            </label>
+
+                            <br>
+                            <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                                Asesor Externo
+                            </h4>
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400"><label
+                                        for="id_t_nombre">Nombre:</label></span>
+                                <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno}}"
+                                    maxlength="100"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_t_nombre">
+                            </label>
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400"><label
+                                        for="id_t_nombre">Puesto:</label></span>
+                                <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno.puesto}}"
+                                    maxlength="100"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_t_nombre">
+                            </label>
+                            <br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+
+        {% include 'Student/errorPage.html' %}
+
+        {% endif %}
+    </div>
+
+
+</main>
+{% endblock %}

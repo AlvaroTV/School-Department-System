@@ -12,35 +12,30 @@ from .forms import *
 from .decorators import *
 # Create your views here.
 
-# * Pagina principal para los maistros
 @login_required(login_url='login')
 @admin_only
 def home(request):
-
-    context = {}
+    group = request.user.groups.all()[0].name
+    context = {'group': group}
     return render(request, 'Global/dashboard.html', context)
-
 
 @login_required(login_url='login')
 def studentPage(request):
-    
-    context = {}
+    group = request.user.groups.all()[0].name
+    context = {'group': group}
     return render(request, 'Student/dashboard.html', context)
-
 
 @login_required(login_url='login')
 def teacherPage(request):
-    
-    context = {}
+    group = request.user.groups.all()[0].name
+    context = {'group': group}
     return render(request, 'Teacher/dashboard.html', context)
 
 def loginPage(request):
 
     if request.method == 'POST':
-
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -52,15 +47,11 @@ def loginPage(request):
     context = {}
     return render(request, 'Global/login.html', context)
 
-
 def errorPage(request):
     return render(request, 'Global/404.html')
 
-
-# * Se crea el estudiante
 def createStudent(request):
-    data = ['id_fotoUsuario', 'id_institutoSeguridadSocial',
-            'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp', 'id_anteproyecto']
+    data = ['id_fotoUsuario', 'id_institutoSeguridadSocial', 'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp', 'id_anteproyecto']
     formE = EstudianteForm()
     formU = CreateUserForm()
 
@@ -71,34 +62,32 @@ def createStudent(request):
             student = formE.save()
             user = formU.save()
             username = formU.cleaned_data.get('username')
-
             group = Group.objects.get(name='student')
             user.groups.add(group)
             student.correoElectronico = formU.cleaned_data.get('email')
             student.user = user
+            student.numControl = username
             student.save()
-
-            messages.success(request, f'Account was created for {username}')
-
+            messages.success(request, f'Cuenta creada exitosamente!... {username}')
             return redirect('login')
 
     context = {'formE': formE, 'formU': formU, 'data': data}
     return render(request, 'Student/create-account.html', context)
 
-
 def estudianteViewProfile(request):
-    estudiante = request.user.estudiante
+    user = request.user
+    estudiante = user.estudiante    
+    group = user.groups.all()[0].name
     domicilio = estudiante.domicilio
     form = DomicilioForm(instance=domicilio)
-
-    context = {'form': form, 'estudiante': estudiante, 'domicilio': domicilio}
+    context = {'form': form, 'estudiante': estudiante, 'domicilio': domicilio, 'group': group}
     return render(request, 'Student/viewProfile.html', context)
 
-
 def estudianteSettings(request):
-    estudiante = request.user.estudiante
+    user = request.user
+    group = user.groups.all()[0].name
+    estudiante = user.estudiante
     domicilio = estudiante.domicilio
-
     formE = EstudianteForm(instance=estudiante)
 
     if domicilio is None:
@@ -127,15 +116,15 @@ def estudianteSettings(request):
                     formD.save()
                 return redirect('studentProfile')
 
-    context = {'formD': formD, 'formE': formE,
-               'estudiante': estudiante, 'domicilio': domicilio}
+    context = {'formD': formD, 'formE': formE, 'estudiante': estudiante, 'domicilio': domicilio, 'group': group}
     return render(request, 'Student/settings.html', context)
-
 
 def expediente(request):
     data = ['id_anteproyecto', 'id_horario', 'id_solicitudResidencia', 'id_cartaCompromiso', 'id_constanciaTerminacion', 'id_cartaTerminacion']
     data2 = ['id_cartaAceptacion', 'id_cartaCompromiso', 'id_cartaPresentacion']
-    estudiante = request.user.estudiante
+    user = request.user
+    group = user.groups.all()[0].name
+    estudiante = user.estudiante
     expediente = estudiante.expediente 
     anteproyecto = estudiante.anteproyecto    
     r1 = None    
@@ -181,13 +170,13 @@ def expediente(request):
             
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
-    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'data2': data2, 'estatus': estatus}
+    context = {'form': formE, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'data2': data2, 'estatus': estatus, 'group': group}    
     return render(request, 'Student/expediente.html', context)
 
-
-
 def reportes(request):
-    estudiante = request.user.estudiante
+    user = request.user
+    group = user.groups.all()[0].name
+    estudiante = user.estudiante
     expediente = estudiante.expediente
     anteproyecto = estudiante.anteproyecto    
     r1 = None    
@@ -253,8 +242,7 @@ def reportes(request):
             if not r2.r2_formatoEvaluacion or not r2.r2_hojaRevisores:
                 if request.method == 'POST':                
                     form2 = Reporte2Form(request.POST, request.FILES, instance = r2)                     
-                    if form2.is_valid():    
-                        print('r2 is not None & form2 is valid')                                    
+                    if form2.is_valid():                            
                         r2 = form2.save()  
                         expediente.reporteParcial2 = r2
                         expediente.save()
@@ -284,23 +272,20 @@ def reportes(request):
         form2 = Reporte2Form()                       
         formF = ReporteFinalForm()
             
-    context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF, 'r1_fechaEntrega': r1_fechaEntrega, 'r2_fechaEntrega': r2_fechaEntrega, 'rF_fechaEntrega': rF_fechaEntrega, 'estatus': estatus}
-    return render(request, 'Student/reportes.html', context)
-
-def deleteStudent(request, pk):
-
-    # Te redirecciona a la misma pagina
-    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
-    
+    context = {'expediente': expediente, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF, 'r1_fechaEntrega': r1_fechaEntrega, 'r2_fechaEntrega': r2_fechaEntrega, 'rF_fechaEntrega': rF_fechaEntrega, 'estatus': estatus, 'group': group}
+    return render(request, 'Student/reportes.html', context)    
     
 def anteproyecto(request):
-    data = ['id_observaciones', 'id_codigoUnion', 'id_estatus', 'id_docentes', 'id_dependencia', 'id_asesorExterno']
-    estudiante = request.user.estudiante                    
+    data = ['id_codigoUnion', 'id_estatus', 'id_docentes', 'id_dependencia', 'id_asesorExterno']
+    user = request.user
+    group = user.groups.all()[0].name
+    estudiante = user.estudiante                    
     anteproyectos = Anteproyecto.objects.all()                          
     anteproyecto = estudiante.anteproyecto                                                   
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)    
+    observaciones = Observacion.objects.filter(anteproyecto = anteproyecto)
     dependencia = None
-    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')        
+    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')                    
     codigo = '0000000000'     
     mensaje = ''                                    
     
@@ -370,21 +355,27 @@ def anteproyecto(request):
             data.append('id_codigoUnion')  
                 
         dependencia = anteproyecto.dependencia                  
-        formA = AnteproyectoViewForm(instance = anteproyecto)                                
+        formA = AnteproyectoViewForm(instance = anteproyecto)                                        
         formD = DependenciaViewForm(instance = dependencia)
         formT = TitularViewForm(instance = dependencia.titular)
         formDom = DomicilioViewForm(instance = dependencia.domicilio)
-        formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)         
+        formDoc = AnteproyectoDocForm(instance = anteproyecto)
+        formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
+        
+        if request.method == 'POST':        
+            formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)
+            if formDoc.is_valid():                
+                formDoc.save()
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
             
-    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia}
+    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones}    
     return render(request, 'Student/anteproyecto.html', context)
     
 def editarAnteproyecto(request):    
-    data = ['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_observaciones', 'id_estatus', 'id_codigoUnion', 'id_domicilio', 'id_titular']
+    data = ['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_estatus', 'id_codigoUnion', 'id_domicilio', 'id_titular']
     estudiante = request.user.estudiante         
     anteproyecto = estudiante.anteproyecto
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()    
-    #anteproyectos = Anteproyecto.objects.all()                          
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()        
     dependencia = anteproyecto.dependencia
     asesorExterno = anteproyecto.asesorExterno
     titular = dependencia.titular
@@ -438,32 +429,56 @@ def editarAnteproyecto(request):
     
     return render(request, 'Student/editarAnteproyecto.html', context)
 
-def crearAnteproyeco(request):
+def proyectoResidencia(request):
+    data = ['id_codigoUnion']
+    user = request.user
+    group = user.groups.all()[0].name
+    estudiante = user.estudiante             
+                       
+    anteproyecto = estudiante.anteproyecto   
     
-    context = {}
-    return render(request, 'Student/registroAnteproyecto.html', context)
+    try:
+        estatus = anteproyecto.estatus                                                        
+    except:
+        estatus = None
+        
+    if estatus == 'ACEPTADO':        
+        dependencia = anteproyecto.dependencia   
+        
+        residencia = Residencia(
+            dependencia = dependencia,
+            asesorExterno = anteproyecto.asesorExterno,
+            nombre = anteproyecto.a_nombre,
+            tipoProyecto = anteproyecto.tipoProyecto,
+            numIntegrantes = anteproyecto.numIntegrantes,
+            periodoInicio = anteproyecto.periodoInicio,
+            periodoFin = anteproyecto.periodoFin
+        )        
+        residencia.save()
+                        
+        estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+        dependencia = residencia.dependencia   
+        
+        for e in estudiantes:        
+            e.residencia = residencia
+            e.save()
 
-def verAnteproyeco(request):
-    
-    context = {}
-    return render(request, 'Student/verAnteproyecto.html', context)
-
-def createTeacher(request):
-
-    context = {}
-    return render(request, 'Teacher/create-account.html', context)
-
-
-def updateTeacher(request, pk):
-
-    context = {}
-    return render(request, 'order_form.html', context)
-
-
-def deleteTeacher(request, pk):
-
-    # Te redirecciona a la misma pagina
-    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+        estudiantes = Estudiante.objects.filter(residencia = residencia)                
+        formR = ResidenciaViewForm(instance = residencia)                                
+        formD = DependenciaViewForm(instance = dependencia)
+        formT = TitularViewForm(instance = dependencia.titular)
+        formDom = DomicilioViewForm(instance = dependencia.domicilio)
+        formAE = AsesorEViewForm(instance = residencia.asesorExterno)                                
+        context = {'group': group,'formR': formR, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'estatus': estatus}
+        return render(request, 'Student/residencia.html', context)
+        
+    context = {'group': group, 'estatus': estatus}
+    return render(request, 'Student/residencia.html', context)
+  
+def removeDoc(request, pk):
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    anteproyecto.anteproyectoDoc.delete()    
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
 
 def logoutUser(request):
     logout(request)
