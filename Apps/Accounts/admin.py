@@ -15,4 +15,6 @@ admin.site.register(Dependencia)
 admin.site.register(TitularDependencia)
 admin.site.register(Anteproyecto)
 admin.site.register(Residencia)
+admin.site.register(Observacion)
+admin.site.register(ObservacionDocente)
 

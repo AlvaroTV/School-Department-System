@@ -16,30 +16,36 @@
         {% for field in form %}
 
         {% if field.id_for_label in data %}
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-          {% if field.value %}
-          <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            {{field.label}} PDF
-          </a>
-          {% else %}
-          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-            {{field.label_tag}}
-          </h4>
-
-          {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
-          <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>          
-          {% endif %}
+          {% if field.id_for_label == 'id_dictamen' and semestre < 13 %}
           
-          {{field}}
-          <div class="relative">
-            <br>
-            <input type="submit" value="Enviar"
-              class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            <br>
+          {% else %}
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+              {% if field.value %}
+              <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                {{field.label}} PDF
+              </a>
+              {% else %}
+              <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                {{field.label_tag}}
+              </h4>
+
+                {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
+                <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
+                {% endif %}
+
+              {{field}}
+              <div class="relative">
+                <br>
+                {% if estatus == 'ACEPTADO' %}
+                <input type="submit" value="Enviar"
+                  class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                {% endif %}
+                <br>
+              </div>
+              {% endif %}
           </div>
           {% endif %}
-        </div>
         {% endif %}
         {% endfor %}
 
@@ -56,7 +62,7 @@
             {{field.label_tag}}
           </h4>
 
-          {% if field.id_for_label in data2  and estatus == 'ACEPTADO'%}
+          {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
           <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
           {% elif field.id_for_label == 'id_cronograma' and estatus == 'ACEPTADO'%}
           <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
@@ -66,8 +72,10 @@
           {{field}}
           <div class="relative">
             <br>
+            {% if estatus == 'ACEPTADO' %}
             <input type="submit" value="Enviar"
               class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            {% endif %}
             <br>
           </div>
           {% endif %}

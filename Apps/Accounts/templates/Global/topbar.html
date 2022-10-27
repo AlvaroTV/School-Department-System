@@ -27,7 +27,11 @@
     <ul class="flex items-center flex-shrink-0 space-x-6">
       <!-- Theme toggler -->
       <li class="flex">
+        {% if group == 'student' %}
         <span>Hola, {{request.user.estudiante.nombre}} </span>
+        {% else %}
+        <span>Hola, {{request.user.docente.nombre}} </span>        
+        {% endif %}
       </li>
       <li class="flex">
         <button class="rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleTheme"
@@ -98,9 +102,15 @@
       <li class="relative">
         <button class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
           @click="toggleProfileMenu" @keydown.escape="closeProfileMenu" aria-label="Account" aria-haspopup="true">
+          {% if group == 'student' %}
           <img class="object-cover w-8 h-8 rounded-full"
             src="{{request.user.estudiante.fotoUsuario.url}}"
             alt="" aria-hidden="true" />
+          {% else %}
+          <img class="object-cover w-8 h-8 rounded-full"
+          src="{{request.user.docente.fotoUsuario.url}}"
+          alt="" aria-hidden="true" />
+          {% endif %}
         </button>
         <template x-if="isProfileMenuOpen">
           <ul x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"

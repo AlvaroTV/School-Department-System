@@ -77,14 +77,14 @@ class ExpedienteForm(ModelForm):
         fields = '__all__'
         exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
         labels = {
+            'anteproyecto': 'Anteproyecto autorizado',
             'solicitudResidencia': 'Solicitud Residencia',
             'cartaPresentacion': 'Carta Presentacion',
             'cartaCompromiso': 'Carta Compromiso',
             'cartaAceptacion': 'Carta Aceptacion',
-            'constanciaTerminacion': 'Constancia Terminacion',            
-            'actaCalificaciones': 'Acta Calificaciones',            
-            'cartaTerminacion': 'Carta Terminacion',            
-            'actaResidencia': 'Acta Residencia',            
+            'cartaLiberacion': 'Carta de Liberacion',            
+            'manualUsuario': 'Manual de Usuario',            
+            'manualTecnico': 'Manual Tecnico',                        
         }
 
     def __init__(self, *args, **kwargs):
@@ -98,14 +98,14 @@ class ExpedienteViewForm(ModelForm):
         fields = '__all__'
         exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
         labels = {
+            'anteproyecto': 'Anteproyecto autorizado',
             'solicitudResidencia': 'Solicitud Residencia',
             'cartaPresentacion': 'Carta Presentacion',
             'cartaCompromiso': 'Carta Compromiso',
             'cartaAceptacion': 'Carta Aceptacion',
-            'constanciaTerminacion': 'Constancia Terminacion',            
-            'actaCalificaciones': 'Acta Calificaciones',            
-            'cartaTerminacion': 'Carta Terminacion',            
-            'actaResidencia': 'Acta Residencia',            
+            'cartaLiberacion': 'Carta de Liberacion',            
+            'manualUsuario': 'Manual de Usuario',            
+            'manualTecnico': 'Manual Tecnico',                   
         }
 
     def __init__(self, *args, **kwargs):
@@ -177,7 +177,7 @@ class AnteproyectoEstForm(ModelForm):
         YEARSF= [x for x in range(today.year,today.year+3)]
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
+        exclude = ['asesorInterno', 'revisor', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -205,7 +205,7 @@ class AnteproyectoViewForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'     
-        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
+        exclude = ['asesorInterno', 'revisor', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -226,7 +226,7 @@ class AnteproyectoForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['docentes', 'dependencia', 'asesorExterno', 'anteproyectoDoc']   
+        exclude = ['asesorInterno', 'revisor','dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion']   
         labels = {
             'a_nombre': 'Nombre del anteproyecto',
         }        
