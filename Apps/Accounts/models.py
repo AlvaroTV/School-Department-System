@@ -39,10 +39,13 @@ class ReporteFinal(models.Model):
     calificacion = models.IntegerField(null=True, blank=True)    
 
 class Expediente(models.Model):    
+    ESTATUS = (('INICIAL', 'INICIAL'), ('PROCESO', 'PROCESO'), ('COMPLETO', 'COMPLETO'))
+    # Llaves foraneas
     reporteParcial1 = models.ForeignKey(ReporteParcial1, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteParcial2 = models.ForeignKey(ReporteParcial2, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
-            
+          
+    estatus = models.CharField(max_length=15, choices=ESTATUS, default='INICIAL', blank=True)     
     solicitudResidencia = models.FileField(upload_to='records/solicitudResidencia/', null=True, blank=True)     
     anteproyecto = models.FileField(upload_to='records/anteproyectoAceptado/', null=True, blank=True)            
     dictamen = models.FileField(upload_to='records/dictamen/', null=True, blank=True)            
@@ -66,7 +69,7 @@ class Docente(models.Model):
     curp = models.CharField(max_length=18, null=True, blank=True)
     rfc = models.CharField(max_length=13, null=True, blank=True)
     estatus = models.CharField(max_length=15, choices=ESTATUS, default='ACTIVO', blank=True)     
-    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/teachers/',null=True, blank=True)
+    fotoUsuario = models.ImageField(default='profilepicD.jpg', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)   
     
     def __str__(self):
@@ -82,7 +85,7 @@ class ObservacionDocente(models.Model):
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
     observacion = models.ForeignKey(Observacion, on_delete=models.CASCADE, null=True, blank=True)
         
-    observacionD = models.CharField(max_length=255, blank=True, null=True)
+    observacionD = models.CharField(max_length=1000, blank=True, null=True)
     fechaElaboracion = models.DateField(default=date.today)
     
 class Dependencia(models.Model):
@@ -98,6 +101,9 @@ class Dependencia(models.Model):
     numCelular = models.CharField(max_length=20)
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
     mision = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return f'{self.d_nombre}'
 
 class AsesorExterno(models.Model):
     # Llaves foraneas
@@ -131,7 +137,7 @@ class Residencia(models.Model):
 
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     
     # Llave foranea
     #docentes = models.ManyToManyField(Docente, blank=True)    
@@ -182,5 +188,5 @@ class Estudiante(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)    
     
     def __str__(self):
-        return f'({self.id}) | {self.nombre} {self.apellidoP} {self.apellidoM}'
+        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
     

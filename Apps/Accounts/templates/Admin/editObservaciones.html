@@ -1,0 +1,155 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<main class="h-full pb-16 overflow-y-auto">
+    <div class="container px-6 mx-auto grid ">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid gap-6 mb-2 my-6 md:grid-cols-2">
+                <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                    Observaciones del Anteproyecto "{{anteproyecto.a_nombre}}"
+                </h4>
+                <div class="relative">
+                    <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        href="{% url 'verAnteproyecto' anteproyecto.id %}">Regresar</a>
+                    <input type="submit"
+                        class="px-4 py-2 text-sm absolute right-1 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        name="Update Information" value="Guardar Informacion">
+                </div>
+            </div>
+
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div
+                    class="min-w-0 p-4 bg-white rounded-lg shadow-xs grid gap-6 mb-2 my-6 md:grid-cols-2 dark:bg-gray-800 ">
+                    <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}}
+                        </strong>
+                    </p>
+                    <div class="relative">
+                        <span class="text-center justify-center text-gray-700 dark:text-gray-400">Agregar tiempo (dias):
+                        </span>
+                        <input type="number" name="agregarDias" value="0"
+                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+                    </div>
+                </div>
+            </div>
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div class="w-full overflow-x-auto">
+                    <br>
+                    <table class="w-full">
+                        <thead>
+                            <tr
+                                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                <th class="px-4 py-3">Docente</th>
+                                <th class="px-4 py-3">Fecha</th>
+                                <th class="px-4 py-3">Observacion</th>
+                                <th class="px-4 py-3">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            {% for observacion in observaciones %}
+                            <tr class="text-gray-700 dark:text-gray-400">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center text-sm">
+                                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                            <img class="object-cover w-full h-full rounded-full"
+                                                src="{{observacion.docente.fotoUsuario.url}}" alt="" loading="lazy" />
+                                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">{{observacion.docente}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
+                                <td class="px-4 py-3 text-md">{{observacion.observacionD}}</td>
+                                <td class="px-4 py-3 text-md">
+                                    <div class="flex items-center justify-center">
+                                        <a href="{% url 'eliminarObservacion' observacion.id %}">
+                                            <button type="button"
+                                                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500"
+                                                aria-label="Like">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                </svg>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="grid gap-6 mb-2 my-6 md:grid-cols-1">
+                        <a href="#"
+                            class="bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded-full"
+                            @click="openModal">Agregar Observacion</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
+        <!-- Modal -->
+        <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 transform translate-y-1/2" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0  transform translate-y-1/2" @click.away="closeModal"
+            @keydown.escape="closeModal"
+            class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+            role="dialog" id="modal">
+            <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+            <header class="flex justify-end">
+                <button
+                    class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                    aria-label="close" @click="closeModal">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+                        <path
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" fill-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </header>
+            <!-- Modal body -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mt-4 mb-6">
+                    <!-- Modal title -->
+                    <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                        Escriba una observacion
+                    </p>
+                    <!-- Modal description -->
+                    <p class="text-sm text-gray-700 dark:text-gray-400">
+                        <label class="block text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Descripcion:</span>
+                            <textarea id="Dobservacion" name="Dobservacion" rows="4"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Su observacion..."></textarea>
+                        </label>
+                    </p>
+                </div>
+                <footer
+                    class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+                    <button @click="closeModal"
+                        type="button"
+                        class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                        Cancelar
+                    </button>
+                    <input
+                        class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        type="submit" value="Agregar Observacion">
+                </footer>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

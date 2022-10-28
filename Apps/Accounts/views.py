@@ -391,6 +391,7 @@ def anteproyecto(request):
     
 def editarAnteproyecto(request):    
     data = ['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_estatus', 'id_codigoUnion', 'id_domicilio', 'id_titular']
+    group = request.user.groups.all()[0].name
     estudiante = request.user.estudiante         
     anteproyecto = estudiante.anteproyecto
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()        
@@ -408,8 +409,7 @@ def editarAnteproyecto(request):
     formDom = DomicilioForm(instance = domicilio)
     formAE = AsesorEForm(instance = asesorExterno)                 
     
-    if request.method == 'POST':                
-        
+    if request.method == 'POST':                        
         formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                
         formD = DependenciaForm(request.POST, instance = dependencia)
         formT = TitularForm(request.POST, instance = titular)
@@ -443,8 +443,7 @@ def editarAnteproyecto(request):
                     anteproyecto.save() 
                     return redirect('anteproyecto')                               
     
-    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje}
-    
+    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje, 'group': group}    
     return render(request, 'Student/editarAnteproyecto.html', context)
 
 def proyectoResidencia(request):

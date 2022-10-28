@@ -25,7 +25,6 @@ class EstudianteForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
 
-
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
@@ -48,7 +47,6 @@ class CreateUserForm(UserCreationForm):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-
 
 class DomicilioForm(ModelForm):
     class Meta:
@@ -75,7 +73,7 @@ class ExpedienteForm(ModelForm):
     class Meta:
         model = Expediente
         fields = '__all__'
-        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
+        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal', 'estatus']
         labels = {
             'anteproyecto': 'Anteproyecto autorizado',
             'solicitudResidencia': 'Solicitud Residencia',
@@ -96,7 +94,7 @@ class ExpedienteViewForm(ModelForm):
     class Meta:
         model = Expediente
         fields = '__all__'
-        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal']
+        exclude = ['reporteParcial1', 'reporteParcial2', 'reporteFinal', 'estatus']
         labels = {
             'anteproyecto': 'Anteproyecto autorizado',
             'solicitudResidencia': 'Solicitud Residencia',
