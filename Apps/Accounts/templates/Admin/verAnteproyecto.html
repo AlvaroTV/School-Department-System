@@ -7,46 +7,58 @@
   <!-- Remove everything INSIDE this div to a really blank page -->
   <div class="container px-6 mx-auto grid ">
 
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Datos del anteproyecto
-    </h2>
-
-    <div class="grid gap-6 mb-8 md:grid-cols-2 min-w-0 max-w-fit p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-      <h4 class="mb-4 mr-24 text-lg font-semibold text-gray-600 dark:text-gray-300">
-        Estado del Anteproyecto:
-        {% if anteproyecto.estatus == 'ACEPTADO' %}
-        <span
-          class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-          {{anteproyecto.estatus}}
-        </span>
-        {% elif anteproyecto.estatus == 'ENVIADO' %}
-        <span
-          class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
-          {{anteproyecto.estatus}}
-        </span>
-        {% elif anteproyecto.estatus == 'EN REVISION' %}
-        <span
-          class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
-          {{anteproyecto.estatus}}
-        </span>
-        {% elif anteproyecto.estatus == 'RECHAZADO' %}
-        <span
-          class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-          {{anteproyecto.estatus}}
-        </span>
-        {% else %}
-        <span
-          class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-          {{anteproyecto.estatus}}
-        </span>
-        {% endif %}
-      </h4>
+    <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Datos del anteproyecto
+      </h2>
       <div class="relative">
-        <a href="#" @click="openModal"
-          class="px-4 py-2 text-sm absolute right-0 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Editar
-          Estado</a>
+        <a href="{% url 'anteproyectos' %}">
+          <button class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
+        </a>
       </div>
     </div>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+      <div
+        class="grid text-sm gap-6 md:grid-cols-2 min-w-0 max-w-fit p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 mr-30 font-semibold text-gray-600 dark:text-gray-300">
+          Estado del Anteproyecto:
+          {% if anteproyecto.estatus == 'ACEPTADO' %}
+          <span
+            class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+            {{anteproyecto.estatus}}
+          </span>
+          {% elif anteproyecto.estatus == 'ENVIADO' %}
+          <span
+            class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+            {{anteproyecto.estatus}}
+          </span>
+          {% elif anteproyecto.estatus == 'EN REVISION' %}
+          <span
+            class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+            {{anteproyecto.estatus}}
+          </span>
+          {% elif anteproyecto.estatus == 'RECHAZADO' %}
+          <span
+            class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+            {{anteproyecto.estatus}}
+          </span>
+          {% else %}
+          <span
+            class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+            {{anteproyecto.estatus}}
+          </span>
+          {% endif %}
+        </h4>
+        <div class="relative">
+          <a href="#" @click="openModal"
+            class="px-4 py-2 text-sm absolute right-0 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Editar
+            Estado</a>
+        </div>
+      </div>
+
+    </div>
+
+
 
     <div class="grid gap-6 mb-2 md:grid-cols-2">
       <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
@@ -114,7 +126,7 @@
                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                   <div>
-                    <p class="font-semibold">{{observacion.docente}}</p>
+                    <p class="font-semibold whitespace-no-wrap">{{observacion.docente}}</p>
                   </div>
                 </div>
               </td>
@@ -151,16 +163,19 @@
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {% if not anteproyecto.anteproyectoDoc %}
-            <div class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+            <div
+              class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
               <h4>
                 No se ha subido el documento del Anteproyecto
               </h4>
               <div class="inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-8 h-8">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                 </svg>
-              </div>                          
-            </div>            
+              </div>
+            </div>
 
             {% else %}
             <a class="text-green-500" href="/images/{{formDoc.anteproyectoDoc.value}}" target="_blank">
@@ -192,6 +207,8 @@
               <th class="px-4 py-3">Número de control</th>
               <th class="px-4 py-3">E-mail</th>
               <th class="px-4 py-3">Número teléfonico</th>
+              <th class="px-4 py-3 text-center">Ver</th>
+              <th class="px-4 py-3 text-center">Eliminar</th>
 
             </tr>
           </thead>
@@ -213,6 +230,37 @@
               <td class="px-4 py-3 text-md">{{student.numControl}}</td>
               <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
               <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'verEstudiante' student.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-500 hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue dark:text-blue-100 dark:bg-blue-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'removeEstudiante' student.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
             </tr>
             {% endfor %}
 
@@ -233,6 +281,9 @@
               <th class="px-4 py-3">Nombre</th>
               <th class="px-4 py-3">Apellidos</th>
               <th class="px-4 py-3">E-mail</th>
+              <th class="px-4 py-3">Número teléfonico</th>
+              <th class="px-4 py-3 text-center">Ver</th>
+              <th class="px-4 py-3 text-center">Eliminar</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -251,6 +302,38 @@
               </td>
               <td class="px-4 py-3 text-md">{{asesorInterno.apellidoP}} {{asesorInterno.apellidoM}}</td>
               <td class="px-4 py-3 text-md">{{asesorInterno.correoElectronico}}</td>
+              <td class="px-4 py-3 text-md">{{asesorInterno.numCelular}}</td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'verDocente' asesorInterno.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-500 hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue dark:text-blue-100 dark:bg-blue-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'removeAsesor' anteproyecto.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -266,6 +349,13 @@
           </svg>
           Un Asesor Interno le sera asignado pronto.
         </p>
+      </div>
+      <div class="h-fit min-h-full flex justify-end">
+        <a href="{% url 'asignarAsesor' anteproyecto.id %}">
+          <button class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-white text-sm font-bold rounded px-2 py-1">
+            Asignar asesor Interno
+          </button>
+        </a>
       </div>
       {% endif %}
 
@@ -283,6 +373,9 @@
               <th class="px-4 py-3">Nombre</th>
               <th class="px-4 py-3">Apellidos</th>
               <th class="px-4 py-3">E-mail</th>
+              <th class="px-4 py-3">Número teléfonico</th>
+              <th class="px-4 py-3 text-center">Ver</th>
+              <th class="px-4 py-3 text-center">Eliminar</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -301,6 +394,38 @@
               </td>
               <td class="px-4 py-3 text-md">{{revisor.apellidoP}} {{revisor.apellidoM}}</td>
               <td class="px-4 py-3 text-md">{{revisor.correoElectronico}}</td>
+              <td class="px-4 py-3 text-md">{{revisor.numCelular}}</td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'verDocente' revisor.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-500 hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue dark:text-blue-100 dark:bg-blue-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-md">
+                <div class="flex items-center justify-center">
+                  <a href="{% url 'removeRevisor' anteproyecto.id %}">
+                    <button type="button"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500"
+                      aria-label="Like">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      </svg>
+                    </button>
+                  </a>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -316,6 +441,13 @@
           </svg>
           Un Revisor le sera asignado pronto.
         </p>
+      </div>
+      <div class="h-fit min-h-full flex justify-end">
+        <a href="{% url 'asignarRevisor' anteproyecto.id %}">
+          <button class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-white text-sm font-bold rounded px-2 py-1">
+            Asignar un Revisor
+          </button>
+        </a>
       </div>
       {% endif %}
 

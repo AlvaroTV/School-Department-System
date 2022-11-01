@@ -55,6 +55,7 @@ def verAnteproyecto(request, pk):
     revisor = anteproyecto.revisor                
     dependencia = anteproyecto.dependencia 
     observacion = anteproyecto.observacion
+    estadoInicial = anteproyecto.estatus
     fechaObservacion = observacion.fechaCreacion    
     observaciones = ObservacionDocente.objects.filter(observacion = observacion)                                
     dias = 5 + observacion.incrementarDias
@@ -63,6 +64,7 @@ def verAnteproyecto(request, pk):
     fechaActual = date.today
     fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                   
     data = []        
+    lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'RECHAZADO']
     
     if anteproyecto.numIntegrantes == 1: data.append('id_codigoUnion')
                      
@@ -72,11 +74,37 @@ def verAnteproyecto(request, pk):
     formDom = DomicilioViewForm(instance = dependencia.domicilio)
     formDoc = AnteproyectoDocForm(instance = anteproyecto)
     formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
-    formEstado = AnteproyectoEstadoForm(instance = anteproyecto)
+    formEstado = AnteproyectoEstadoForm(instance = anteproyecto)        
     
     if request.method == 'POST':
-        formEstado = AnteproyectoEstadoForm(request.POST, instance = anteproyecto)
-        if formEstado.is_valid():
+        formEstado = AnteproyectoEstadoForm(request.POST, instance = anteproyecto)        
+        if formEstado.is_valid():            
+            estadoFinal = formEstado['estatus'].value()        
+            if estadoInicial in lista and estadoFinal == 'ACEPTADO':
+                residencia = Residencia(
+                    dependencia = dependencia,
+                    asesorExterno = anteproyecto.asesorExterno,
+                    r_asesorInterno = anteproyecto.asesorInterno,
+                    r_revisor = anteproyecto.revisor,
+                    nombre = anteproyecto.a_nombre,
+                    tipoProyecto = anteproyecto.tipoProyecto,
+                    numIntegrantes = anteproyecto.numIntegrantes,
+                    periodoInicio = anteproyecto.periodoInicio,
+                    periodoFin = anteproyecto.periodoFin
+                )        
+                residencia.save()                                                        
+
+                for e in estudiantes:        
+                    e.residencia = residencia
+                    e.save()
+                
+                print('RESIDENCIA CREADA')
+                
+            elif estadoInicial == 'ACEPTADO' and estadoFinal in lista:
+                print('Eliminar la residencia')            
+                residencia = estudiantes[0].residencia
+                residencia.delete()
+                print('RESIDENCIA ELMINIDA')
             formEstado.save()
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
@@ -184,3 +212,129 @@ def eliminarObservacion(request, pk):
     observacion.delete()    
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+def verEstudiante(request, pk):
+    group = request.user.groups.all()[0].name
+    estudiante = Estudiante.objects.get(id = pk)
+    domicilio = estudiante.domicilio    
+    anteproyecto = estudiante.anteproyecto
+    
+    context = {'group': group, 'estudiante': estudiante, 'domicilio': domicilio, 'anteproyecto': anteproyecto}    
+    return render(request, 'Admin/verEstudiante.html', context)        
+
+def editarEstudiante(request, pk):
+    group = request.user.groups.all()[0].name
+    estudiante = Estudiante.objects.get(id = pk)
+    anteproyecto = estudiante.anteproyecto
+    domicilio = estudiante.domicilio
+    
+    formE = EstudianteForm(instance=estudiante)
+    formD = DomicilioForm(instance=domicilio)
+    
+    if request.method == 'POST':
+        formE = EstudianteForm(request.POST, instance=estudiante)
+        formD = DomicilioForm(request.POST, instance=domicilio)
+    
+        if formE.is_valid():
+            formE.save()
+            
+        if formD.is_valid():
+            formD.save()
+    
+        return redirect('verEstudiante', estudiante.id)
+    
+    context = {'group': group, 'estudiante': estudiante, 'anteproyecto': anteproyecto, 'formE': formE, 'formD': formD}    
+    return render(request, 'Student/settings.html', context)        
+
+def removeEstudiante(request, pk):    
+    estudiante = Estudiante.objects.get(id = pk)
+    estudiante.anteproyecto = None
+    estudiante.save()  
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def asignarAsesor(request, pk):
+    group = request.user.groups.all()[0].name
+    docentes = Docente.objects.all()
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    asesor = '.'
+    
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'asesor': asesor}
+    return render(request, 'Admin/asignarDocente.html', context)        
+
+def asignarAsesorI(request, pkA, pkD):        
+    anteproyecto = Anteproyecto.objects.get(id = pkA)
+    docente = Docente.objects.get(id = pkD)
+    anteproyecto.asesorInterno = docente
+    anteproyecto.save()        
+    return redirect('verAnteproyecto', anteproyecto.id)
+
+def removeAsesor(request, pk):
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    anteproyecto.asesorInterno = None
+    anteproyecto.save()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def asignarRevisor(request, pk):
+    group = request.user.groups.all()[0].name
+    docentes = Docente.objects.all()
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto}
+    return render(request, 'Admin/asignarDocente.html', context)        
+
+def asignarRevisorI(request, pkA, pkD):        
+    anteproyecto = Anteproyecto.objects.get(id = pkA)
+    docente = Docente.objects.get(id = pkD)
+    anteproyecto.revisor = docente
+    anteproyecto.save()        
+    return redirect('verAnteproyecto', anteproyecto.id)
+
+def removeRevisor(request, pk):
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    anteproyecto.revisor = None
+    anteproyecto.save()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def verDocente(request, pk):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id = pk)    
+    context = {'group': group, 'docente': docente}
+    return render(request, 'Admin/verDocente.html', context)    
+
+def editarDocente(request, pk):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id = pk)
+    formD = DocenteForm(instance=docente)
+    
+    if request.method == 'POST':
+        formD = DocenteForm(request.POST, instance=docente)
+        if formD.is_valid():
+            formD.save()
+            return redirect('verDocente', docente.id)
+            
+    
+    context = {'group': group, 'docente': docente, 'formD': formD}
+    return render(request, 'Admin/editarDocente.html', context)        
+
+def altaDocente(request):
+    group = request.user.groups.all()[0].name
+    data = ['id_fotoUsuario', 'id_correoElectronico']
+    formD = DocenteForm()
+    formU = CreateUserForm()
+    
+    if request.method == 'POST':
+        formD = DocenteForm(request.POST)
+        formU = CreateUserForm(request.POST)
+        
+        if formD.is_valid() and formU.is_valid():
+            teacher = formD.save()
+            user = formU.save()
+            group = Group.objects.get(name='teacher')
+            user.groups.add(group)
+            teacher.correoElectronico = formU.cleaned_data.get('email')            
+            teacher.user = user
+            teacher.save()
+            
+            return redirect('docentes')
+    
+    context = {'group': group, 'formD': formD, 'formU': formU, 'data': data}
+    return render(request, 'Admin/altaDocente.html', context)        

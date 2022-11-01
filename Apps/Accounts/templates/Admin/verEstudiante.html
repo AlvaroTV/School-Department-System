@@ -1,0 +1,171 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<main class="h-full pb-16 overflow-y-auto">
+  <!-- Remove everything INSIDE this div to a really blank page -->
+  <div class="container px-6 mx-auto grid">
+    <div class="grid gap-7 mb-9 md:grid-cols-2">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Información del estudiante
+      </h2>
+
+      <div class="grid gap-7 mb-9 mt-5 md:grid-cols-2">        
+        <div>
+          <button
+            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" onClick="history.back()">
+            Volver
+          </button>
+        </div>
+                  
+        <a href="{% url 'editarEstudiante' estudiante.id %}">
+          <button
+            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            Editar datos del estuditante
+          </button>
+        </a>                
+      </div>      
+    </div>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Información general
+        </h4>
+
+        <label class="block text-sm items-center">
+
+          <img src="{{ estudiante.fotoUsuario.url }}" alt="user-avatar" class="mx-auto d-block profile-pic"
+            id="uploadedAvatar" />
+
+        </label>
+        <br>
+        <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Nombre:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            CURP:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.curp }}
+            </span>
+          </li>
+
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Correo institucional:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.correoElectronico }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Número de contacto:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.numCelular }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Instituo de seguro social:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.institutoSeguridadSocial }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Número de seguro social
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.numSeguridadSocial }}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Información escolar
+        </h4>
+        <label class="block text-sm items-center ">
+
+          <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block " height="150"
+            width="150" id="imageschool" />
+
+
+
+        </label>
+        <br>
+        <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Número de control:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.numControl }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Carrera:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.carrera }}
+            </span>
+          </li>
+
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Semestre:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ estudiante.semestre }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Especialidad:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              ISIE-TSE-2019-01 TECNOLOGÍAS DE SOFTWARE EMERGENTE
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid gap-6 mb-8 md:grid-cols-1">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Información de contacto
+        </h4>
+        <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Calle y Número:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ domicilio.calle }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Colonia:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ domicilio.colonia }}
+            </span>
+          </li>
+
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Código postal:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ domicilio.codigoPostal }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Municipio:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ domicilio.municipio }}
+            </span>
+          </li>
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            Estado:
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              {{ domicilio.estado }}
+            </span>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+{% endblock %}

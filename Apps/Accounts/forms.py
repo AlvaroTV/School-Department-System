@@ -162,6 +162,15 @@ class DocenteForm(ModelForm):
     class Meta:
         model = Docente
         fields = '__all__'
+        exclude = ['user']
+        labels = {
+            'curp': 'CURP',
+            'rfc': 'RFC',
+            'nombre': 'Nombre(s)',
+            'apellidoP': 'Apellido Paterno',
+            'apellidoM': 'Apellido Materno',
+            'numCelular': 'Numero de celular',
+        }
 
     def __init__(self, *args, **kwargs):
         super(DocenteForm, self).__init__(*args, **kwargs)

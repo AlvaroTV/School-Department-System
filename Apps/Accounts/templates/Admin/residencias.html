@@ -42,22 +42,22 @@
                                 {{proyecto.dependencia}}
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                {% if proyecto.estatus == 'ACEPTADO' %}
+                                {% if proyecto.estatus == 'FINALIZADA' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                     {{proyecto.estatus}}
                                 </span>
-                                {% elif proyecto.estatus == 'ENVIADO' %}
+                                {% elif proyecto.estatus == 'INICIADA' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-teal-500 dark:text-blue-100">
                                     {{proyecto.estatus}}
                                 </span>
-                                {% elif proyecto.estatus == 'PENDIENTE' %}
+                                {% elif proyecto.estatus == 'EN PROCESO' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
                                     {{proyecto.estatus}}
                                 </span>
-                                {% elif proyecto.estatus == 'RECHAZADO' %}
+                                {% elif proyecto.estatus == 'RECHAZADA' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                                     {{proyecto.estatus}}
@@ -75,8 +75,8 @@
                             <td class="px-4 py-3 text-sm">
                                 {{proyecto.periodoFin|date:"d/M/Y"}}
                             </td>
-                            <td class="flex px-4 py-3 items-center justify-center">
-                                {{anteproyecto.numIntegrantes}}
+                            <td class="px-4 py-3 text-center">
+                                {{proyecto.numIntegrantes}}
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center">

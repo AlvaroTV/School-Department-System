@@ -31,5 +31,21 @@ urlpatterns = [
     path('verAnteproyecto/<int:pk>', verAnteproyecto, name='verAnteproyecto'),        
     path('editarAnteproyectoAdmin/<int:pk>', editarAnteproyectoAdmin, name='editarAnteproyectoAdmin'),        
     path('editarObservaciones/<int:pk>', editarObservaciones, name='editarObservaciones'),        
-    path('eliminarObservacion/<int:pk>', eliminarObservacion, name='eliminarObservacion'),        
+    path('eliminarObservacion/<int:pk>', eliminarObservacion, name='eliminarObservacion'),   
+    
+    path('verEstudiante/<int:pk>', verEstudiante, name='verEstudiante'),       
+    path('editarEstudiante/<int:pk>', editarEstudiante, name='editarEstudiante'),       
+    path('removeEstudiante/<int:pk>', removeEstudiante, name='removeEstudiante'),       
+    
+    path('asignarAsesor/<int:pk>', asignarAsesor, name='asignarAsesor'),           
+    path('asignarAsesorI/<int:pkA>/<int:pkD>', asignarAsesorI, name='asignarAsesorI'),           
+    path('removeAsesor/<int:pk>', removeAsesor, name='removeAsesor'),           
+    
+    path('asignarRevisor/<int:pk>', asignarRevisor, name='asignarRevisor'),           
+    path('asignarRevisorI/<int:pkA>/<int:pkD>', asignarRevisorI, name='asignarRevisorI'),           
+    path('removeRevisor/<int:pk>', removeRevisor, name='removeRevisor'),           
+    
+    path('verDocente/<int:pk>', verDocente, name='verDocente'),           
+    path('editarDocente/<int:pk>', editarDocente, name='editarDocente'),           
+    path('altaDocente/', altaDocente, name='altaDocente'),           
 ]

@@ -284,6 +284,8 @@ def anteproyecto(request):
     anteproyecto = estudiante.anteproyecto                                                   
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
     fechaObservacion = None
+    fechaCorte = None
+    fechaActual = None
     dependencia = None
     asesorInterno = None
     revisor = None

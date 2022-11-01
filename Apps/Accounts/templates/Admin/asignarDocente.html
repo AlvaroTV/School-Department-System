@@ -5,19 +5,22 @@
 
 <main class="h-full pb-16 overflow-y-auto">
     <div class="container grid px-6 mx-auto">
-        <div class="grid gap-6 mb-2 my-6 md:grid-cols-2">
-            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                Docentes
-            </h2>
-            <div class="relative">
-                <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                    href="{% url 'altaDocente' %}">Alta docente</a>
-            </div>
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Anteproyecto: "{{anteproyecto.a_nombre}}"
+        </h2>
+        <div class="relative mb-4">
+            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                href="{% url 'verAnteproyecto' anteproyecto.id %}">Cancelar</a>
         </div>
-
+        {% if asesor %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-            Titulo peque
+            Asignar Asesor Interno
         </h4>
+        {% else %}
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Asignar Revisor
+        </h4>
+        {% endif %}
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">
@@ -25,15 +28,15 @@
                         <tr
                             class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                             <th class="px-4 py-3">Docente</th>
-                            <th class="px-4 py-3">RFC</th>
                             <th class="px-4 py-3">Numero Celular</th>
                             <th class="px-4 py-3">Correo Electronico</th>
                             <th class="px-4 py-3">Estatus</th>
-                            <th class="px-4 py-3">Ver docente</th>
+                            <th class="px-4 py-3">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                         {% for docente in docentes %}
+                        {% if docente.estatus == 'ACTIVO' %}
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
                                 <div class="flex items-center text-sm">
@@ -50,55 +53,38 @@
                                 </div>
                             </td>
                             <td class="text-center px-4 py-3">
-                                {{docente.rfc}}
-                            </td>
-                            <td class="text-center px-4 py-3">
                                 {{docente.numCelular}}
                             </td>
                             <td class="text-center px-4 py-3">
                                 {{docente.correoElectronico}}
                             </td>
                             <td class="text-center px-4 py-3 text-xs">
-                                {% if docente.estatus == 'ACTIVO' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                     {{docente.estatus}}
                                 </span>
-                                {% elif docente.estatus == 'VACACIONES' %}
-                                <span
-                                    class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-                                    {{docente.estatus}}
-                                </span>
-                                {% elif docente.estatus == 'INACTIVO' %}
-                                <span
-                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                                    {{docente.estatus}}
-                                </span>
-                                {% else %}
-                                <span
-                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-                                    {{docente.estatus}}
-                                </span>
-                                {% endif %}
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center">
-                                    <a href="{% url 'verDocente' docente.id %}">
+                                    {% if asesor %}
+                                    <a href="{% url 'asignarAsesorI' pkA=anteproyecto.id pkD=docente.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarRevisorI' pkA=anteproyecto.id pkD=docente.id %}">
+                                    {% endif %}
                                         <button
                                             class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                                             aria-label="Like">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
                                             </svg>
                                         </button>
                                     </a>
                                 </div>
                             </td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

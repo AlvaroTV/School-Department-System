@@ -119,7 +119,7 @@ class AsesorExterno(models.Model):
 
 class Residencia(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('EN PROCESO', 'EN PROCESO'), ('PROROGA', 'PROROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
+    ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PROROGA', 'PROROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
     
     # Llaves foraneas
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
@@ -130,7 +130,7 @@ class Residencia(models.Model):
     nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS)         
     numIntegrantes = models.IntegerField(default=1)
-    estatus = models.CharField(max_length=15, choices=ESTADOS, default='EN PROCESO', blank=True)    
+    estatus = models.CharField(max_length=15, choices=ESTADOS, default='INICIADA', blank=True)    
     periodoInicio = models.DateField(null=True)
     periodoFin = models.DateField(null=True)
     observaciones = models.CharField(max_length=500, null=True, blank=True)    
@@ -167,10 +167,10 @@ class Estudiante(models.Model):
     SEMESTRES = ((8, '8'), (9, '9'), (10, '10'), (11, '11'), (12, '12'), (13, '13'), (14, '14'))
     
     # Llaves Foraneas
-    domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True, blank=True)    
-    expediente = models.OneToOneField(Expediente, on_delete=models.CASCADE, null=True, blank=True)
-    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.CASCADE, null=True, blank=True)
-    residencia = models.ForeignKey(Residencia, on_delete=models.CASCADE, null=True, blank=True)
+    domicilio = models.OneToOneField(Domicilio, on_delete=models.SET_NULL, null=True, blank=True)    
+    expediente = models.OneToOneField(Expediente, on_delete=models.SET_NULL, null=True, blank=True)
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
+    residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Atributos
     nombre = models.CharField(max_length=100)
