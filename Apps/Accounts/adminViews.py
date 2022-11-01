@@ -338,3 +338,14 @@ def altaDocente(request):
     
     context = {'group': group, 'formD': formD, 'formU': formU, 'data': data}
     return render(request, 'Admin/altaDocente.html', context)        
+
+def verResidencia(request, pk):
+    group = request.user.groups.all()[0].name
+    residencia = Residencia.objects.get(id = pk)
+    estudiantes = Estudiante.objects.filter(residencia = residencia)                
+    dependencia = residencia.dependencia
+    formR = ResidenciaViewForm(instance = residencia)                                
+    formD = DependenciaViewForm(instance = dependencia)
+    
+    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'formR': formR, 'formD': formD}
+    return render(request, 'Admin/verResidencia.html', context)        

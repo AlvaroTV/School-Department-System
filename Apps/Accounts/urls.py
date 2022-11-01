@@ -47,5 +47,8 @@ urlpatterns = [
     
     path('verDocente/<int:pk>', verDocente, name='verDocente'),           
     path('editarDocente/<int:pk>', editarDocente, name='editarDocente'),           
-    path('altaDocente/', altaDocente, name='altaDocente'),           
+    path('altaDocente/', altaDocente, name='altaDocente'), 
+    
+    path('verResidencia/<int:pk>', verResidencia, name='verResidencia'),           
+              
 ]

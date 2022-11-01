@@ -452,37 +452,12 @@ def proyectoResidencia(request):
     data = ['id_codigoUnion']
     user = request.user
     group = user.groups.all()[0].name
-    estudiante = user.estudiante             
-                       
+    estudiante = user.estudiante                                    
     anteproyecto = estudiante.anteproyecto   
-    
-    try:
-        estatus = anteproyecto.estatus                                                        
-    except:
-        estatus = None
+    residencia = estudiante.residencia
         
-    if estatus == 'ACEPTADO':        
-        dependencia = anteproyecto.dependencia   
-        
-        residencia = Residencia(
-            dependencia = dependencia,
-            asesorExterno = anteproyecto.asesorExterno,
-            r_asesorInterno = anteproyecto.asesorInterno,
-            r_revisor = anteproyecto.revisor,
-            nombre = anteproyecto.a_nombre,
-            tipoProyecto = anteproyecto.tipoProyecto,
-            numIntegrantes = anteproyecto.numIntegrantes,
-            periodoInicio = anteproyecto.periodoInicio,
-            periodoFin = anteproyecto.periodoFin
-        )        
-        residencia.save()
-                        
-        estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
-        dependencia = residencia.dependencia   
-        
-        for e in estudiantes:        
-            e.residencia = residencia
-            e.save()
+    if residencia:                                                
+        dependencia = residencia.dependencia                   
 
         estudiantes = Estudiante.objects.filter(residencia = residencia)                
         formR = ResidenciaViewForm(instance = residencia)                                
@@ -490,10 +465,10 @@ def proyectoResidencia(request):
         formT = TitularViewForm(instance = dependencia.titular)
         formDom = DomicilioViewForm(instance = dependencia.domicilio)
         formAE = AsesorEViewForm(instance = residencia.asesorExterno)                                
-        context = {'group': group,'formR': formR, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'estatus': estatus}
+        context = {'group': group,'formR': formR, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'residencia': residencia}
         return render(request, 'Student/residencia.html', context)
         
-    context = {'group': group, 'estatus': estatus}
+    context = {'group': group, 'residencia': residencia}
     return render(request, 'Student/residencia.html', context)
   
 def removeDoc(request, pk):

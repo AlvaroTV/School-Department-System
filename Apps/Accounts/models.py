@@ -132,8 +132,7 @@ class Residencia(models.Model):
     numIntegrantes = models.IntegerField(default=1)
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='INICIADA', blank=True)    
     periodoInicio = models.DateField(null=True)
-    periodoFin = models.DateField(null=True)
-    observaciones = models.CharField(max_length=500, null=True, blank=True)    
+    periodoFin = models.DateField(null=True)    
 
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
