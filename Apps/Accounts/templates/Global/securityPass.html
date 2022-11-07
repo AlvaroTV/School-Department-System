@@ -1,0 +1,87 @@
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      Cambiar contraseña
+    </h2>
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <h2 class="my-6 text-sm font-semibold text-gray-700 dark:text-gray-200">
+            Introduce los siguientes datos para completar el cambio de
+            contraseña:
+          </h2>
+          <form method="POST">
+            <!---Contraseña con 8 a 16 caracteres, numero, minusculas, mayusculas y simbolos-->
+            <label class="block mt-4 text-sm">
+              <span class="text-gray-700 dark:text-gray-400">
+                Contraseña anterior
+              </span>
+              <div class="relative text-gray-500 focus-within:text-purple-600">
+                <input
+                  class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                  type="password" name="password" id="password" placeholder="Ingresa contraseña" />
+
+              </div>
+            </label>
+
+            <label class="block mt-4 text-sm">
+              <span class="text-gray-700 dark:text-gray-400">
+                Nueva contraseña
+              </span>
+              <div class="relative text-gray-500 focus-within:text-purple-600">
+                <input
+                  class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                  type="password" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$"
+                  onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Debe contener entre 8 y 16 caracteres: (Digitos, minúsculas, mayúsculas y simbolos)' : ''); 
+                          if(this.checkValidity()) form.confirm_password1.pattern = this.value;" required
+                  name="confirm_password" id="confirm_password" placeholder="Ingresa contraseña" />
+                <button
+                  class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                  onclick="mostrarContrasena()">
+                  Ver/Ocultar
+                </button>
+              </div>
+            </label>
+
+            <label class="block mt-4 text-sm">
+              <span class="text-gray-700 dark:text-gray-400">
+                Repetir contraseña
+              </span>
+              <div class="relative text-gray-500 focus-within:text-purple-600">
+                <input
+                  class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                  type="password" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$"
+                  name="confirm_password1" id="confirm_password1" placeholder="Ingresa contraseña"
+                  onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Por favor ingresa la misma contraseña' : '');"
+                  required />
+                <button
+                  class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                  onclick="mostrarContrasena2()">
+                  Ver/Ocultar
+                </button>
+              </div>
+            </label>
+            <br>
+            <input type="submit"
+              class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+              id="enviar" value="Actualizar">
+            <span id="recibido"></span>
+          </form>
+          <input type="submit" style="float: right;"
+            class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            value="Regresar">
+          <br>
+
+
+          <script src="password.js"></script>
+
+        </div>
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+          <img src="../assets/img/security.png" alt="user-avatar" class="mx-auto d-block" height="350" width="350"
+            id="uploadedAvatar" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>

@@ -100,7 +100,7 @@ class Dependencia(models.Model):
     giro = models.CharField(max_length=20, choices=OPCIONES, default='PUBLICO', blank=True)    
     numCelular = models.CharField(max_length=20)
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
-    mision = models.CharField(max_length=200)
+    mision = models.CharField(max_length=1000)
     
     def __str__(self):
         return f'{self.d_nombre}'

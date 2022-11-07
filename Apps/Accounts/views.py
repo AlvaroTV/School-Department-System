@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -49,6 +51,24 @@ def loginPage(request):
 
 def errorPage(request):
     return render(request, 'Global/404.html')
+
+def changePassword(request):
+    user = request.user
+    group = user.groups.all()[0].name
+    form = ChangePasswordForm(user)
+    
+    if request.method == 'POST':
+        form = ChangePasswordForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            messages.success(request, 'Your password was successfully updated!')
+            return render(request, 'Global/password-change-done.html', {'group': group})
+        else:
+            messages.error(request, 'Please correct the error below.')
+            
+    context = {'group': group, 'form': form,}
+    return render(request, 'Global/change-password.html', context)
 
 def createStudent(request):
     data = ['id_fotoUsuario', 'id_institutoSeguridadSocial', 'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp', 'id_anteproyecto']
@@ -341,8 +361,8 @@ def anteproyecto(request):
                 formAE = AsesorEForm(request.POST)                        
                                         
                 if formA.is_valid() and formD.is_valid() and formT.is_valid() and formAE.is_valid() and formDom.is_valid():                                
-                    fecha_inicio = formA['periodoInicio'].value()
-                    fecha_fin = formA['periodoFin'].value()                    
+                    fecha_inicio = formA.cleaned_data.get('periodoInicio')
+                    fecha_fin = formA.cleaned_data.get('periodoFin')
                     if fecha_inicio < fecha_fin:                                            
                         anteproyecto = formA.save()
                         dependencia = formD.save()
