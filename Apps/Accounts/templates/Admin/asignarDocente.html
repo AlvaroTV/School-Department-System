@@ -5,22 +5,58 @@
 
 <main class="h-full pb-16 overflow-y-auto">
     <div class="container grid px-6 mx-auto">
-        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-            Anteproyecto: "{{anteproyecto.a_nombre}}"
-        </h2>
-        <div class="relative mb-4">
-            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                href="{% url 'verAnteproyecto' anteproyecto.id %}">Cancelar</a>
+        <div class="grid gap-6 mt-8 mb-8 md:grid-cols-2">
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                {% if revisor1 %}
+                Anteproyecto: "{{anteproyecto.a_nombre}}"
+                {% elif revisor2 %}
+                Anteproyecto: "{{anteproyecto.a_nombre}}"
+                {% elif asesorI %}
+                Residencia: "{{residencia.nombre}}"
+                {% elif revisor %}
+                Residencia: "{{residencia.nombre}}"
+                {% endif %}
+            </h4>
+            <div class="relative">
+                {% if revisor1 or revisor2 %}
+                <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    href="{% url 'verAnteproyecto' anteproyecto.id %}">Cancelar</a>
+                {% elif asesorI or revisor %}
+                <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    href="{% url 'verResidencia' residencia.id %}">Cancelar</a>
+                {% endif %}
+            </div>
         </div>
-        {% if asesor %}
+
+        {% if revisor1 %}
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Asignar Revisor 1
+        </h4>
+        {% elif revisor2 %}
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Asignar Revisor 2
+        </h4>
+        {% elif asesorI %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Asesor Interno
         </h4>
-        {% else %}
+        {% elif revisor %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor
         </h4>
         {% endif %}
+
+        <div class="flex flex-col flex-wrap mb-4 space-y-4 md:flex-row-reverse md:items-end md:space-x-4">
+            <div>
+                <button @click="openModal"
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Buscar Docente
+                </button>
+            </div>
+        </div>
+
+
+
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">
@@ -66,21 +102,26 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center">
-                                    {% if asesor %}
-                                    <a href="{% url 'asignarAsesorI' pkA=anteproyecto.id pkD=docente.id %}">
-                                    {% else %}
-                                    <a href="{% url 'asignarRevisorI' pkA=anteproyecto.id pkD=docente.id %}">
-                                    {% endif %}
-                                        <button
-                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                                            aria-label="Like">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                                            </svg>
-                                        </button>
-                                    </a>
+                                    {% if revisor1 %}
+                                    <a href="{% url 'asignarRevisor1I' pkA=anteproyecto.id pkD=docente.id %}">
+                                        {% elif revisor2 %}
+                                        <a href="{% url 'asignarRevisor2I' pkA=anteproyecto.id pkD=docente.id %}">
+                                            {% elif asesorI %}
+                                            <a href="{% url 'asignarAsesorI' pkR=residencia.id pkD=docente.id %}">
+                                                {% elif revisor %}
+                                                <a href="{% url 'asignarRevisor' pkR=residencia.id pkD=docente.id %}">
+                                                    {% endif %}
+                                                    <button
+                                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                                                        aria-label="Like">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                            class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                                        </svg>
+                                                    </button>
+                                                </a>
                                 </div>
                             </td>
                         </tr>
@@ -89,6 +130,236 @@
                     </tbody>
                 </table>
             </div>
+            <div
+                class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+                <span class="flex items-center col-span-3">
+                    Mostrando {{start}} - {{end}} de {{totalD}}
+                </span>
+                <span class="col-span-2"></span>
+                <!-- Pagination -->
+                {% if buttons %}
+                <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                    <nav aria-label="Table navigation">
+                        <ul class="inline-flex items-center">
+                            <li>
+                                {% if revisor1 %}
+
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'asignarRevisor1' n_buttons anteproyecto.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarRevisor1' prev_page anteproyecto.id %}">
+                                        {% endif %}
+
+                                {% elif revisor2 %}
+
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'asignarRevisor2' n_buttons anteproyecto.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarRevisor2' prev_page anteproyecto.id %}">
+                                        {% endif %}
+                                
+                                {% elif asesorI %}
+
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'asignarAsesorIL' n_buttons residencia.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarAsesorIL' prev_page residencia.id %}">
+                                        {% endif %}
+
+                                {% elif revisor %}
+
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'asignarRevisorL' n_buttons residencia.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarRevisorL' prev_page residencia.id %}">
+                                        {% endif %}
+
+                                {% endif %}
+
+                                        <button
+                                            class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Previous">
+                                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
+                            </li>
+                            
+                            {% for button in buttons %}
+                            {% if button == page %}
+                            <li>
+                                {% if revisor1 %}
+                                <a href="{% url 'asignarRevisor1' button anteproyecto.id %}">
+                                {% elif revisor2 %}
+                                <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
+                                {% elif asesorI %}
+                                <a href="{% url 'asignarAsesorIL' button residencia.id %}">
+                                {% elif revisor %}
+                                <a href="{% url 'asignarRevisorL' button residencia.id %}">
+                                {% endif %}                                
+                                    <button
+                                        class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li>
+                                {% if revisor1 %}
+                                <a href="{% url 'asignarRevisor1' button anteproyecto.id %}">
+                                {% elif revisor2 %}
+                                <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
+                                {% elif asesorI %}
+                                <a href="{% url 'asignarAsesorIL' button residencia.id %}">
+                                {% elif revisor %}
+                                <a href="{% url 'asignarRevisorL' button residencia.id %}">
+                                {% endif %}      
+                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+
+                            
+                            <li>                                
+                                {% if revisor1 %}
+
+                                {% if next_page > n_buttons %}
+                                <a href="{% url 'asignarRevisor1' 1 anteproyecto.id %}">
+                                    {% else %}
+                                    <a href="{% url 'asignarRevisor1' next_page anteproyecto.id %}">
+                                        {% endif %}
+
+                                {% elif revisor2 %}
+
+                                        {% if next_page > n_buttons %}
+                                        <a href="{% url 'asignarRevisor2' 1 anteproyecto.id %}">
+                                            {% else %}
+                                            <a href="{% url 'asignarRevisor2' next_page anteproyecto.id %}">
+                                                {% endif %}
+
+                                {% elif asesorI %}
+
+                                                {% if next_page > n_buttons %}
+                                                <a href="{% url 'asignarAsesorIL' 1 residencia.id %}">
+                                                    {% else %}
+                                                    <a
+                                                        href="{% url 'asignarAsesorIL' next_page residencia.id %}">
+                                                        {% endif %}
+
+                                {% elif revisor %}
+
+                                                        {% if next_page > n_buttons %}
+                                                        <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
+                                                            {% else %}
+                                                            <a
+                                                                href="{% url 'asignarRevisorL' next_page residencia.id %}">
+                                                                {% endif %}
+
+                                {% endif %}
+                                                                <button
+                                                                    class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                                                    aria-label="Next">
+                                                                    <svg class="w-4 h-4 fill-current" aria-hidden="true"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path
+                                                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                                            clip-rule="evenodd" fill-rule="evenodd">
+                                                                        </path>
+                                                                    </svg>
+                                                                </button>
+                                                            </a>
+                            </li>
+                            
+                        </ul>
+                    </nav>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
+        <!-- Modal -->
+        <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 transform translate-y-1/2" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0  transform translate-y-1/2" @click.away="closeModal"
+            @keydown.escape="closeModal"
+            class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+            role="dialog" id="modal">
+            <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+            <header class="flex justify-end">
+                <button
+                    class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                    aria-label="close" @click="closeModal">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+                        <path
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" fill-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </header>
+            <!-- Modal body -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mt-2 mb-4">
+                    <!-- Modal title -->
+                    <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                        Busqueda del docente por:
+                    </p>
+                    <!-- Modal description -->
+                    <div class="grid gap-6 mb-8 md:grid-cols-1">
+                        <div class="flex inline-flex items-center rounded-lg flex-grow ">
+                            <div>
+                                <select id="s2" name="search_options"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected value="1">Nombre</option>
+                                    <option value="2">Apellido Paterno</option>
+                                    <option value="3">Apellido Materno</option>
+                                    <option value="4">RFC</option>
+                                </select>
+                            </div>
+                            <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">
+                            </svg>
+                            <div class="flex justify-center bg:mr-32 flex-grow">
+                                <div
+                                    class="relative w-full whitespace-no-wrap max-w-xl mr-10 focus-within:text-purple-500">
+                                    <div class="absolute inset-y-0 flex items-center pl-2">
+                                        <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <input name="search"
+                                        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                                        type="text" placeholder="Buscar docente" aria-label="Search" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Search input -->
+                    </div>
+                </div>
+                <footer
+                    class="flex flex-col items-center justify-end px-3 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+                    <button @click="closeModal" type="button"
+                        class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                        Cancelar
+                    </button>
+                    <input
+                        class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        type="submit" value="Aceptar">
+                </footer>
+            </form>
         </div>
     </div>
 </main>

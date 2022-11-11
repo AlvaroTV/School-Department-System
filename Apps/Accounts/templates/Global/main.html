@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
   <!--Iconos-->
   <script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
-
+  
 </head>
 
 
@@ -29,16 +29,20 @@
     <div class="flex flex-col flex-1 w-full">
       {% include 'Global/topbar.html' %}
       <main class="h-full overflow-y-auto">
-        <div class="container px-6 mx-auto grid">
+        
           {% block content %}
 
           {% endblock %}
-        </div>
+        
       </main>
     </div>
 
   </div>
   {% include 'Global/footer.html' %}
 </body>
+<!-- sweetalert2 -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+{% block scripts %}
 
+{% endblock %}
 </html>

@@ -1,83 +1,201 @@
 {% extends 'Global/main.html'%}
 
 {% block content %}
-<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-    Dashboard del admin
-</h2>
-<div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-    <!-- Card -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
-                </path>
-            </svg>
+<div class="container grid px-6 mx-auto">
+
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Panel del administrador
+    </h2>
+    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                    </path>
+                </svg>
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Total alumnos dados de alta
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{totalAlumnos}}
+                </p>
+            </div>
         </div>
-        <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Total alumnos realizando residencia
-            </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                6389
-            </p>
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Anteproyectos enviados
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{anteproyectosE}}
+                </p>
+            </div>
+        </div>
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                </svg>
+
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Residencias finalizadas
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{residenciasF}}
+                </p>
+            </div>
+        </div>
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Docentes dados de alta
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{docentes}}
+                </p>
+            </div>
         </div>
     </div>
-    <!-- Card -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                    clip-rule="evenodd"></path>
-            </svg>
+
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Graficas
+    </h2>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Anteproyectos por estado
+            </h4>
+            <canvas id="pie1"></canvas>
+            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <!-- Chart legend -->
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#73B761;"></span>
+                    <span>ENVIADO</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#F2C80F;"></span>
+                    <span>PENDIENTE</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FE9666;"></span>
+                    <span>EN REVISION</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#4A8DDC;"></span>
+                    <span>ACEPTADO</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>
+                    <span>RECHAZADO</span>
+                </div>
+            </div>
         </div>
-        <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Anteproyectos pendientes
-            </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                $ 46,760.89
-            </p>
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Residencias por estado
+            </h4>
+            <canvas id="pie2"></canvas>
+            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <!-- Chart legend -->
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"></span>
+                    <span>INICIADA</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
+                    <span>EN PROCESO</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
+                    <span>PROROGA</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"></span>
+                    <span>FINALIZADA</span>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Card -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                    d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
-                </path>
-            </svg>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Residencias por estado
+            </h4>
+            <canvas id="pie"></canvas>
+            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <!-- Chart legend -->
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"></span>
+                    <span>INICIADA</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
+                    <span>EN PROCESO</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
+                    <span>PROROGA</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"></span>
+                    <span>FINALIZADA</span>
+                </div>
+            </div>
         </div>
-        <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Residencias activas
-            </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                376
-            </p>
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Traffic
+            </h4>
+            <canvas id="line"></canvas>
+            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <!-- Chart legend -->
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
+                    <span>Organic</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
+                    <span>Paid</span>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Card -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                    clip-rule="evenodd"></path>
-            </svg>
-        </div>
-        <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Pending contacts
-            </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                35
-            </p>
-        </div>
-    </div>
+    <!--Anteproyectos-->
+    <span hidden="hidden" id="anteproyectosE">{{anteproyectosE}}</span>
+    <span hidden="hidden" id="anteproyectosP">{{anteproyectosP}}</span>
+    <span hidden="hidden" id="anteproyectosER">{{anteproyectosER}}</span>
+    <span hidden="hidden" id="anteproyectosA">{{anteproyectosA}}</span>
+    <span hidden="hidden" id="anteproyectosR">{{anteproyectosR}}</span>
+    <!--Residencias-->
+    <span hidden="hidden" id="residenciasI">{{residenciasI}}</span>
+    <span hidden="hidden" id="residenciasEP">{{residenciasEP}}</span>
+    <span hidden="hidden" id="residenciasP">{{residenciasP}}</span>
+    <span hidden="hidden" id="residenciasF">{{residenciasF}}</span>
 </div>
-
-
 {% endblock %}

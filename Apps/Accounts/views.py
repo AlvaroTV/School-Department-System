@@ -18,7 +18,20 @@ from .decorators import *
 @admin_only
 def home(request):
     group = request.user.groups.all()[0].name
-    context = {'group': group}
+    totalAlumnos = Estudiante.objects.all().count()
+    
+    anteproyectosE = Anteproyecto.objects.filter(estatus = 'ENVIADO').count()
+    anteproyectosP = Anteproyecto.objects.filter(estatus = 'PENDIENTE').count()
+    anteproyectosER = Anteproyecto.objects.filter(estatus = 'EN REVISION').count()
+    anteproyectosA = Anteproyecto.objects.filter(estatus = 'ACEPTADO').count()
+    anteproyectosR = Anteproyecto.objects.filter(estatus = 'RECHAZADO').count()
+    
+    residenciasI = Residencia.objects.filter(estatus = 'INICIADA').count()
+    residenciasEP = Residencia.objects.filter(estatus = 'EN PROCESO').count()
+    residenciasP = Residencia.objects.filter(estatus = 'PROROGA').count()
+    residenciasF = Residencia.objects.filter(estatus = 'FINALIZADA').count()
+    docentes = Docente.objects.all().count()
+    context = {'group': group, 'totalAlumnos': totalAlumnos, 'anteproyectosE': anteproyectosE, 'anteproyectosP': anteproyectosP, 'anteproyectosER': anteproyectosER, 'anteproyectosA': anteproyectosA, 'anteproyectosR': anteproyectosR, 'residenciasI': residenciasI, 'residenciasEP': residenciasEP, 'residenciasP': residenciasP ,'residenciasF': residenciasF, 'docentes': docentes,}
     return render(request, 'Global/dashboard.html', context)
 
 @login_required(login_url='login')
@@ -307,8 +320,8 @@ def anteproyecto(request):
     fechaCorte = None
     fechaActual = None
     dependencia = None
-    asesorInterno = None
-    revisor = None
+    revisor1 = None
+    revisor2 = None
     observaciones = None                                 
     enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')                    
     codigo = '0000000000'     
@@ -340,7 +353,7 @@ def anteproyecto(request):
             except:
                 codigoU = None
                                                 
-            if codigoU is not None:                
+            if codigoU:                
                 for i in enviados:                    
                     if i.codigoUnion == codigoU:                        
                         numIntegrantes = Estudiante.objects.filter(anteproyecto=i).count()                                                
@@ -392,8 +405,8 @@ def anteproyecto(request):
         if anteproyecto.numIntegrantes == 1:
             data.append('id_codigoUnion')  
         
-        asesorInterno = anteproyecto.asesorInterno
-        revisor = anteproyecto.revisor                
+        revisor1 = anteproyecto.revisor1
+        revisor2 = anteproyecto.revisor2                
         dependencia = anteproyecto.dependencia                  
         formA = AnteproyectoViewForm(instance = anteproyecto)                                        
         formD = DependenciaViewForm(instance = dependencia)
@@ -408,7 +421,7 @@ def anteproyecto(request):
                 formDoc.save()
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
             
-    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'asesorInterno': asesorInterno, 'revisor': revisor, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual}    
+    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual}    
     return render(request, 'Student/anteproyecto.html', context)
     
 def editarAnteproyecto(request):    

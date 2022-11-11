@@ -1,21 +1,64 @@
 /**
  * For usage, visit Chart.js docs https://www.chartjs.org/docs/latest/
  */
-const pieConfig = {
+
+
+const anteproyectosE = document.getElementById('anteproyectosE').textContent
+const anteproyectosP = document.getElementById('anteproyectosP').textContent
+const anteproyectosER = document.getElementById('anteproyectosER').textContent
+const anteproyectosA = document.getElementById('anteproyectosA').textContent
+const anteproyectosR = document.getElementById('anteproyectosR').textContent
+
+const residenciasI = document.getElementById('residenciasI').textContent
+const residenciasEP = document.getElementById('residenciasEP').textContent
+const residenciasP = document.getElementById('residenciasP').textContent
+const residenciasF = document.getElementById('residenciasF').textContent
+
+
+const pieConfig1 = {
   type: 'doughnut',
   data: {
     datasets: [
       {
-        data: [33, 33, 33],
+        data: [anteproyectosE, anteproyectosP, anteproyectosER, anteproyectosA, anteproyectosR],
         /**
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
          */
-        backgroundColor: ['#0694a2', '#1c64f2', '#7e3af2'],
+        backgroundColor: ['#73B761', '#F2C80F', '#FE9666', '#4A8DDC', '#D83B01'],
         label: 'Dataset 1',
       },
     ],
-    labels: ['Shoes', 'Shirts', 'Bags'],
+    labels: ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'ACEPTADO', 'RECHAZADO'],
+  },
+  options: {
+    responsive: true,
+    cutoutPercentage: 80,
+    /**
+     * Default legends are ugly and impossible to style.
+     * See examples in charts.html to add your own legends
+     *  */
+    legend: {
+      display: false,
+    },
+  },
+}
+
+const pieConfig2 = {
+  type: 'doughnut',
+  data: {
+    datasets: [
+      {
+        data: [residenciasI, residenciasEP, residenciasP, residenciasF],
+        /**
+         * These colors come from Tailwind CSS palette
+         * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
+         */
+        backgroundColor: ['#0694a2', '#1c64f2', '#7e3af2', '#e02424'],
+        label: 'Dataset 1',
+      },
+    ],
+    labels: ['INICIADA', 'EN PROCESO', 'PROROGA', 'FINALIZADA'],
   },
   options: {
     responsive: true,
@@ -31,5 +74,7 @@ const pieConfig = {
 }
 
 // change this to the id of your chart element in HMTL
-const pieCtx = document.getElementById('pie')
-window.myPie = new Chart(pieCtx, pieConfig)
+const pieCtx1 = document.getElementById('pie1')
+const pieCtx2 = document.getElementById('pie2')
+window.myPie1 = new Chart(pieCtx1, pieConfig1)
+window.myPie2 = new Chart(pieCtx2, pieConfig2)

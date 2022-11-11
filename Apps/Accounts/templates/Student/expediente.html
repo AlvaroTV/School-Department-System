@@ -16,42 +16,8 @@
         {% for field in form %}
 
         {% if field.id_for_label in data %}
-          {% if field.id_for_label == 'id_dictamen' and semestre < 13 %}
-          
-          {% else %}
-          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-              {% if field.value %}
-              <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
-                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-                {{field.label}} PDF
-              </a>
-              {% else %}
-              <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-                {{field.label_tag}}
-              </h4>
-
-                {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
-                <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
-                {% endif %}
-
-              {{field}}
-              <div class="relative">
-                <br>
-                {% if estatus == 'ACEPTADO' %}
-                <input type="submit" value="Enviar"
-                  class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                {% endif %}
-                <br>
-              </div>
-              {% endif %}
-          </div>
-          {% endif %}
-        {% endif %}
-        {% endfor %}
-
-        {% for field in form %}
-        {% if not field.id_for_label in data %}
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        {% if field.id_for_label == 'id_dictamen' and semestre < 13 %} {% else %} <div
+          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           {% if field.value %}
           <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
             <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
@@ -64,10 +30,7 @@
 
           {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
           <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
-          {% elif field.id_for_label == 'id_cronograma' and estatus == 'ACEPTADO'%}
-          <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
           {% endif %}
-
 
           {{field}}
           <div class="relative">
@@ -79,73 +42,109 @@
             <br>
           </div>
           {% endif %}
+      </div>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+
+      {% for field in form %}
+      {% if not field.id_for_label in data %}
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        {% if field.value %}
+        <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          {{field.label}} PDF
+        </a>
+        {% else %}
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          {{field.label_tag}}
+        </h4>
+
+        {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
+        <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
+        {% elif field.id_for_label == 'id_cronograma' and estatus == 'ACEPTADO'%}
+        <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
+        {% endif %}
+
+
+        {{field}}
+        <div class="relative">
+          <br>
+          {% if estatus == 'ACEPTADO' %}
+          <input type="submit" value="Enviar"
+            class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          {% endif %}
+          <br>
         </div>
         {% endif %}
-        {% endfor %}
       </div>
+      {% endif %}
+      {% endfor %}
     </form>
+  </div>
 
-    <div class="container px-6 mx-auto grid">
-      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Reportes parciales
-      </h2>
-      <div class="grid gap-6 mb-8 md:grid-cols-2">
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-            Reporte parcial 1
-          </h4>
-          {% if r1.reporte1Doc %}
 
-          <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Parcial 1 PDF
-          </a>
+  <div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      Reportes parciales
+    </h2>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Reporte parcial 1
+        </h4>
+        {% if r1.reporte1Doc %}
 
-          {% else %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
-          {% endif %}
-        </div>
+        <a class="text-green-500" href="{{r1.reporte1Doc.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Parcial 1 PDF
+        </a>
 
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-            Reporte parcial 2
-          </h4>
-          {% if r2.reporte2Doc %}
-
-          <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Parcial 2 PDF
-          </a>
-
-          {% else %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
-
-          {% endif %}
-        </div>
-
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+        {% endif %}
       </div>
 
-      <div class="grid gap-6 mb-8 md:grid-cols-2">
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-          <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-            Reporte final
-          </h4>
-          {% if rF.reporteDocFinal %}
-          <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            Reporte Final PDF
-          </a>
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Reporte parcial 2
+        </h4>
+        {% if r2.reporte2Doc %}
 
-          {% else %}
-          <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
-          <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+        <a class="text-green-500" href="{{r2.reporte2Doc.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Parcial 2 PDF
+        </a>
 
-          {% endif %}
-        </div>
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+
+        {% endif %}
+      </div>
+
+    </div>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+          Reporte final
+        </h4>
+        {% if rF.reporteDocFinal %}
+        <a class="text-green-500" href="{{rF.reporteDocFinal.url}}" target="_blank">
+          <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+          Reporte Final PDF
+        </a>
+
+        {% else %}
+        <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+        <p class="text-red-600">Verifique que su reporte haya sido enviado</p>
+
+        {% endif %}
       </div>
     </div>
+  </div>
 
 </main>
 

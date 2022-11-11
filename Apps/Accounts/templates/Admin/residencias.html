@@ -10,12 +10,44 @@
         </h2>
 
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-            Titulo peque
+            Ordenar por
         </h4>
-
+        <div class="mb-8">
+            <select id="s1"
+                onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                {% if orderB == 1 %}
+                <option selected>Nombre Residencia A - Z</option>
+                {% elif orderB == 2 %}
+                <option selected>Nombre Residencia Z - A</option>
+                {% elif orderB == 3 %}
+                <option selected>Estatus A - Z</option>
+                {% elif orderB == 4 %}
+                <option selected>Estatus Z - A</option>
+                {% elif orderB == 5 %}
+                <option selected>Periodo Inicio (Menor a Mayor)</option>
+                {% elif orderB == 6 %}
+                <option selected>Periodo Inicio (Mayor a Menor)</option>
+                {% elif orderB == 7 %}
+                <option selected>Periodo Fin (Menor a Mayor)</option>
+                {% elif orderB == 8 %}
+                <option selected>Periodo Fin (Mayor a Menor)</option>
+                {% else %}
+                <option selected>Seleccionar</option>
+                {% endif %}
+                <option value="{% url 'residencias' page 1 %}">Nombre Residencia A - Z</option>
+                <option value="{% url 'residencias' page 2 %}">Nombre Residencia Z - A</option>
+                <option value="{% url 'residencias' page 3 %}">Estatus A - Z</option>
+                <option value="{% url 'residencias' page 4 %}">Estatus Z - A</option>
+                <option value="{% url 'residencias' page 5 %}">Periodo Inicio (Menor a Mayor)</option>
+                <option value="{% url 'residencias' page 6 %}">Periodo Inicio (Mayor a Menor)</option>
+                <option value="{% url 'residencias' page 7 %}">Periodo Fin (Menor a Mayor)</option>
+                <option value="{% url 'residencias' page 8 %}">Periodo Fin (Mayor a Menor)</option>
+            </select>
+        </div>
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
-                <table class="w-full whitespace-no-wrap">
+                <table class="w-full">
                     <thead>
                         <tr
                             class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
@@ -23,10 +55,10 @@
                             <th class="px-4 py-3">Tipo de proyecto</th>
                             <th class="px-4 py-3">Dependencia</th>
                             <th class="px-4 py-3">Estatus</th>
-                            <th class="px-4 py-3">Periodo Inicio</th>
-                            <th class="px-4 py-3">Periodo Fin</th>
-                            <th class="px-4 py-3"># Integrantes</th>
-                            <th class="px-4 py-3">Ver proyecto</th>
+                            <th class="px-4 py-3 text-center">Periodo Inicio</th>
+                            <th class="px-4 py-3 text-center">Periodo Fin</th>
+                            <th class="px-4 py-3 text-center"># Integrantes</th>
+                            <th class="px-4 py-3 text-center">Ver proyecto</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -41,30 +73,35 @@
                             <td class="px-4 py-3 text-sm">
                                 {{proyecto.dependencia}}
                             </td>
-                            <td class="px-4 py-3 text-xs">
-                                {% if proyecto.estatus == 'FINALIZADA' %}
+                            <td class="px-4 py-3 text-xs whitespace-no-wrap">
+                                {% if proyecto.estatus == 'INICIADA' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                     {{proyecto.estatus}}
                                 </span>
-                                {% elif proyecto.estatus == 'INICIADA' %}
+                                {% elif proyecto.estatus == 'FINALIZADA' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-teal-500 dark:text-blue-100">
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
                                     {{proyecto.estatus}}
                                 </span>
                                 {% elif proyecto.estatus == 'EN PROCESO' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
                                     {{proyecto.estatus}}
                                 </span>
                                 {% elif proyecto.estatus == 'RECHAZADA' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{proyecto.estatus}}
+                                </span>
+                                {% elif proyecto.estatus == 'PROROGA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
                                     {{proyecto.estatus}}
                                 </span>
                                 {% else %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
                                     {{proyecto.estatus}}
                                 </span>
                                 {% endif %}
@@ -104,7 +141,7 @@
             <div
                 class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
                 <span class="flex items-center col-span-3">
-                    Showing 1-30 of 100
+                    Mostrando {{start}} - {{end}} de {{totalR}}
                 </span>
                 <span class="col-span-2"></span>
                 <!-- Pagination -->
@@ -112,60 +149,58 @@
                     <nav aria-label="Table navigation">
                         <ul class="inline-flex items-center">
                             <li>
-                                <button
-                                    class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
-                                    aria-label="Previous">
-                                    <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                        <path
-                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                            clip-rule="evenodd" fill-rule="evenodd"></path>
-                                    </svg>
-                                </button>
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'residencias' n_buttons orderB %}">
+                                    {% else %}
+                                    <a href="{% url 'residencias' prev_page orderB %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Previous">
+                                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
                             </li>
+                            {% for button in buttons %}
+                            {% if button == page %}
                             <li>
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    1
-                                </button>
+                                <a href="{% url 'residencias' button orderB %}">
+                                    <button
+                                        class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
                             </li>
+                            {% else %}
                             <li>
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    2
-                                </button>
+                                <a href="{% url 'residencias' button orderB %}">
+                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
                             </li>
+                            {% endif %}
+                            {% endfor %}
                             <li>
-                                <button
-                                    class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    3
-                                </button>
-                            </li>
-                            <li>
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    4
-                                </button>
-                            </li>
-                            <li>
-                                <span class="px-3 py-1">...</span>
-                            </li>
-                            <li>
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    8
-                                </button>
-                            </li>
-                            <li>
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    9
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-                                    aria-label="Next">
-                                    <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
-                                        <path
-                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                            clip-rule="evenodd" fill-rule="evenodd"></path>
-                                    </svg>
-                                </button>
+                                {% if next_page > n_buttons %}
+                                <a href="{% url 'residencias' 1 orderB %}">
+                                    {% else %}
+                                    <a href="{% url 'residencias' next_page orderB %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Next">
+                                            <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
                             </li>
                         </ul>
                     </nav>

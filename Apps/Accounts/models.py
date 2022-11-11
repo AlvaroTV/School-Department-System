@@ -64,11 +64,12 @@ class Docente(models.Model):
     nombre = models.CharField(max_length=100)
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)
-    numCelular = models.CharField(max_length=20)
+    numCelular = models.CharField(max_length=20, null=True, blank=True)
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)        
     curp = models.CharField(max_length=18, null=True, blank=True)
     rfc = models.CharField(max_length=13, null=True, blank=True)
     estatus = models.CharField(max_length=15, choices=ESTATUS, default='ACTIVO', blank=True)     
+    puesto = models.CharField(max_length=70, null=True, blank=True)     
     fotoUsuario = models.ImageField(default='profilepicD.jpg', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)   
     
@@ -140,8 +141,8 @@ class Anteproyecto(models.Model):
     
     # Llave foranea
     #docentes = models.ManyToManyField(Docente, blank=True)    
-    asesorInterno = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='asesorInterno')
-    revisor = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='revisor')
+    revisor1 = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='revisor1')
+    revisor2 = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='revisor2')
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
     asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
     observacion = models.OneToOneField(Observacion, on_delete=models.SET_NULL, null=True, blank=True)

@@ -1,0 +1,353 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+<div class="container grid px-6 mx-auto">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Expediente
+    </h2>
+    <div class="relative">
+        <a href="{% url 'expedientes' 1 0%}">
+            <button
+                class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
+        </a>
+    </div>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div
+            class="grid text-sm gap-6 md:grid-cols-2 min-w-0 max-w-fit p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 mr-30 font-semibold text-gray-600 dark:text-gray-300">
+                Estado del Expediente:
+                {% if expediente.estatus == 'INICIAL' %}
+                <span
+                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                    {{expediente.estatus}}
+                </span>
+                {% elif expediente.estatus == 'PROCESO' %}
+                <span
+                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                    {{expediente.estatus}}
+                </span>
+                {% elif expediente.estatus == 'COMPLETO' %}
+                <span
+                    class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                    {{expediente.estatus}}
+                </span>
+                {% else %}
+                <span
+                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                    {{expediente.estatus}}
+                </span>
+                {% endif %}
+            </h4>
+            <div class="relative">
+                <a href="#" @click="openModal"
+                    class="px-4 py-2 text-sm absolute right-0 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Editar
+                    Estado</a>
+            </div>
+        </div>
+    </div>
+    <table class="w-full whitespace-no-wrap">
+        <thead>
+            <tr
+                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                <th class="px-4 py-3">Numero de Control</th>
+                <th class="px-4 py-3">Estudiante</th>
+                <th class="px-4 py-3">Semestre</th>
+            </tr>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400">
+                <td class="px-4 py-3">
+                    {{estudiante.numControl}}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                            <img class="object-cover w-full h-full rounded-full" src="{{estudiante.fotoUsuario.url}}"
+                                alt="" loading="lazy" />
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold">{{estudiante}}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    {{estudiante.semestre}}
+                </td>
+            </tr>
+        </tbody>
+        </thead>
+    </table>
+    <div>
+        <br>
+        <form name="formulario" method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid gap-6 mb-8 md:grid-cols-2">
+                {% for field in formE %}
+
+                {% if field.id_for_label in data %}
+                {% if field.id_for_label == 'id_dictamen' and semestre < 13 %} {% else %} <div
+                    class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        {{field.label}} PDF
+                    </a>
+                    {% else %}
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        {{field.label_tag}}
+                    </h4>
+
+                    {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
+                    {% endif %}
+
+                    <div
+                        class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+                        <h4>
+                            No se ha subido el documento
+                        </h4>
+                        <div class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+
+            {% for field in formE %}
+            {% if not field.id_for_label in data %}
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                {% if field.value %}
+                <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                    <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                        class="mx-auto d-block">
+                    {{field.label}} PDF
+                </a>
+                {% else %}
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    {{field.label_tag}}
+                </h4>
+
+                {% if field.id_for_label in data2 and estatus == 'ACEPTADO'%}
+                <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha20d}} </p>
+                {% elif field.id_for_label == 'id_cronograma' and estatus == 'ACEPTADO'%}
+                <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
+                {% endif %}
+
+
+                <div
+                    class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+                    <h4>
+                        No se ha subido el documento
+                    </h4>
+                    <div class="inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                        </svg>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+    <div class="container px-6 mx-auto grid">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Reportes Parciales
+        </h2>
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Reporte parcial 1
+                </h4>
+                {% if r1_fechaEntrega and not r1.r1_hojaRevisores and not r1.r1_formatoEvaluacion %}
+                <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{r1_fechaEntrega}} </p>
+                {% endif %}
+
+                {% for field in form1 %}
+                <br>
+                <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                    {{field.label}}
+                </p>
+                {% if field.value %}
+                <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                    <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                        class="mx-auto d-block">
+                    {{field.label}} PDF
+                </a>
+                <br>
+                {% else %}
+                <div
+                    class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+                    <h4>
+                        No se ha subido el documento
+                    </h4>
+                    <div class="inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                        </svg>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        Reporte parcial 2
+                    </h4>
+                    {% if r2_fechaEntrega and not r2.r2_hojaRevisores and not r2.r2_formatoEvaluacion %}
+                    {% if r1.r1_hojaRevisores or r1.r1_formatoEvaluacion %}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{r2_fechaEntrega}} </p>
+                    {% endif %}
+                    {% endif %}
+                    {% for field in form2 %}
+                    <br>
+                    <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                        {{field.label}}
+                    </p>
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        {{field.label}} PDF
+                    </a>
+                    <br>
+                    {% else %}
+                    <div
+                        class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+                        <h4>
+                            No se ha subido el documento
+                        </h4>
+                        <div class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </form>
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                        Reporte Final
+                    </h4>
+                    {% if rF_fechaEntrega and not rF.rf_formatoEvaluacion and not rF.rf_hojaRevisores %}
+                    {% if r1.r1_hojaRevisores or r1.r1_formatoEvaluacion %}
+                    <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{rF_fechaEntrega}} </p>
+                    {% endif %}
+                    {% endif %}
+                    {% if rF.calificacion %}
+                    <p class="text-green-500"><strong>Calificacion:</strong> {{rF.calificacion}}</p>
+                    {% endif %}
+                    {% for field in formF %}
+                    <br>
+                    <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                        {{field.label}}
+                    </p>
+                    {% if field.value %}
+                    <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
+                        <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
+                            class="mx-auto d-block">
+                        {{field.label}} PDF
+                    </a>
+                    <br>
+                    {% else %}
+                    <div
+                        class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+                        <h4>
+                            No se ha subido el documento
+                        </h4>
+                        <div class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0 transform translate-y-1/2" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0  transform translate-y-1/2" @click.away="closeModal"
+        @keydown.escape="closeModal"
+        class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+        role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+            <button
+                class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                aria-label="close" @click="closeModal">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+                    <path
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+            </button>
+        </header>
+        <!-- Modal body -->
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mt-4 mb-6">
+                <!-- Modal title -->
+                <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                    Seleccione el nuevo Estado para el Anteproyecto
+                </p>
+                <!-- Modal description -->
+                <p class="text-sm text-gray-700 dark:text-gray-400">
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Estado Anteproyecto</span>
+                        {{ formEstado }}
+                    </label>
+                </p>
+            </div>
+            <footer
+                class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
+                <button @click="closeModal" type="button"
+                    class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                    Cancelar
+                </button>
+                <input
+                    class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    type="submit" value="Aceptar">
+            </footer>
+        </form>
+    </div>
+</div>
+{% endblock %}
