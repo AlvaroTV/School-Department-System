@@ -15,8 +15,8 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Eliminar este Anteproyecto?...' + '\n(No se podra revertir)',
-                text: elementValue.item(index).textContent,
+                title: 'Eliminar esta Observacion?...' + '\n(No se podra revertir)',
+                text: 'Elaborada por: ' + elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -30,7 +30,7 @@ window.onload = function() {
                         'El elemento ha sido removido.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    setTimeout(() => { location.href = ref; }, 1500);                    
                 }
             })
         })

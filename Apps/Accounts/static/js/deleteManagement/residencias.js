@@ -15,7 +15,7 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Eliminar este Anteproyecto?...' + '\n(No se podra revertir)',
+                title: 'Eliminar este Proyecto?...' + '\n(No se podra revertir)',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,

@@ -203,7 +203,7 @@ class AnteproyectoEstForm(ModelForm):
         YEARSF= [x for x in range(today.year,today.year+3)]
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion']   
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatusR1', 'estatusR2']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -231,7 +231,7 @@ class AnteproyectoViewForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'     
-        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatus']   
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatus', 'estatusR1', 'estatusR2']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -252,7 +252,7 @@ class AnteproyectoForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['asesorInterno', 'revisor','dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion']   
+        exclude = ['asesorInterno', 'revisor','dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatusR1', 'estatusR2']   
         labels = {
             'a_nombre': 'Nombre del anteproyecto',
         }        

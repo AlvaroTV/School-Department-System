@@ -1,4 +1,5 @@
 {% extends 'Global/main.html'%}
+{% load static %}
 
 {% block content %}
 <div class="container grid px-6 mx-auto">
@@ -36,10 +37,10 @@
             </div>
             <div>
                 <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    Anteproyectos enviados
+                    Anteproyectos totales
                 </p>
                 <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
-                    {{anteproyectosE}}
+                    {{anteproyectosT}}
                 </p>
             </div>
         </div>
@@ -98,19 +99,23 @@
                     <span>ENVIADO</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#F2C80F;"></span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#2c3038;"></span>
                     <span>PENDIENTE</span>
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center text-center ">
                     <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FE9666;"></span>
                     <span>EN REVISION</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#F2C80F;"></span>
+                    <span>REVISADO</span>
                 </div>
                 <div class="flex items-center">
                     <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#4A8DDC;"></span>
                     <span>ACEPTADO</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>                    
                     <span>RECHAZADO</span>
                 </div>
             </div>
@@ -144,52 +149,80 @@
 
     <div class="grid gap-6 mb-8 md:grid-cols-2">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                    <div class=""></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink">
+                    <div class=""></div>
+                </div>
+            </div>
             <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Residencias por estado
+                Anteproyectos por Estudiantes
             </h4>
-            <canvas id="pie"></canvas>
+            <canvas id="bars1" style="display: block; width: 572px; height: 286px;" class="chartjs-render-monitor"
+                width="572" height="286"></canvas>
             <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-                <!-- Chart legend -->
+                <!-- Chart legend -->                
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"></span>
-                    <span>INICIADA</span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FF6D28;"></span>
+                    <span>Total Estudiantes</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
-                    <span>EN PROCESO</span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#6FEDD6;"></span>
+                    <span>Estudiantes con Anteproyecto</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                    <span>PROROGA</span>
-                </div>
-                <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"></span>
-                    <span>FINALIZADA</span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FCE700;"></span>
+                    <span>Anteproyectos Registrados</span>
                 </div>
             </div>
         </div>
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Traffic
-            </h4>
-            <canvas id="line"></canvas>
-            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-                <!-- Chart legend -->
-                <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
-                    <span>Organic</span>
+            <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                    <div class=""></div>
                 </div>
-                <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                    <span>Paid</span>
+                <div class="chartjs-size-monitor-shrink">
+                    <div class=""></div>
                 </div>
             </div>
-        </div>
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Residencias por Estudiantes
+            </h4>
+            <canvas id="bars2" style="display: block; width: 572px; height: 286px;" class="chartjs-render-monitor"
+                width="572" height="286"></canvas>
+            <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
+                <!-- Chart legend -->                
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#A149FA;"></span>
+                    <span>Total Estudiantes</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#82CD47;"></span>
+                    <span>Estudiantes con Residencia</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#2192FF;"></span>
+                    <span>Residencias Registradas</span>
+                </div>
+            </div>
+        </div>        
+    </div>        
+
+    <div class="grid gap-6 mb-8 md:grid-cols-1">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Anteproyectos registrados por mes
+            </h4>
+            <canvas id="prueba"></canvas>            
+        </div>        
     </div>
     <!--Anteproyectos-->
     <span hidden="hidden" id="anteproyectosE">{{anteproyectosE}}</span>
     <span hidden="hidden" id="anteproyectosP">{{anteproyectosP}}</span>
     <span hidden="hidden" id="anteproyectosER">{{anteproyectosER}}</span>
+    <span hidden="hidden" id="anteproyectosRE">{{anteproyectosRE}}</span>
     <span hidden="hidden" id="anteproyectosA">{{anteproyectosA}}</span>
     <span hidden="hidden" id="anteproyectosR">{{anteproyectosR}}</span>
     <!--Residencias-->
@@ -197,5 +230,16 @@
     <span hidden="hidden" id="residenciasEP">{{residenciasEP}}</span>
     <span hidden="hidden" id="residenciasP">{{residenciasP}}</span>
     <span hidden="hidden" id="residenciasF">{{residenciasF}}</span>
+
+    <span hidden="hidden" id="dataPie1">{{dataPie1}}</span>
+
+    <span hidden="hidden" id="anteproyectos_months">{{anteproyectos_months}}</span>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/charts-bars.js' %}" defer></script>
+<script src="{% static 'js/charts-lines.js' %}" defer></script>
+<script src="{% static 'js/charts-pie.js' %}" defer></script>
+<script src="{% static 'js/charts-pLine.js' %}" defer></script>
 {% endblock %}

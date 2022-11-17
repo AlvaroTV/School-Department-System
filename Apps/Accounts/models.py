@@ -137,7 +137,8 @@ class Residencia(models.Model):
 
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    ESTADOSR = (('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     
     # Llave foranea
     #docentes = models.ManyToManyField(Docente, blank=True)    
@@ -152,6 +153,8 @@ class Anteproyecto(models.Model):
     fechaEntrega = models.DateTimeField(auto_now_add=True)
     numIntegrantes = models.IntegerField(default=1)
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
+    estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE', blank=True)
+    estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE', blank=True)    
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)
     periodoInicio = models.DateField(null=True, default=date.today)
     periodoFin = models.DateField(null=True)    

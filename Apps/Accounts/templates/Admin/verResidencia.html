@@ -10,7 +10,7 @@
                 Datos de la residencia
             </h2>
             <div class="relative">
-                <a href="{% url 'residencias' 1 0 %}">
+                <a href="{% url 'residencias' 1 0 0 %}">
                     <button
                         class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
                 </a>
@@ -23,7 +23,7 @@
             <div
                 class="grid text-sm gap-6 md:grid-cols-2 min-w-0 max-w-fit p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <h4 class="mb-4 mr-30 font-semibold text-gray-600 dark:text-gray-300">
-                    Estado dela Residencia:
+                    Estado de la Residencia:
                     {% if residencia.estatus == 'INICIADA' %}
                     <span
                         class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">

@@ -5,7 +5,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-#from django.db.models import Count
+from django.db.models.functions import Substr
+from django.db.models import Count
 from datetime import date, timedelta
 import string  
 import random  
@@ -15,23 +16,60 @@ from .decorators import *
 # Create your views here.
 
 @login_required(login_url='login')
-@admin_only
+@dashboard
 def home(request):
     group = request.user.groups.all()[0].name
-    totalAlumnos = Estudiante.objects.all().count()
-    
-    anteproyectosE = Anteproyecto.objects.filter(estatus = 'ENVIADO').count()
-    anteproyectosP = Anteproyecto.objects.filter(estatus = 'PENDIENTE').count()
-    anteproyectosER = Anteproyecto.objects.filter(estatus = 'EN REVISION').count()
-    anteproyectosA = Anteproyecto.objects.filter(estatus = 'ACEPTADO').count()
-    anteproyectosR = Anteproyecto.objects.filter(estatus = 'RECHAZADO').count()
-    
-    residenciasI = Residencia.objects.filter(estatus = 'INICIADA').count()
-    residenciasEP = Residencia.objects.filter(estatus = 'EN PROCESO').count()
-    residenciasP = Residencia.objects.filter(estatus = 'PROROGA').count()
-    residenciasF = Residencia.objects.filter(estatus = 'FINALIZADA').count()
+    all_estudiantes = Estudiante.objects.all()
+    all_anteproyectos = Anteproyecto.objects.all()
+    all_residencias = Residencia.objects.all()
     docentes = Docente.objects.all().count()
-    context = {'group': group, 'totalAlumnos': totalAlumnos, 'anteproyectosE': anteproyectosE, 'anteproyectosP': anteproyectosP, 'anteproyectosER': anteproyectosER, 'anteproyectosA': anteproyectosA, 'anteproyectosR': anteproyectosR, 'residenciasI': residenciasI, 'residenciasEP': residenciasEP, 'residenciasP': residenciasP ,'residenciasF': residenciasF, 'docentes': docentes,}
+    totalAlumnos = all_estudiantes.count()    
+    
+    anteproyectosT = all_anteproyectos.count()
+    residenciasT = all_residencias.count()
+    
+    anteproyectosE = all_anteproyectos.filter(estatus = 'ENVIADO').count()
+    anteproyectosP = all_anteproyectos.filter(estatus = 'PENDIENTE').count()
+    anteproyectosER = all_anteproyectos.filter(estatus = 'EN REVISION').count()
+    anteproyectosRE = all_anteproyectos.filter(estatus = 'REVISADO').count()
+    anteproyectosA = all_anteproyectos.filter(estatus = 'ACEPTADO').count()
+    anteproyectosR = all_anteproyectos.filter(estatus = 'RECHAZADO').count()
+    
+    residenciasI = all_residencias.filter(estatus = 'INICIADA').count()
+    residenciasEP = all_residencias.filter(estatus = 'EN PROCESO').count()
+    residenciasP = all_residencias.filter(estatus = 'PROROGA').count()
+    residenciasF = all_residencias.filter(estatus = 'FINALIZADA').count()
+                      
+    generaciones = all_estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()    
+    list_generaciones = []
+    cantidad_generaciones = []
+    cantidad_anteproyectos = []        
+    cantidad_residencias = []    
+    cantidadT_anteproyectos = []
+    prueba1 = []
+    prueba2 = []
+    cantidadT_residencias = []   
+    anteproyectos_months = []
+        
+    for g in generaciones:         
+        list_generaciones.append(g['generacion'])        
+        cantidad_generaciones.append(all_estudiantes.filter(numControl__startswith=g['generacion']).count())        
+        cantidad_anteproyectos.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None).count())            
+        cantidad_residencias.append((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None).count())) 
+        prueba1.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)) 
+        prueba2.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
+        cantidadT_anteproyectos.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
+        cantidadT_residencias.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None)).values('residencia').annotate(dcount=Count('residencia'))).count()) 
+                    
+    
+    for i in range(1,13): anteproyectos_months.append(all_anteproyectos.filter(periodoInicio__month=i).count())
+    
+    print(anteproyectos_months)
+    
+    dataPie1 = [list_generaciones, cantidad_generaciones, cantidad_anteproyectos, cantidad_residencias, cantidadT_anteproyectos, cantidadT_residencias]     
+        
+    
+    context = {'group': group, 'totalAlumnos': totalAlumnos, 'anteproyectosE': anteproyectosE, 'anteproyectosT': anteproyectosT, 'anteproyectosP': anteproyectosP, 'anteproyectosER': anteproyectosER, 'anteproyectosRE': anteproyectosRE, 'anteproyectosA': anteproyectosA, 'anteproyectosR': anteproyectosR, 'residenciasI': residenciasI, 'residenciasEP': residenciasEP, 'residenciasP': residenciasP ,'residenciasF': residenciasF, 'docentes': docentes, 'dataPie1': dataPie1, 'anteproyectos_months': anteproyectos_months}
     return render(request, 'Global/dashboard.html', context)
 
 @login_required(login_url='login')

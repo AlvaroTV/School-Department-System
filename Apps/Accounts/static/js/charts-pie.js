@@ -6,6 +6,7 @@
 const anteproyectosE = document.getElementById('anteproyectosE').textContent
 const anteproyectosP = document.getElementById('anteproyectosP').textContent
 const anteproyectosER = document.getElementById('anteproyectosER').textContent
+const anteproyectosRE = document.getElementById('anteproyectosRE').textContent
 const anteproyectosA = document.getElementById('anteproyectosA').textContent
 const anteproyectosR = document.getElementById('anteproyectosR').textContent
 
@@ -14,26 +15,42 @@ const residenciasEP = document.getElementById('residenciasEP').textContent
 const residenciasP = document.getElementById('residenciasP').textContent
 const residenciasF = document.getElementById('residenciasF').textContent
 
+const config = {
+  type: 'pie',
+  data: data,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Pie Chart'
+      }
+    }
+  },
+};
 
 const pieConfig1 = {
-  type: 'doughnut',
+  type: 'pie',
   data: {
     datasets: [
       {
-        data: [anteproyectosE, anteproyectosP, anteproyectosER, anteproyectosA, anteproyectosR],
+        data: [anteproyectosE, anteproyectosP, anteproyectosER, anteproyectosRE, anteproyectosA, anteproyectosR],
         /**
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
          */
-        backgroundColor: ['#73B761', '#F2C80F', '#FE9666', '#4A8DDC', '#D83B01'],
+        backgroundColor: ['#73B761', '#2c3038', '#FE9666', '#F2C80F', '#4A8DDC', '#D83B01'],
         label: 'Dataset 1',
       },
     ],
-    labels: ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'ACEPTADO', 'RECHAZADO'],
+    labels: ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'REVISADO', 'ACEPTADO', 'RECHAZADO'],
   },
   options: {
     responsive: true,
-    cutoutPercentage: 80,
+    
     /**
      * Default legends are ugly and impossible to style.
      * See examples in charts.html to add your own legends

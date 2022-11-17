@@ -7,36 +7,56 @@
     <div class="container grid px-6 mx-auto">
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Expedientes
-        </h2>                        
+        </h2>
 
-        <div class="relative my-6 h-12">     
-            {% if not search %}                   
-            <div class="absolute inset-y-0 left-0 ">                
-                <label for="s1" class="font-semibold text-gray-600 dark:text-gray-300">Ordenar por </label>    
-                <select id="s1" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    {% if orderB == 1 %}
-                    <option selected>Semestre (Menor a Mayor)</option>
-                    {% elif orderB == 2 %}
-                    <option selected>Semestre (Mayor a Menor)</option>
-                    {% elif orderB == 3 %}
-                    <option selected>Numero control (Menor a Mayor)</option>
-                    {% elif orderB == 4 %}
-                    <option selected>Numero control (Mayor a Menor)</option>
-                    {% elif orderB == 5 %}
-                    <option selected>Apellido Paterno A - Z</option>
-                    {% elif orderB == 6 %}
-                    <option selected>Apellido Paterno Z - A</option>
-                    {% else %}
-                    <option selected>Seleccionar</option>
-                    {% endif %}
-                    <option value="{% url 'expedientes' page 1 %}" >Semestre (Menor a Mayor)</option>
-                    <option value="{% url 'expedientes' page 2 %}" >Semestre (Mayor a Menor)</option>
-                    <option value="{% url 'expedientes' page 3 %}" >Numero control (Menor a Mayor)</option>
-                    <option value="{% url 'expedientes' page 4 %}" >Numero control (Mayor a Menor)</option>
-                    <option value="{% url 'expedientes' page 5 %}" >Apellido Paterno A - Z</option>
-                    <option value="{% url 'expedientes' page 6 %}" >Apellido Paterno Z - A</option>
-                </select>
+        {% if not search %}
+        <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Ordenar por
+        </h4>
+        {% endif %}
+
+        <div class="relative mb-6 h-12">
+            {% if not search %}
+            <div class="absolute inset-y-0 left-0 ">
+                <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+                    <select id="s1"
+                        onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        {% if orderB == 1 %}
+                        <option selected>Semestre (Menor a Mayor)</option>
+                        {% elif orderB == 2 %}
+                        <option selected>Semestre (Mayor a Menor)</option>
+                        {% elif orderB == 3 %}
+                        <option selected>Numero control (Menor a Mayor)</option>
+                        {% elif orderB == 4 %}
+                        <option selected>Numero control (Mayor a Menor)</option>
+                        {% elif orderB == 5 %}
+                        <option selected>Apellido Paterno A - Z</option>
+                        {% elif orderB == 6 %}
+                        <option selected>Apellido Paterno Z - A</option>
+                        {% else %}
+                        <option selected>Seleccionar</option>
+                        {% endif %}
+                        <option value="{% url 'expedientes' page 1 filter %}">Semestre (Menor a Mayor)</option>
+                        <option value="{% url 'expedientes' page 2 filter %}">Semestre (Mayor a Menor)</option>
+                        <option value="{% url 'expedientes' page 3 filter %}">Numero control (Menor a Mayor)</option>
+                        <option value="{% url 'expedientes' page 4 filter %}">Numero control (Mayor a Menor)</option>
+                        <option value="{% url 'expedientes' page 5 filter %}">Apellido Paterno A - Z</option>
+                        <option value="{% url 'expedientes' page 6 filter %}">Apellido Paterno Z - A</option>
+                    </select>
+
+                    <select id="s2"
+                        onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                        <option selected="">Filtrar por estatus</option>
+
+                        <option value="{% url 'expedientes' page orderB 1 %}">INICIAL </option>
+                        <option value="{% url 'expedientes' page orderB 2 %}">PROCESO </option>
+                        <option value="{% url 'expedientes' page orderB 3 %}">COMPLETO</option>                        
+                        <option value="{% url 'expedientes' page orderB 4 %}">TODOS</option>
+                    </select>
+                </div>
             </div>
             {% endif %}
             <div class="absolute inset-y-0 right-0 ">
@@ -46,8 +66,10 @@
                 </button>
             </div>
         </div>
+
         
-        <div class="w-full my-8 overflow-hidden rounded-lg shadow-xs">
+
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">
                     <thead>
@@ -58,6 +80,7 @@
                             <th class="px-4 py-3 text-center">Semestre</th>
                             <th class="px-4 py-3">Estatus</th>
                             <th class="px-4 py-3 text-center">Ver expediente</th>
+                            <th class="px-4 py-3 text-center">Eliminar expediente</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -127,82 +150,97 @@
                                     </a>
                                 </div>
                             </td>
+                            <span hidden="hidden" class="elementValue">{{estudiante}}</span>
+                            <td class="px-4 py-3 text-md btnDelete">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'eliminarExpediente' estudiante.expediente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500"
+                                        aria-label="Like">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             <div
-            class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-            <span class="flex items-center col-span-3">
-                Mostrando {{start}} - {{end}} de {{totalE}}
-            </span>
-            <span class="col-span-2"></span>
-            <!-- Pagination -->
-            {% if buttons %}
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                <nav aria-label="Table navigation">
-                    <ul class="inline-flex items-center">
-                        <li>
-                            {% if prev_page == 0 %}
-                            <a href="{% url 'expedientes' n_buttons orderB %}">
-                                {% else %}
-                                <a href="{% url 'expedientes' prev_page orderB %}">
-                                    {% endif %}
-                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                        aria-label="Previous">
-                                        <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                            <path
-                                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" fill-rule="evenodd"></path>
-                                        </svg>
-                                    </button>
-                                </a>
-                        </li>
-                        {% for button in buttons %}
-                        {% if button == page %}
-                        <li>
-                            <a href="{% url 'expedientes' button orderB %}">
-                                <button
-                                    class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    {{button}}
-                                </button>
-                            </a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="{% url 'expedientes' button orderB %}">
-                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                    {{button}}
-                                </button>
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                        <li>
-                            {% if next_page > n_buttons %}
-                            <a href="{% url 'expedientes' 1 orderB %}">
-                                {% else %}
-                                <a href="{% url 'expedientes' next_page orderB %}">
-                                    {% endif %}
+                class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+                <span class="flex items-center col-span-3">
+                    Mostrando {{start}} - {{end}} de {{totalE}}
+                </span>
+                <span class="col-span-2"></span>
+                <!-- Pagination -->
+                {% if buttons %}
+                <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                    <nav aria-label="Table navigation">
+                        <ul class="inline-flex items-center">
+                            <li>
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'expedientes' n_buttons orderB filter %}">
+                                    {% else %}
+                                    <a href="{% url 'expedientes' prev_page orderB filter %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Previous">
+                                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
+                            </li>
+                            {% for button in buttons %}
+                            {% if button == page %}
+                            <li>
+                                <a href="{% url 'expedientes' button orderB filter %}">
                                     <button
-                                        class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-                                        aria-label="Next">
-                                        <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
-                                            <path
-                                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                clip-rule="evenodd" fill-rule="evenodd"></path>
-                                        </svg>
+                                        class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
                                     </button>
                                 </a>
-                        </li>
-                    </ul>
-                </nav>
-            </span>
-            {% endif %}
+                            </li>
+                            {% else %}
+                            <li>
+                                <a href="{% url 'expedientes' button orderB filter %}">
+                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <li>
+                                {% if next_page > n_buttons %}
+                                <a href="{% url 'expedientes' 1 orderB filter %}">
+                                    {% else %}
+                                    <a href="{% url 'expedientes' next_page orderB filter %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Next">
+                                            <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </span>
+                {% endif %}
+            </div>
         </div>
-        </div>
-    </div>        
+    </div>
 
     <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
@@ -231,7 +269,7 @@
             <!-- Modal body -->
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                
+
                 <div class="mt-2 mb-4">
                     <!-- Modal title -->
                     <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
@@ -245,9 +283,9 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option selected value="1">Numero Control</option>
                                     <option value="2">Nombre Estudiante</option>
-                                    <option value="3">Apellido Paterno</option>                                    
-                                    <option value="4">Apellido Materno</option>                                    
-                                    <option value="5">Semestre</option>                                    
+                                    <option value="3">Apellido Paterno</option>
+                                    <option value="4">Apellido Materno</option>
+                                    <option value="5">Semestre</option>
                                 </select>
                             </div>
                             <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">
@@ -287,4 +325,8 @@
 </main>
 
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/deleteManagement/expedientes.js' %}"></script>
 {% endblock %}

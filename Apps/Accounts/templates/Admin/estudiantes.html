@@ -109,6 +109,11 @@
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
                                     {{estudiante.anteproyecto.estatus}}
                                 </span>
+                                {% elif estudiante.anteproyecto.estatus == 'REVISADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-y-700 bg-y-100 rounded-full dark:text-white dark:bg-y-700">
+                                    {{estudiante.anteproyecto.estatus}}
+                                </span>
                                 {% elif estudiante.anteproyecto.estatus == 'RECHAZADO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
@@ -195,6 +200,7 @@
             </span>
             <span class="col-span-2"></span>
             <!-- Pagination -->
+            {% if buttons %}
             <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
@@ -254,6 +260,7 @@
                     </ul>
                 </nav>
             </span>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -299,7 +306,9 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option selected value="1">Numero Control</option>
                                     <option value="2">Nombre Estudiante</option>
-                                    <option value="3">Semestre</option>                                    
+                                    <option value="3">Apellido Paterno</option>
+                                    <option value="4">Apellido Materno</option>
+                                    <option value="5">Semestre</option>                                    
                                 </select>
                             </div>
                             <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">

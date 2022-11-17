@@ -17,7 +17,7 @@
     </div>    
     <ul class="mt-6">
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>        
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_dashboard" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
           href="{% url 'home' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -29,8 +29,8 @@
           <span class="ml-4">Dashboard</span>
         </a>
       </li>
-    </ul>
-
+    </ul>    
+    
     <!--Student-->
     {% if group == 'student' %}
     <ul>
@@ -246,8 +246,9 @@
     {% elif group == 'admin' %}
     <ul>
       <li class="relative px-6 py-3">
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_anteproyectos" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          href="{% url 'anteproyectos' 1 0 %}">
+          href="{% url 'anteproyectos' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -258,8 +259,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_residencias" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          href="{% url 'residencias' 1 0 %}">
+          href="{% url 'residencias' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -270,8 +272,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_expedientes" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          href="{% url 'expedientes' 1 0 %}">
+          href="{% url 'expedientes' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
             <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
@@ -280,6 +283,7 @@
         </a>
       </li>      
       <li class="relative px-6 py-3">
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_estudiantes" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           href="{% url 'estudiantes' 1 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -289,6 +293,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
+        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true" id="id_docentes" hidden></span>        
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           href="{% url 'docentes' 1 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -310,9 +315,7 @@
         </svg>
       </button>
     </div>
-
-    {% endif %}
-
+    {% endif %}    
   </div>
 </aside>
 <!-- Mobile sidebar -->

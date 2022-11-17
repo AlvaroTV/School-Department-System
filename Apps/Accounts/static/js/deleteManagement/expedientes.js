@@ -15,8 +15,8 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Eliminar este Anteproyecto?...' + '\n(No se podra revertir)',
-                text: elementValue.item(index).textContent,
+                title: 'Eliminar este expediente?...' + '\n(No se podra revertir)',
+                text: 'Expediente del estudiante: ' + elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

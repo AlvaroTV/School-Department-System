@@ -24,13 +24,14 @@ urlpatterns = [
     path('residencia/', proyectoResidencia, name='residencia'),    
         
     # Admin
-    path('anteproyectos/<int:page>/<int:orderB>', anteproyectos, name='anteproyectos'),    
-    path('residencias/<int:page>/<int:orderB>', residencias, name='residencias'),        
-    path('expedientes/<int:page>/<int:orderB>', expedientes, name='expedientes'),        
+    path('anteproyectos/<int:page>/<int:orderB><int:filter>', anteproyectos, name='anteproyectos'),    
+    path('residencias/<int:page>/<int:orderB><int:filter>', residencias, name='residencias'),        
+    path('expedientes/<int:page>/<int:orderB><int:filter>', expedientes, name='expedientes'),        
     path('estudiantes/<int:page>/<int:orderB>', estudiantes, name='estudiantes'),        
     path('docentes/<int:page>/<int:orderB>', docentes, name='docentes'),       
     
     path('verExpediente/<int:pk>', verExpediente, name='verExpediente'),           
+    path('eliminarExpediente/<int:pk>', eliminarExpediente, name='eliminarExpediente'),           
      
     path('verAnteproyecto/<int:pk>', verAnteproyecto, name='verAnteproyecto'),        
     path('editarAnteproyectoAdmin/<int:pk>', editarAnteproyectoAdmin, name='editarAnteproyectoAdmin'),        
@@ -63,7 +64,8 @@ urlpatterns = [
     path('editarDocente/<int:pk>', editarDocente, name='editarDocente'),           
     path('altaDocente/', altaDocente, name='altaDocente'), 
     
-    path('verResidencia/<int:pk>', verResidencia, name='verResidencia'),    
+    path('verResidencia/<int:pk>', verResidencia, name='verResidencia'),        
+    path('eliminarResidencia/<int:pk>', eliminarResidencia, name='eliminarResidencia'),        
     path('editarResidenciaAdmin/<int:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
     
     path('eliminarEstudiante/<int:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
