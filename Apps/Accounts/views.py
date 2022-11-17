@@ -75,7 +75,12 @@ def home(request):
 @login_required(login_url='login')
 def studentPage(request):
     group = request.user.groups.all()[0].name
-    context = {'group': group}
+    student = request.user.estudiante
+    anteproyecto = student.anteproyecto
+    proyecto = student.residencia
+    expediente = student.expediente
+    observaciones = anteproyecto.observacion
+    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente}    
     return render(request, 'Student/dashboard.html', context)
 
 @login_required(login_url='login')
