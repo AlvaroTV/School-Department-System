@@ -23,8 +23,12 @@ def plantilla(request):
 def teacherProfile(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    perfilAcademico = docente.perfilAcademico
-    materias = perfilAcademico.materias.all()        
+    try:
+        perfilAcademico = docente.perfilAcademico
+        materias = perfilAcademico.materias.all()        
+    except:
+        perfilAcademico = None
+        materias = None
     
     context = {'group': group, 'docente': docente, 'materias': materias}    
     return render(request, 'Teacher/profile.html', context)
@@ -32,8 +36,13 @@ def teacherProfile(request):
 def teacherSettings(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente        
-    perfilAcademico = docente.perfilAcademico
-    materias = perfilAcademico.materias.all()
+    try:
+        perfilAcademico = docente.perfilAcademico
+        materias = perfilAcademico.materias.all()
+    except:
+        perfilAcademico = None
+        materias = None
+        
     formD = DocenteForm(instance=docente)
     
     if request.method == 'POST':
@@ -147,8 +156,17 @@ def materias(request):
     group = request.user.groups.all()[0].name
     all_materias = Materia.objects.all()
     docente = request.user.docente
-    perfilAcademico = docente.perfilAcademico
-    materias = perfilAcademico.materias.all()
+    
+    try:
+        perfilAcademico = docente.perfilAcademico        
+    except:
+        perfilAcademico = None            
+    
+    try:
+        materias = perfilAcademico.materias.all()
+    except:        
+        materias = None    
+        
     semestre1 = all_materias.filter(semestre=1)
     semestre2 = all_materias.filter(semestre=2)
     semestre3 = all_materias.filter(semestre=3)
@@ -252,6 +270,13 @@ def seleccionarMateria(request, materiaPK):
     docente = request.user.docente
     materia = Materia.objects.get(id = int(materiaPK))
     perfil_academico = docente.perfilAcademico
+    if not perfil_academico:
+        perfil_academico = PerfilAcademico()
+        perfil_academico.save()
+        docente.perfilAcademico = perfil_academico
+        docente.save()
+        perfil_academico = docente.perfilAcademico
+        
     perfil_academico.materias.add(materia)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
     
