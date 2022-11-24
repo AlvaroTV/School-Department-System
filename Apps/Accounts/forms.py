@@ -131,7 +131,6 @@ class ExpedienteViewForm(ModelForm):
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
             self.fields[myField].widget.attrs['disabled'] = True
 
-
 class Reporte1Form(ModelForm):
     class Meta:
         model = ReporteParcial1
@@ -181,7 +180,7 @@ class DocenteForm(ModelForm):
     class Meta:
         model = Docente
         fields = '__all__'
-        exclude = ['user']
+        exclude = ['user', 'perfilAcademico']
         labels = {
             'curp': 'CURP',
             'rfc': 'RFC',
@@ -313,8 +312,7 @@ class ResidenciaViewForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                             
             self.fields[myField].widget.attrs['disabled'] = True
-        
-            
+                    
 class DependenciaForm(ModelForm):
     class Meta:
         model = Dependencia
@@ -414,3 +412,4 @@ class AsesorEViewForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
             self.fields[myField].widget.attrs['disabled'] = True
+            

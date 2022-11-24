@@ -78,15 +78,43 @@ def studentPage(request):
     student = request.user.estudiante
     anteproyecto = student.anteproyecto
     proyecto = student.residencia
-    expediente = student.expediente
-    observaciones = anteproyecto.observacion
-    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente}    
+    expediente = student.expediente    
+    try:
+        observaciones = anteproyecto.observacion
+    except:
+        observaciones = None
+    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'observaciones': observaciones}    
     return render(request, 'Student/dashboard.html', context)
 
 @login_required(login_url='login')
 def teacherPage(request):
     group = request.user.groups.all()[0].name
-    context = {'group': group}
+    docente = request.user.docente
+    all_anteproyectos = Anteproyecto.objects.all()
+    all_residencias = Residencia.objects.all()
+    all_anteproyectos_E = all_anteproyectos.filter(estatus = 'ENVIADO')
+    
+    anteproyectos_activos_r1 = all_anteproyectos.filter(revisor1=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
+    anteproyectos_activos_r2 = all_anteproyectos.filter(revisor2=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
+    
+    residencias_activas_a = all_residencias.filter(r_asesorInterno=docente).exclude(estatus__in=['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA'])
+    residencias_activas_r = all_residencias.filter(r_revisor=docente).exclude(estatus__in=['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA'])
+    
+    anteproyectos_pasados_r1 = all_anteproyectos.filter(estatus='ACEPTADO', revisor1=docente)
+    anteproyectos_pasados_r2 = all_anteproyectos.filter(estatus='ACEPTADO', revisor2=docente)
+    
+    residencias_pasadas_a = all_residencias.filter(estatus='FINALIZADA', r_asesorInterno=docente)
+    residencias_pasadas_r = all_residencias.filter(estatus='FINALIZADA', r_revisor=docente)
+    
+    actividad_docente = [anteproyectos_activos_r1.count() + anteproyectos_activos_r2.count(),
+                         residencias_activas_a.count() + residencias_activas_r.count(), 
+                         residencias_activas_a.count(), 
+                         anteproyectos_pasados_r1.count() + anteproyectos_pasados_r2.count(), 
+                         residencias_pasadas_a.count() + residencias_pasadas_r.count(), 
+                         residencias_activas_r.count()
+                         ]
+
+    context = {'group': group, 'docente': docente, 'anteproyectos': all_anteproyectos_E, 'actividad_docente': actividad_docente}
     return render(request, 'Teacher/dashboard.html', context)
 
 def loginPage(request):

@@ -17,4 +17,6 @@ admin.site.register(Anteproyecto)
 admin.site.register(Residencia)
 admin.site.register(Observacion)
 admin.site.register(ObservacionDocente)
+admin.site.register(Materia)
+admin.site.register(PerfilAcademico)
 

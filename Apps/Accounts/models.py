@@ -4,6 +4,14 @@ from django.contrib.auth.models import User
 import os
 
 # Create your models here.
+class Materia(models.Model):
+    SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
+    clave = models.CharField(max_length=10, null=True, blank=True)
+    nombre = models.CharField(max_length=150, null=True, blank=True)
+    semestre = models.IntegerField(choices=SEMESTRES)     
+    
+    def __str__(self):
+        return f'{self.id}'
 
 class Domicilio(models.Model):
     ESTADOS = (('Aguascalientes', 'Aguascalientes'),('Baja California', 'Baja California'),('Baja California Sur', 'Baja California Sur'),('Campeche', 'Campeche'),('Chiapas', 'Chiapas'),('Chihuahua', 'Chihuahua'),('Coahuila', 'Coahuila'),('Colima', 'Colima'),('Ciudad de México', 'Ciudad de México'),('Durango', 'Durango'),('Guanajuato', 'Guanajuato'),('Guerrero', 'Guerrero'),('Hidalgo', 'Hidalgo'),('Jalisco', 'Jalisco'),('Estado de Mexico', 'Estado de Mexico'),('Michoacan', 'Michoacan'),('Morelos', 'Michoacan'),('Nayarit', 'Nayarit'),('Nuevo Leon', 'Nuevo Leon'),('Oaxaca', 'Oaxaca'),('Puebla', 'Puebla'),('Queretaro', 'Queretaro'),('Quintana Roo', 'Quintana Roo'),('San Luis Potosi', 'San Luis Potosi'),('Sinaloa', 'Sinaloa'),('Sonora', 'Sonora'),('Tabasco', 'Tabasco'),('Tamaulipas', 'Tamaulipas'),('Tlaxcala', 'Tlaxcala'),('Veracruz', 'Veracruz'),('Yucatan', 'Yucatan'),('Zacatecas', 'Zacatecas'))
@@ -58,8 +66,17 @@ class Expediente(models.Model):
     manualUsuario = models.FileField(upload_to='records/manualUsuario/', null=True, blank=True)            
     manualTecnico = models.FileField(upload_to='records/manualTecnico/', null=True, blank=True)                    
 
+class PerfilAcademico(models.Model):
+    # Llaves Foraneas
+    materias = models.ManyToManyField( Materia, blank=True)
+    
+    especialidad = models.CharField(max_length=50, null=True, blank=True)
+
+
 class Docente(models.Model):
     ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACIONES'), ('INACTIVO', 'INACTIVO'))
+    
+    perfilAcademico = models.OneToOneField(PerfilAcademico, null=True, blank=True, on_delete=models.SET_NULL)
     
     nombre = models.CharField(max_length=100)
     apellidoP = models.CharField(max_length=70)

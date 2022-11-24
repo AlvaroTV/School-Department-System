@@ -1,0 +1,70 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Seleccion de materias
+    </h4>
+
+    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <table class="w-full border-collapse border border-slate-500">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3 text-center">Semestre 1</th>
+                        <th class="px-4 py-3 text-center">Semestre 2</th>
+                        <th class="px-4 py-3 text-center">Semestre 3</th>
+                        <th class="px-4 py-3 text-center">Semestre 4</th>
+                        <th class="px-4 py-3 text-center">Semestre 5</th>
+                        <th class="px-4 py-3 text-center">Semestre 6</th>
+                        <th class="px-4 py-3 text-center">Semestre 7</th>
+                        <th class="px-4 py-3 text-center">Semestre 8</th>
+                        <th class="px-4 py-3 text-center">Semestre 9</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for semestre in all_semestres %}
+                    <tr class="text-gray-700 dark:text-gray-400 celdafija">
+                        {% for materia in semestre %}
+                        {% if materia in materias %} 
+                        <span hidden="hidden" class="elementValue2">{{materia.nombre}}</span>                       
+                        <td class="px-4 py-3 text-white border border-slate-600 btnDelete" style="background-color:#b067e0;">
+                            <a href="{% url 'removeMateria' materia %}">
+                                <p class="text-xs text-center font-semibold">{{materia.clave}}</p>
+                                <p class="text-xs text-center font-semibold">{{materia.nombre}}</p>
+                            </a>
+                        </td>
+                        {% else %}
+                        <span hidden="hidden" class="elementValue">{{materia.nombre}}</span>
+                        {% if materia %}
+                        <td class="px-4 py-3 border border-slate-600 btnAdd">                                
+                            <a href="{% url 'seleccionarMateria' materia %}">                                                        
+                                <p class="text-xs text-center font-semibold">{{materia.clave}}</p>
+                                <p class="text-xs text-center font-semibold">{{materia.nombre}}</p>                                
+                            </a>
+                        </td>
+                        {% else %}
+                        <td class="px-4 py-3 border border-slate-600">                                                            
+                                <p class="text-xs text-center font-semibold">{{materia.clave}}</p>
+                                <p class="text-xs text-center font-semibold">{{materia.nombre}}</p>                                                            
+                        </td>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/deleteManagement/materias.js' %}"></script>
+{% endblock %}

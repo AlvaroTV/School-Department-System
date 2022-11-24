@@ -1,0 +1,140 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container px-6 mx-auto grid">
+    <div class="grid gap-7 mb-9 md:grid-cols-2">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Información de usuario
+        </h2>
+
+        <div>
+            <span></span>
+            <span></span>
+            <br>
+            {% if group == 'admin'%}
+            <a href="{% url 'verDocente' docente.id %}">
+                <button
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Cancelar
+                </button>
+            </a>
+            {% else %}
+            <a href="{% url 'home' %}">
+                <button
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Cancelar
+                </button>
+            </a>
+            {% endif %}
+            <br>
+        </div>
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Información general
+                </h4>
+
+                <div class="card-body">
+                    <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img src="{{docente.fotoUsuario.url}}" alt="user-avatar" class="mx-auto d-block" height="150"
+                            width="150" id="uploadedAvatar" />
+                        <br>
+                        <div>
+                            <label
+                                class="px-4 py-5 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg "
+                                tabindex="0">
+                                <span class="d-none d-sm-block">Subir nueva imagen</span>
+                                <i class="bx bx-upload d-block d-sm-none"></i>
+                            </label>
+                            <input type="file" name="fotoUsuario" accept="image/*"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                id="id_fotoUsuario">
+                            <p class="mb-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Permitido JPG o
+                                PNG. Tamaño
+                                máximo de 800K</p>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div
+                    class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 grid gap-6 mb-8 md:grid-cols-2">
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Nombre(s)</span>
+                        {{formD.nombre}}
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Apellido paterno</span>
+                        {{formD.apellidoP}}
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Apellido materno</span>
+                        {{formD.apellidoM}}
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">CURP:</span>
+                        {{formD.curp}}
+                    </label>
+                    <label class="block mt-3 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400"> RFC: </span>
+                        {{formD.rfc}}
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Número de contacto:</span>
+                        {{formD.numCelular}}
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Correo electronico:</span>
+                        {{formD.correoElectronico}}
+                    </label>
+                </div>
+            </div>
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                    Perfil Academico
+                </h4>
+                <label class="block text-sm items-center ">
+                    <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block " height="150"
+                        width="150" id="imageschool" />
+                </label>
+                <br>
+                <div>
+                    <label
+                        class="px-4 py-5 my-10 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg "
+                        tabindex="0">
+                        <a href="{% url 'materias' %}">
+                            <span class="d-none d-sm-block">Agregar materias</span>
+                            <i class="bx bx-upload d-block d-sm-none"></i>
+                        </a>
+                    </label>
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Materias Impartidas:</span>
+                    </label>
+                    <br>
+                    {% for materia in materias %}
+                    <label class="block text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">* {{materia.nombre}}</span>
+                    </label>
+                    <br>
+                    {% endfor %}                    
+                    <br>                    
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <input type="submit"
+                class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                name="Update Information" value="Guardar Cambios">
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

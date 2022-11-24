@@ -213,7 +213,7 @@ def docentes(request, page, orderB):
     context = {'group': group, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB}
     return render(request, 'Admin/docentes.html', context)     
 
-@admin_only
+@publicView
 def verAnteproyecto(request, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)    
@@ -510,7 +510,8 @@ def asignarRevisor1I(request, pkA, pkD):
     anteproyecto = Anteproyecto.objects.get(id = pkA)
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor1 = docente
-    if anteproyecto.estatus != 'ACEPTADO':
+    revisor2 = anteproyecto.revisor2
+    if revisor2 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
     anteproyecto.save()    
         
@@ -563,7 +564,8 @@ def asignarRevisor2I(request, pkA, pkD):
     anteproyecto = Anteproyecto.objects.get(id = pkA)
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor2 = docente
-    if anteproyecto.estatus != 'ACEPTADO':
+    revisor1 = anteproyecto.revisor1
+    if revisor1 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
     anteproyecto.save()        
     return redirect('verAnteproyecto', anteproyecto.id)
@@ -593,8 +595,7 @@ def verDocente(request, pk):
     
     residencias_pasadas_a = all_residencias.filter(estatus='FINALIZADA', r_asesorInterno=docente)
     residencias_pasadas_r = all_residencias.filter(estatus='FINALIZADA', r_revisor=docente)
-    
-    
+        
     for i in residencias_activas_a:
         print(i.nombre)
     

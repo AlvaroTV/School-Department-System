@@ -8,16 +8,22 @@
       Datos del anteproyecto
     </h2>
     <div class="relative">
+      {% if group == 'admin' %}
       <a href="{% url 'anteproyectos' 1 0 0 %}">
-        <button
-          class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
-      </a>
+        {% elif group == 'teacher'%}
+        <a href="{% url 'home' %}">
+          {% endif %}
+          <button
+            class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
+        </a>
     </div>
   </div>
 
   <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
     <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      {% if group == 'admin' %}
       <a href="#" @click="openModal">
+        {% endif %}
         <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
             <path
@@ -146,10 +152,12 @@
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
       Datos generales
     </h4>
+    {% if group == 'admin' %}
     <div class="relative">
       <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
         href="{% url 'editarAnteproyectoAdmin' anteproyecto.id %}">Editar Informacion</a>
     </div>
+    {% endif %}
   </div>
 
   <div class="grid gap-6 mb-8 md:grid-cols-1">
@@ -170,6 +178,7 @@
     </div>
   </div>
 
+  {% if group == 'admin' %}
   <div class="grid gap-6 mb-2 md:grid-cols-2">
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
       Observaciones
@@ -185,7 +194,6 @@
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}} </strong>
         </p>
-
       </div>
       <br>
       <table class="w-full">
@@ -231,9 +239,9 @@
         </p>
       </div>
       {% endif %}
-
     </div>
   </div>
+  {% endif %}
 
   <div class="grid gap-6 mb-8 md:grid-cols-1">
     <br>
@@ -264,10 +272,12 @@
             <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
             {{formDoc.anteproyectoDoc.label}} PDF
           </a>
+          {% if group == 'admin' %}
           <div class="relative">
             <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
               href="{% url 'removeDoc' anteproyecto.id %}">Eliminar</a>
           </div>
+          {% endif %}
           {% endif %}
           <br>
         </form>
@@ -290,7 +300,9 @@
             <th class="px-4 py-3">E-mail</th>
             <th class="px-4 py-3">Número teléfonico</th>
             <th class="px-4 py-3 text-center">Ver</th>
+            {% if group == 'admin' %}
             <th class="px-4 py-3 text-center">Eliminar</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -328,6 +340,7 @@
               </div>
             </td>
             <span hidden="hidden" class="elementValue">{{student}}</span>
+            {% if group == 'admin' %}
             <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
               <a href="{% url 'removeEstudiante' student.id %}" type="button" aria-label="Like"
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500">
@@ -338,6 +351,7 @@
                 </svg>
               </a>
             </td>
+            {% endif %}
           </tr>
           {% endfor %}
 
@@ -360,7 +374,9 @@
             <th class="px-4 py-3">E-mail</th>
             <th class="px-4 py-3">Número teléfonico</th>
             <th class="px-4 py-3 text-center">Ver</th>
+            {% if group == 'admin' %}
             <th class="px-4 py-3 text-center">Eliminar</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -397,6 +413,7 @@
               </div>
             </td>
             <span hidden="hidden" class="elementValue">{{revisor1}}</span>
+            {% if group == 'admin' %}
             <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
               <a href="{% url 'removeRevisor1' anteproyecto.id %}" type="button" aria-label="Like"
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500">
@@ -407,6 +424,7 @@
                 </svg>
               </a>
             </td>
+            {% endif %}
           </tr>
         </tbody>
       </table>
@@ -423,6 +441,7 @@
         Un Revisor le sera asignado pronto.
       </p>
     </div>
+    {% if group == 'admin' %}
     <div class="h-fit min-h-full flex justify-end">
       <a href="{% url 'asignarRevisor1' 1 anteproyecto.id %}">
         <button
@@ -431,6 +450,16 @@
         </button>
       </a>
     </div>
+    {% elif group == 'teacher'%}
+    <div class="h-fit min-h-full flex justify-end">
+      <a href="{% url 'tomarRevisor1' anteproyecto.id %}">
+        <button
+          class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
+          Tomar Anteproyecto Revisor 1
+        </button>
+      </a>
+    </div>
+    {% endif %}
     {% endif %}
 
     <br>
@@ -449,7 +478,9 @@
             <th class="px-4 py-3">E-mail</th>
             <th class="px-4 py-3">Número teléfonico</th>
             <th class="px-4 py-3 text-center">Ver</th>
+            {% if group == 'admin' %}
             <th class="px-4 py-3 text-center">Eliminar</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -486,6 +517,7 @@
               </div>
             </td>
             <span hidden="hidden" class="elementValue">{{revisor2}}</span>
+            {% if group == 'admin' %}
             <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
               <a href="{% url 'removeRevisor2' anteproyecto.id %}" type="button" aria-label="Like"
                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500">
@@ -496,6 +528,7 @@
                 </svg>
               </a>
             </td>
+            {% endif %}
           </tr>
         </tbody>
       </table>
@@ -512,6 +545,7 @@
         Un Revisor le sera asignado pronto.
       </p>
     </div>
+    {% if group == 'admin' %}
     <div class="h-fit min-h-full flex justify-end">
       <a href="{% url 'asignarRevisor2' 1 anteproyecto.id %}">
         <button
@@ -520,6 +554,16 @@
         </button>
       </a>
     </div>
+    {% elif group == 'teacher'%}
+    <div class="h-fit min-h-full flex justify-end">
+      <a href="{% url 'tomarRevisor2' anteproyecto.id %}">
+        <button
+          class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
+          Tomar Anteproyecto Revisor 2
+        </button>
+      </a>
+    </div>
+    {% endif %}
     {% endif %}
 
     <br>

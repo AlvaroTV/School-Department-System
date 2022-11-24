@@ -1,0 +1,117 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container px-6 mx-auto grid">    
+
+    <div class="grid gap-7 mb-9 md:grid-cols-2">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Información del docente
+        </h2>
+
+        <div class="grid gap-7 mb-9 mt-2 md:grid-cols-2">
+            {% if group == 'teacher'%}
+            <a href="{% url 'teacherSettings' %}">
+                <button
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Editar mis datos
+                </button>
+            </a>
+            {% else %}
+            <a href="{% url 'editarDocente' docente.id %}">
+                <button
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Editar informacion
+                </button>
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                Información general
+            </h4>
+            <label class="block text-sm items-center">
+                <img src="{{ docente.fotoUsuario.url }}" alt="user-avatar" class="mx-auto d-block profile-pic"
+                    id="uploadedAvatar" />
+            </label>
+            <br>
+            <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    Nombre:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente }}
+                    </span>
+                </li>
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    CURP:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente.curp }}
+                    </span>
+                </li>
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    RFC:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente.rfc }}
+                    </span>
+                </li>
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    Correo electronico:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente.correoElectronico }}
+                    </span>
+                </li>
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    Número de contacto:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente.numCelular }}
+                    </span>
+                </li>
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    Estatus:
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        {{ docente.estatus }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                Perfil Academico
+            </h4>
+            <label class="block text-sm items-center ">
+                <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block " height="150"
+                    width="150" id="imageschool" />
+            </label>
+            <br>
+            <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    Materias:
+                </li>
+                {% if materias %}
+                {% for materia in materias %}
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        * {{ materia.nombre }}
+                    </span>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                    <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                        No tiene materias
+                    </span>
+                </li>
+                {% endif %}                
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

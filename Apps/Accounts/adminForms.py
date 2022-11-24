@@ -18,6 +18,33 @@ class AnteproyectoEstadoForm(ModelForm):
         super(AnteproyectoEstadoForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+
+class AnteproyectoEstadoFormR1(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = ['estatusR1']
+        labels = {
+            'estatusR1': ''
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(AnteproyectoEstadoFormR1, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+
+class AnteproyectoEstadoFormR2(ModelForm):
+    class Meta:
+        model = Anteproyecto
+        fields = ['estatusR2']
+        labels = {
+            'estatusR2': ''
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(AnteproyectoEstadoFormR2, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+
             
 class ExpedienteEstadoForm(ModelForm):
     class Meta:

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 from .adminViews import *
+from .teacherViews import *
 
 urlpatterns = [    
     # Globales           
@@ -69,6 +70,24 @@ urlpatterns = [
     path('editarResidenciaAdmin/<int:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
     
     path('eliminarEstudiante/<int:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
-    path('eliminarDocente/<int:pk>', eliminarDocente, name='eliminarDocente'),       
-              
+    path('eliminarDocente/<int:pk>', eliminarDocente, name='eliminarDocente'),
+    
+    # Teacher 
+    path('tProfile/', teacherProfile, name='teacherProfile'),      
+    path('tSettings/', teacherSettings, name='teacherSettings'),
+    
+    path('anteproyectosTeacher/', anteproyectosTeacher, name='anteproyectosTeacher'),      
+    path('anteproyectoA/<int:pk>', anteproyectoA, name='anteproyectoA'),
+    path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),
+    
+    path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      
+    
+    
+    path('tomarRevisor1/<int:pk>', tomarRevisor1, name='tomarRevisor1'),      
+    path('tomarRevisor2/<int:pk>', tomarRevisor2, name='tomarRevisor2'),      
+    path('anteproyectosH/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', anteproyectosH, name='anteproyectosH'),      
+    path('residenciasH/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', residenciasH, name='residenciasH'),      
+    path('materias/', materias, name='materias'),          
+    path('seleccionarMateria/<materiaPK>', seleccionarMateria, name='seleccionarMateria'),  
+    path('removeMateria/<materiaPK>', removeMateria, name='removeMateria'),  
 ]
