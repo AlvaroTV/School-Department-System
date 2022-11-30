@@ -131,29 +131,23 @@
             {{actividad_docente.5}}
           </p>
         </div>
-      </div>            
+      </div>
     </div>
-    
+
     <div class="grid gap-7 mb-9 md:grid-cols-2">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Información del docente
       </h2>
 
-      <div class="grid gap-7 mb-9 mt-2 md:grid-cols-2">        
-
+      <div class="grid gap-7 mb-9 mt-2 md:grid-cols-2">
+        {% if group == 'admin'%}
         <a href="{% url 'editarDocente' docente.id %}">
-          {% if group == 'teacher'%}
-          <button
-            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            Editar mis datos
-          </button>
-          {% else %}
           <button
             class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             Editar informacion
           </button>
-          {% endif %}
         </a>
+        {% endif %}
       </div>
 
     </div>
@@ -217,11 +211,23 @@
         <br>
         <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
           <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
-            Número de control:
+            Materias:
+          </li>
+          {% if materias %}
+          {% for materia in materias %}
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
             <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
-              {{ docente.numControl }}
+              * {{ materia.nombre }}
             </span>
           </li>
+          {% endfor %}
+          {% else %}
+          <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+            <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+              No tiene materias
+            </span>
+          </li>
+          {% endif %}
           <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
             Carrera:
             <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">

@@ -13,6 +13,7 @@ urlpatterns = [
     path('student/', studentPage, name='student'),
     path('teacher/', teacherPage, name='teacher'),
     path('createStudent/', createStudent, name='createStudent'),                    
+    path('faqs/', faqs, name='faqs'),                    
     
     # Estudiante                
     path('profile/', estudianteViewProfile, name='studentProfile'),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('reportes/', reportes, name='reportes'),    
     path('removeDoc/<int:pk>', removeDoc, name='removeDoc'),    
     path('residencia/', proyectoResidencia, name='residencia'),    
+    path('compatibilidadA/<materiaPK>', compatibilidadA, name='compatibilidadA'),    
         
     # Admin
     path('anteproyectos/<int:page>/<int:orderB><int:filter>', anteproyectos, name='anteproyectos'),    
@@ -78,6 +80,7 @@ urlpatterns = [
     
     path('anteproyectosTeacher/', anteproyectosTeacher, name='anteproyectosTeacher'),      
     path('anteproyectoA/<int:pk>', anteproyectoA, name='anteproyectoA'),
+    path('agregarComentario/<int:pk>', agregarComentario, name='agregarComentario'),
     path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),
     
     path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      

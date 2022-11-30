@@ -80,10 +80,16 @@ def studentPage(request):
     proyecto = student.residencia
     expediente = student.expediente    
     try:
-        observaciones = anteproyecto.observacion
+        observacion = anteproyecto.observacion
+        observaciones = ObservacionDocente.objects.filter(observacion=observacion)       
+        fechaObservacion = observacion.fechaCreacion            
+        dias = 5 + observacion.incrementarDias
+        fechaObservacion = fechaObservacion + timedelta(days=dias)                   
+        fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                    
     except:
+        observacion = None
         observaciones = None
-    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'observaciones': observaciones}    
+    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones}    
     return render(request, 'Student/dashboard.html', context)
 
 @login_required(login_url='login')
@@ -135,6 +141,11 @@ def loginPage(request):
 
 def errorPage(request):
     return render(request, 'Global/404.html')
+
+def faqs(request):
+    group = request.user.groups.all()[0].name
+    context = {'group': group}
+    return render(request, 'Global/faqs.html', context)
 
 def changePassword(request):
     user = request.user
@@ -466,7 +477,8 @@ def anteproyecto(request):
                         anteproyecto.save()
                         estudiante.anteproyecto=anteproyecto
                         estudiante.save()                                
-                        return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+                        #return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+                        return redirect('materias')
                     
                     mensaje = 'Fecha de fin del Anteproyecto erronea'
                     
@@ -477,7 +489,9 @@ def anteproyecto(request):
             data.append('id_codigoUnion')  
         
         revisor1 = anteproyecto.revisor1
-        revisor2 = anteproyecto.revisor2                
+        revisor2 = anteproyecto.revisor2         
+        print(revisor1)       
+        print(revisor2)       
         dependencia = anteproyecto.dependencia                  
         formA = AnteproyectoViewForm(instance = anteproyecto)                                        
         formD = DependenciaViewForm(instance = dependencia)
@@ -583,6 +597,21 @@ def removeDoc(request, pk):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def compatibilidadA(request, materiaPK):
+    group = request.user.groups.all()[0].name
+    estudiante = request.user.estudiante
+    anteproyecto = estudiante.anteproyecto
+    materia = Materia.objects.get(id = int(materiaPK))
+    
+    if request.method == 'POST':
+        compatibilidad = int(request.POST['Compatibilidad'])
+        anteproyecto_materia = Anteproyecto_materia(anteproyecto=anteproyecto, materia=materia, compatibilidad=compatibilidad)
+        anteproyecto_materia.save()
+        return redirect('materias')
+        
+    context = {'group': group, 'materia': materia}    
+    return render(request, 'Student/compatibilidadA.html', context)
     
 def generarCodigo():            
     length = 10
@@ -602,3 +631,4 @@ def buscarCodigo(codigo):
         if p.codigoUnion == codigo:
             return True
     return False
+

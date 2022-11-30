@@ -93,25 +93,25 @@
                 <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                     Estado <strong> revisor 1 </strong>
                 </p>
-                {% if anteproyecto.estatusR2 == 'ACEPTADO' %}
+                {% if anteproyecto.estatusR1 == 'ACEPTADO' %}
                 <span
                     class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                    {{anteproyecto.estatusR2}}
+                    {{anteproyecto.estatusR1}}
                 </span>
-                {% elif anteproyecto.estatusR2 == 'EN REVISION' %}
+                {% elif anteproyecto.estatusR1 == 'EN REVISION' %}
                 <span
                     class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
-                    {{anteproyecto.estatusR2}}
+                    {{anteproyecto.estatusR1}}
                 </span>
-                {% elif anteproyecto.estatusR2 == 'RECHAZADO' %}
+                {% elif anteproyecto.estatusR1 == 'RECHAZADO' %}
                 <span
                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                    {{anteproyecto.estatusR2}}
+                    {{anteproyecto.estatusR1}}
                 </span>
                 {% else %}
                 <span
                     class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-                    {{anteproyecto.estatusR2}}
+                    {{anteproyecto.estatusR1}}
                 </span>
                 {% endif %}
             </div>
@@ -199,56 +199,6 @@
             </form>
         </div>
     </div>
-    
-    <div class="grid gap-6 mb-2 md:grid-cols-2">
-        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-            Observaciones
-        </h4>
-        <div class="relative">
-            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                href="{% url 'editarObservaciones' anteproyecto.id %}">Editar Observaciones</a>
-        </div>
-    </div>
-    <div class="w-full overflow-hidden rounded-lg shadow-xs">
-        <div class="w-full overflow-x-auto">            
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}}
-                    </strong>
-                </p>
-            </div>
-            <br>
-            <table class="w-full">
-                <thead>
-                    <tr
-                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                        <th class="px-4 py-3">Docente</th>
-                        <th class="px-4 py-3">Fecha</th>
-                        <th class="px-4 py-3">Observacion</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    {% for observacion in observaciones %}
-                    <tr class="text-gray-700 dark:text-gray-400">
-                        <td class="px-4 py-3">
-                            <div class="flex items-center text-sm">
-                                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                                    <img class="object-cover w-full h-full rounded-full"
-                                        src="{{observacion.docente.fotoUsuario.url}}" alt="" loading="lazy" />
-                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                                </div>
-                                <div>
-                                    <p class="font-semibold whitespace-no-wrap">{{observacion.docente}}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
-                        <td class="px-4 py-3 text-md">{{observacion.observacionD}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>            
-        </div>
-    </div>    
 
     <div class="grid gap-6 mb-8 md:grid-cols-1">
         <br>
@@ -293,6 +243,81 @@
         </div>
     </div>
 
+    {% if observaciones %}
+    <div class="grid gap-6 mb-2 md:grid-cols-2">
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Observaciones
+        </h4>
+        <div class="relative">
+            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                href="{% url 'agregarComentario' anteproyecto.id %}">Agregar Observacion</a>
+        </div>
+    </div>
+    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}}
+                    </strong>
+                </p>
+            </div>
+            <br>
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">Docente</th>
+                        <th class="px-4 py-3">Fecha</th>
+                        <th class="px-4 py-3">Observacion</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for observacion in observaciones %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center text-sm">
+                                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                    <img class="object-cover w-full h-full rounded-full"
+                                        src="{{observacion.docente.fotoUsuario.url}}" alt="" loading="lazy" />
+                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                                </div>
+                                <div>
+                                    <p class="font-semibold whitespace-no-wrap">{{observacion.docente}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
+                        <td class="px-4 py-3 text-md">{{observacion.observacionD}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="grid gap-6 mb-2 md:grid-cols-2">
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Observaciones
+        </h4>
+    </div>
+    <div class="min-w-0 mb-8 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <a href="{% url 'agregarComentario' anteproyecto.id %}">
+            <p
+                class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+                Agregar observacion .
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z">
+                    </path>
+                </svg>
+            </p>
+        </a>
+    </div>
+    {% endif %}
+
     <br>
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
         Datos de los integrantes
@@ -307,7 +332,7 @@
                         <th class="px-4 py-3">Número de control</th>
                         <th class="px-4 py-3">E-mail</th>
                         <th class="px-4 py-3">Número teléfonico</th>
-                        <th class="px-4 py-3 text-center">Ver</th>                        
+                        <th class="px-4 py-3 text-center">Ver</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -344,7 +369,7 @@
                                     </button>
                                 </a>
                             </div>
-                        </td>                        
+                        </td>
                     </tr>
                     {% endfor %}
 
@@ -366,7 +391,7 @@
                         <th class="px-4 py-3">Apellidos</th>
                         <th class="px-4 py-3">E-mail</th>
                         <th class="px-4 py-3">Número teléfonico</th>
-                        <th class="px-4 py-3 text-center">Ver</th>                        
+                        <th class="px-4 py-3 text-center">Ver</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -402,7 +427,7 @@
                                     </button>
                                 </a>
                             </div>
-                        </td>                        
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -418,7 +443,7 @@
                 </svg>
                 Un Revisor le sera asignado pronto.
             </p>
-        </div>        
+        </div>
         {% endif %}
 
         <br>
@@ -436,7 +461,7 @@
                         <th class="px-4 py-3">Apellidos</th>
                         <th class="px-4 py-3">E-mail</th>
                         <th class="px-4 py-3">Número teléfonico</th>
-                        <th class="px-4 py-3 text-center">Ver</th>                        
+                        <th class="px-4 py-3 text-center">Ver</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -473,7 +498,7 @@
                                 </a>
                             </div>
                         </td>
-                        <span hidden="hidden" class="elementValue">{{revisor2}}</span>                        
+                        <span hidden="hidden" class="elementValue">{{revisor2}}</span>
                     </tr>
                 </tbody>
             </table>
@@ -489,7 +514,7 @@
                 </svg>
                 Un Revisor le sera asignado pronto.
             </p>
-        </div>        
+        </div>
         {% endif %}
 
         <br>
@@ -604,7 +629,11 @@
                 <p class="text-sm text-gray-700 dark:text-gray-400">
                     <label class="block text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Estado Anteproyecto</span>
+                        {% if editar %}
                         {{ formEstadoR1 }}
+                        {% else %}
+                        {{ formEstadoR2 }}
+                        {% endif %}
                     </label>
                 </p>
             </div>

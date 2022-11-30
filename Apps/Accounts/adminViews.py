@@ -218,7 +218,7 @@ def verAnteproyecto(request, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)    
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
-    revisor1 = anteproyecto.revisor1
+    revisor1 = anteproyecto.revisor1 
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
     observacion = anteproyecto.observacion
@@ -231,7 +231,7 @@ def verAnteproyecto(request, pk):
     fechaActual = date.today
     fechaObservacion = None
     data = ['id_mision']        
-    lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'RECHAZADO']
+    lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'REVISADO' ,'RECHAZADO']
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
@@ -388,9 +388,7 @@ def editarObservaciones(request, pk):
             rObservacion = None
         
         if observacion:    
-            if rDias and rDias > 0:  
-                text = ''
-                print(f'{text:*^20}')          
+            if rDias and rDias > 0:                  
                 observacion.incrementarDias += rDias            
                 observacion.save()
                 
@@ -426,7 +424,7 @@ def eliminarObservacion(request, pk):
     observacion.delete()    
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
 
-@admin_only
+@publicView
 def verEstudiante(request, pk):
     group = request.user.groups.all()[0].name
     estudiante = Estudiante.objects.get(id = pk)
@@ -577,12 +575,19 @@ def removeRevisor2(request, pk):
     anteproyecto.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-@admin_only
+@publicView
 def verDocente(request, pk):
     group = request.user.groups.all()[0].name
     docente = Docente.objects.get(id = pk)   
     all_anteproyectos = Anteproyecto.objects.all()
     all_residencias = Residencia.objects.all()
+    
+    try:
+        perfilAcademico = docente.perfilAcademico
+        materias = perfilAcademico.materias.all()        
+    except:
+        perfilAcademico = None
+        materias = None
     
     anteproyectos_activos_r1 = all_anteproyectos.filter(revisor1=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
     anteproyectos_activos_r2 = all_anteproyectos.filter(revisor2=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
@@ -610,7 +615,7 @@ def verDocente(request, pk):
                          residencias_activas_r.count()
                          ]
             
-    context = {'group': group, 'docente': docente, 'actividad_docente': actividad_docente}        
+    context = {'group': group, 'docente': docente, 'actividad_docente': actividad_docente, 'materias': materias}        
     return render(request, 'Admin/verDocente.html', context)    
 
 @admin_only
@@ -649,7 +654,7 @@ def altaDocente(request):
             teacher.user = user
             teacher.save()
             
-            return redirect('docentes')
+            return redirect('docentes', 1, 0)
     
     context = {'group': group, 'formD': formD, 'formU': formU, 'data': data}
     return render(request, 'Admin/altaDocente.html', context)        

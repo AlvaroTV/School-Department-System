@@ -1,0 +1,74 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/site.css' %}">
+<link rel="stylesheet" href="{% static 'css/richtext.min.css' %}">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/jquery.richtext.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">
+
+    <div class="grid gap-6 my-8 md:grid-cols-2 xl:grid-cols-2">
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+                Anteproyecto: "{{anteproyecto.a_nombre}}"
+            </h2>
+        </div>
+        <div class="flex justify-end items-center p-4">
+            <button onClick="history.back()"
+                class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                Volver
+            </button>
+        </div>
+    </div>
+
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Agregar comentario
+    </h2>
+
+    <br>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <textarea class="content" name="Dobservacion"></textarea>
+            <script>
+                $(document).ready(function () {
+                    $('.content').richText({
+                        fonts: false,
+                        fontColor: false,
+                        fontSize: false,
+                        heading: false,
+                        // uploads
+                        imageUpload: false,
+                        fileUpload: false,
+
+                        // media
+                        videoEmbed: false,
+
+                        // link
+                        urls: false,
+
+                        // tables
+                        table: false,
+
+                        // code
+                        removeStyles: false,
+                        code: false,
+                    });
+                });
+            </script>
+        </div>
+        <button type="submit"
+            class="px-5 py-3 mb-8 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            Enviar Comentario
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}

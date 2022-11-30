@@ -119,6 +119,7 @@
           </div>
       </div>
       <!-- Card -->
+      {% if group == 'admin'%}
       <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         {% if expediente %}
         <a href="{% url 'verExpediente' estudiante.id%}">
@@ -178,6 +179,7 @@
           </button>
         </div>
       </div>
+      {% endif %}
     </div>
 
     <div class="grid gap-7 mb-9 md:grid-cols-2">
@@ -186,6 +188,7 @@
         Información del estudiante
       </h2>
 
+      {% if group == 'admin' %}
       <div class="grid gap-7 mb-9 mt-5 md:grid-cols-2">
         <a href="{% url 'editarEstudiante' estudiante.id %}">
           <button
@@ -194,6 +197,17 @@
           </button>
         </a>
       </div>
+      {% else %}
+      <div class="relative">
+        <div class="absolute inset-y-0 right-0">
+          <button
+            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            onClick="history.back()">
+            Volver
+          </button>
+        </div>
+      </div>
+      {% endif %}
     </div>
 
     <div class="grid gap-6 mb-8 md:grid-cols-2">
@@ -281,7 +295,7 @@
             <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
               {{ estudiante.semestre }}
             </span>
-          </li>          
+          </li>
         </ul>
       </div>
     </div>

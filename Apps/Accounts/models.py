@@ -103,7 +103,7 @@ class ObservacionDocente(models.Model):
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
     observacion = models.ForeignKey(Observacion, on_delete=models.CASCADE, null=True, blank=True)
         
-    observacionD = models.CharField(max_length=1000, blank=True, null=True)
+    observacionD = models.CharField(max_length=3000, blank=True, null=True)
     fechaElaboracion = models.DateField(default=date.today)
     
 class Dependencia(models.Model):
@@ -176,6 +176,13 @@ class Anteproyecto(models.Model):
     periodoInicio = models.DateField(null=True, default=date.today)
     periodoFin = models.DateField(null=True)    
     anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', null=True, blank=True)                        
+
+class Anteproyecto_materia(models.Model):
+    # Llaves foraneas
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
+    materia = models.ForeignKey(Materia, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    compatibilidad = models.IntegerField(null=True, blank=True)
 
 class Estudiante(models.Model):    
     CARRERA = (

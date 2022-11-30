@@ -58,8 +58,8 @@ def anteproyectosTeacher(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     estados = ['ACEPTADO', 'RECHAZADO']
-    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados)
-    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados)            
+    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados).order_by('periodoInicio')
+    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados).order_by('periodoInicio')            
     
     context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2}    
     return render(request, 'Teacher/anteproyectos.html', context)
@@ -155,17 +155,32 @@ def residenciasH(request, page1, page2, orderB1, orderB2, filter1, filter2):
 def materias(request):
     group = request.user.groups.all()[0].name
     all_materias = Materia.objects.all()
-    docente = request.user.docente
     
-    try:
-        perfilAcademico = docente.perfilAcademico        
-    except:
-        perfilAcademico = None            
-    
-    try:
-        materias = perfilAcademico.materias.all()
-    except:        
-        materias = None    
+    if group == 'teacher':        
+        docente = request.user.docente    
+        try:
+            perfilAcademico = docente.perfilAcademico        
+        except:
+            perfilAcademico = None            
+        
+        try:
+            materias = perfilAcademico.materias.all()
+        except:        
+            materias = None    
+    elif group == 'student':
+        estudiante = request.user.estudiante
+        anteproyecto = estudiante.anteproyecto
+        estado = anteproyecto.estatus
+        if estado == 'ACEPTADO':
+            return redirect('404')
+        q_materias = Anteproyecto_materia.objects.filter(anteproyecto=anteproyecto)        
+        materias = []
+        for m in q_materias:
+            materias.append(m.materia)
+            print(m.materia)
+    else:
+        materias = None
+        perfilAcademico = None
         
     semestre1 = all_materias.filter(semestre=1)
     semestre2 = all_materias.filter(semestre=2)
@@ -267,8 +282,9 @@ def tomarRevisor2(request, pk):
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
 
 def seleccionarMateria(request, materiaPK):
-    docente = request.user.docente
-    materia = Materia.objects.get(id = int(materiaPK))
+    group = request.user.groups.all()[0].name
+    materia = Materia.objects.get(id = int(materiaPK))    
+    docente = request.user.docente        
     perfil_academico = docente.perfilAcademico
     if not perfil_academico:
         perfil_academico = PerfilAcademico()
@@ -278,6 +294,7 @@ def seleccionarMateria(request, materiaPK):
         perfil_academico = docente.perfilAcademico
         
     perfil_academico.materias.add(materia)
+        
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
     
 def removeMateria(request, materiaPK):
@@ -304,12 +321,14 @@ def anteproyectoA(request, pk):
     fechaCorte = None
     fechaActual = date.today
     fechaObservacion = None
+    formEstadoR1 = None
+    formEstadoR2 = None
     data = ['id_mision']        
     lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'RECHAZADO']
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
-        observaciones = ObservacionDocente.objects.filter(observacion = observacion)                                
+        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-id')                                    
         dias = 5 + observacion.incrementarDias
         fechaObservacion = fechaObservacion + timedelta(days=dias)           
         fechaCorte = fechaObservacion + timedelta(days=1)                     
@@ -317,10 +336,12 @@ def anteproyectoA(request, pk):
     
     if anteproyecto.numIntegrantes == 1: data.append('id_codigoUnion')
     
-    if revisor1 == docente:
+    if revisor1 == docente:        
         editar = True
-    else:
+        formEstadoR1 = AnteproyectoEstadoFormR1(instance = anteproyecto)        
+    else:        
         editar = False
+        formEstadoR2 = AnteproyectoEstadoFormR2(instance = anteproyecto)        
     
     formA = AnteproyectoViewForm(instance = anteproyecto)                                        
     formD = DependenciaViewForm(instance = dependencia)
@@ -328,10 +349,54 @@ def anteproyectoA(request, pk):
     formDom = DomicilioViewForm(instance = dependencia.domicilio)
     formDoc = AnteproyectoDocForm(instance = anteproyecto)
     formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)             
-    formEstadoR1 = AnteproyectoEstadoFormR1(instance = anteproyecto)
     
-    context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'data': data, 'editar': editar}    
+    if request.method == 'POST':        
+        if editar:
+            formEstadoR1 = AnteproyectoEstadoFormR1(request.POST, instance = anteproyecto)        
+            if formEstadoR1.is_valid():
+                formEstadoR1.save()
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
+        else:
+            formEstadoR2 = AnteproyectoEstadoFormR2(request.POST, instance = anteproyecto)        
+            if formEstadoR2.is_valid():
+                formEstadoR2.save()
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
+            
+    context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'formEstadoR2': formEstadoR2, 'data': data, 'editar': editar}    
     return render(request, 'Teacher/anteproyectoA.html', context)
+
+def agregarComentario(request, pk):
+    group = request.user.groups.all()[0].name
+    docente = request.user.docente
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    observacion = anteproyecto.observacion    
+    
+    if request.method == 'POST':               
+        rObservacion = request.POST['Dobservacion']
+        
+        if observacion:
+            nuevaObservacion = ObservacionDocente(
+                    docente = docente,
+                    observacion = observacion,
+                    observacionD = rObservacion
+            )
+            nuevaObservacion.save()            
+        else:
+            observacion = Observacion()
+            observacion.save()
+            anteproyecto.observacion = observacion
+            anteproyecto.save()        
+            nuevaObservacion = ObservacionDocente(
+                docente = docente,
+                observacion = observacion,
+                observacionD = rObservacion
+            )
+            nuevaObservacion.save()    
+            
+        return redirect('anteproyectoA', anteproyecto.id)
+    
+    context = {'group': group, 'anteproyecto': anteproyecto,}    
+    return render(request, 'Teacher/addComment.html', context)
 
 def anteproyectoH(request):
     group = request.user.groups.all()[0].name
