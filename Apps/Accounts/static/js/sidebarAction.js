@@ -19,7 +19,7 @@ console.log(pathName)
 
 
 
-if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName =='anteproyectoH' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto') {
+if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName =='anteproyectoH' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA') {
     anteproyectos.hidden = false
 } else if (pathName == 'anteproyectosH' ) {
     anteproyectosH.hidden = false    
