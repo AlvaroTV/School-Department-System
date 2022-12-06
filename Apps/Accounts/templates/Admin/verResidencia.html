@@ -10,7 +10,11 @@
                 Datos de la residencia
             </h2>
             <div class="relative">
+                {% if group == 'admin' %}
                 <a href="{% url 'residencias' 1 0 0 %}">
+                {% elif group == 'teacher' %}
+                <a href="{% url 'residenciasTeacher' %}">
+                {% endif %}
                     <button
                         class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
                 </a>
@@ -56,21 +60,25 @@
                     </span>
                     {% endif %}
                 </h4>
+                {% if group == 'admin' %}
                 <div class="relative">
                     <a href="#" @click="openModal"
                         class="px-4 py-2 text-sm absolute right-0 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Editar
                         Estado</a>
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="grid gap-6 mb-2 md:grid-cols-2">
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
                 Datos generales
             </h4>
+            {% if group == 'admin'%}
             <div class="relative">
                 <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                     href="{% url 'editarResidenciaAdmin' residencia.id %}">Editar Informacion</a>
             </div>
+            {% endif %}
         </div>
         <div class="grid gap-6 mb-8 md:grid-cols-1">
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
@@ -105,9 +113,14 @@
                             <th class="px-4 py-3">Estudiante</th>
                             <th class="px-4 py-3">Número de control</th>
                             <th class="px-4 py-3">E-mail</th>
-                            <th class="px-4 py-3">Número teléfonico</th>
+                            <th class="px-4 py-3">Número teléfonico</th>                            
+                            {% if group == 'admin' %}
                             <th class="px-4 py-3 text-center">Ver</th>
                             <th class="px-4 py-3 text-center">Eliminar</th>
+                            {% elif group == 'teacher' %}
+                            <th class="px-4 py-3 text-center">Semestre</th>
+                            <th class="px-4 py-3 text-center">Reportes</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -129,6 +142,7 @@
                             <td class="px-4 py-3 text-md">{{student.numControl}}</td>
                             <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
                             <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+                            {% if group == 'admin'%}
                             <td class="px-4 py-3 text-md">
                                 <div class="flex items-center justify-center">
                                     <a href="{% url 'verEstudiante' student.id %}">
@@ -157,6 +171,26 @@
                                     </svg>
                                 </a>
                             </td>
+                            {% elif group == 'teacher'%}
+                            <td class="px-4 py-3 text-md text-center">{{student.semestre}}</td>
+                            <td class="px-4 py-3 text-md">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'verReporte' student.id %}">
+                                        <button type="button"
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-500 hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue dark:text-blue-100 dark:bg-blue-500"
+                                            aria-label="Like">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
 
@@ -179,7 +213,9 @@
                             <th class="px-4 py-3">E-mail</th>
                             <th class="px-4 py-3">Número teléfonico</th>
                             <th class="px-4 py-3 text-center">Ver</th>
+                            {% if group == 'admin'%}
                             <th class="px-4 py-3 text-center">Eliminar</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -218,6 +254,7 @@
                                 </div>
                             </td>
                             <span hidden="hidden" class="elementValue">{{asesorI}}</span>
+                            {% if group == 'admin' %}
                             <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
                                 <a href="{% url 'removeAsesorI' residencia.id %}" type="button" aria-label="Like"
                                     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500">
@@ -228,6 +265,7 @@
                                     </svg>
                                 </a>
                             </td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
@@ -270,7 +308,9 @@
                             <th class="px-4 py-3">E-mail</th>
                             <th class="px-4 py-3">Número teléfonico</th>
                             <th class="px-4 py-3 text-center">Ver</th>
+                            {% if group == 'admin' %}
                             <th class="px-4 py-3 text-center">Eliminar</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -309,6 +349,7 @@
                                 </div>
                             </td>
                             <span hidden="hidden" class="elementValue">{{revisor}}</span>
+                            {% if group == 'admin' %}
                             <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
                                 <a href="{% url 'removeRevisor' residencia.id %}" type="button" aria-label="Like"
                                     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-100 border border-transparent rounded-lg active:bg-orange-500 hover:bg-orange-500 focus:outline-none focus:shadow-outline-orange dark:text-orange-100 dark:bg-orange-500">
@@ -319,6 +360,7 @@
                                     </svg>
                                 </a>
                             </td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
@@ -428,6 +470,7 @@
             </div>
         </div>
     </div>
+    {% if group == 'admin' %}
     <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
@@ -481,6 +524,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </main>
 {% endblock %}
 

@@ -1,6 +1,10 @@
 {% extends 'Global/main.html'%}
 {% load static %}
 
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/inputrange.css' %}">
+{% endblock %}
+
 {% block content %}
 
 <div class="container px-6 mx-auto grid">
@@ -54,8 +58,8 @@
                 </div>
             </div>
         </form>
-    </div>    
+    </div>
 
-</div>
+    
 
-{% endblock %}
+    {% endblock %}

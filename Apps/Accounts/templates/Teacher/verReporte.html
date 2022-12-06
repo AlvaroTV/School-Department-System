@@ -1,0 +1,141 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Reportes parciales
+    </h2>
+    <table class="w-full whitespace-no-wrap my-8">
+        <thead>
+            <tr
+                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                <th class="px-4 py-3">Numero de Control</th>
+                <th class="px-4 py-3">Estudiante</th>
+                <th class="px-4 py-3">Semestre</th>
+            </tr>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tr class="text-gray-700 dark:text-gray-400">
+                <td class="px-4 py-3">
+                    {{estudiante.numControl}}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                            <img class="object-cover w-full h-full rounded-full" src="{{estudiante.fotoUsuario.url}}"
+                                alt="" loading="lazy" />
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold">{{estudiante}}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    {{estudiante.semestre}}
+                </td>
+            </tr>
+        </tbody>
+        </thead>
+    </table>
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                Reporte parcial 1
+            </h4>
+            {% if r1.r1_hojaRevisores %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Hoja Revisores
+            </p>
+            <a class="text-green-500" href="{{r1.r1_hojaRevisores.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Hoja Revisores PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+            <br>
+            {% if r1.r1_formatoEvaluacion %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Formtato Evaluacion
+            </p>
+            <a class="text-green-500" href="{{r1.r1_formatoEvaluacion.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Formato Evaluacion PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+        </div>
+
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                Reporte parcial 2
+            </h4>
+            {% if r2.r2_hojaRevisores %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Hoja Revisores
+            </p>
+            <a class="text-green-500" href="{{r2.r2_hojaRevisores.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Hoja Revisores PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+
+            {% if r2.r2_formatoEvaluacion %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Formato Evaluacion
+            </p>
+            <a class="text-green-500" href="{{r2.r2_formatoEvaluacion.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Formato Evaluacion PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid gap-6 mb-8 md:grid-cols-2">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
+                Reporte final
+            </h4>
+            {% if rF.rf_hojaRevisores %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Hoja Revisores
+            </p>
+            <a class="text-green-500" href="{{rF.rf_hojaRevisores.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Hoja Revisores PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+
+            {% if rF.rf_formatoEvaluacion %}
+            <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
+                Hoja Revisores
+            </p>
+            <a class="text-green-500" href="{{rF.rf_formatoEvaluacion.url}}" target="_blank">
+                <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+                Formato Evaluacion PDF
+            </a>
+            {% else %}
+            <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
+            <p class="text-red-600">El documento no ha sido enviado</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

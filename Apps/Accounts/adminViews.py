@@ -128,8 +128,8 @@ def verExpediente(request, pk):
     rF = expediente.reporteFinal                
     formE = ExpedienteForm(instance=expediente)
     form1 = Reporte1Form(instance = r1)                  
-    form2 = Reporte1Form(instance = r2)                  
-    formF = Reporte1Form(instance = rF)                      
+    form2 = Reporte2Form(instance = r2)                  
+    formF = ReporteFinalForm(instance = rF)                      
     formEstado = ExpedienteEstadoForm(instance = expediente)        
     
     if request.method == 'POST':
@@ -659,7 +659,7 @@ def altaDocente(request):
     context = {'group': group, 'formD': formD, 'formU': formU, 'data': data}
     return render(request, 'Admin/altaDocente.html', context)        
 
-@admin_only
+@publicView
 def verResidencia(request, pk):
     group = request.user.groups.all()[0].name
     data = ['id_mision']        
@@ -828,14 +828,63 @@ def removeRevisor(request, pk):
     residencia.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@admin_only
 def eliminarEstudiante(request, pk):
     estudiante = Estudiante.objects.get(id = pk)
     estudiante.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@admin_only
 def eliminarDocente(request, pk):
     docente = Docente.objects.get(id = pk)
     docente.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminarDocExpediente(request, pk, file_name):    
+    expediente = Expediente.objects.get(id = pk)        
+    file_name = file_name.replace('id_', '')    
+    archivo = getattr(expediente,file_name)
+    archivo.delete()    
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminarDocR1(request, pk, file_name):
+    reporte = ReporteParcial1.objects.get(pk=pk)
+    file_name = file_name.replace(' ', '')    
+    letter = file_name[0]
+    letter = letter.lower()
+    file_name = file_name.replace(file_name[0], letter, 1)
+    str = 'r1_'
+    file_name = str + file_name
+    archivo = getattr(reporte,file_name)
+    archivo.delete()    
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminarDocR2(request, pk, file_name):
+    reporte = ReporteParcial2.objects.get(pk=pk)
+    file_name = file_name.replace(' ', '')    
+    letter = file_name[0]
+    letter = letter.lower()
+    file_name = file_name.replace(file_name[0], letter, 1)
+    str = 'r2_'
+    file_name = str + file_name
+    archivo = getattr(reporte,file_name)
+    archivo.delete()    
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminarDocRF(request, pk, file_name):
+    reporte = ReporteFinal.objects.get(pk=pk)
+    file_name = file_name.replace(' ', '')    
+    letter = file_name[0]
+    letter = letter.lower()
+    file_name = file_name.replace(file_name[0], letter, 1)
+    str = 'rf_'
+    file_name = str + file_name
+    archivo = getattr(reporte,file_name)
+    archivo.delete()    
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 def filtrar_anteproyectos(anteproyectos, filter):

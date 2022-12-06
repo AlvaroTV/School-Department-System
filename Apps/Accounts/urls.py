@@ -73,6 +73,10 @@ urlpatterns = [
     
     path('eliminarEstudiante/<int:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
     path('eliminarDocente/<int:pk>', eliminarDocente, name='eliminarDocente'),
+    path('eliminarDocExpediente/<int:pk>/<file_name>', eliminarDocExpediente, name='eliminarDocExpediente'),
+    path('eliminarDocR1/<int:pk>/<file_name>', eliminarDocR1, name='eliminarDocR1'),
+    path('eliminarDocR2/<int:pk>/<file_name>', eliminarDocR2, name='eliminarDocR2'),
+    path('eliminarDocRF/<int:pk>/<file_name>', eliminarDocRF, name='eliminarDocRF'),
     
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      
@@ -81,10 +85,9 @@ urlpatterns = [
     path('anteproyectosTeacher/', anteproyectosTeacher, name='anteproyectosTeacher'),      
     path('anteproyectoA/<int:pk>', anteproyectoA, name='anteproyectoA'),
     path('agregarComentario/<int:pk>', agregarComentario, name='agregarComentario'),
-    path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),
-    
+    path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),    
     path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      
-    
+    path('verReporte/<int:pk>', verReporte, name='verReporte'),          
     
     path('tomarRevisor1/<int:pk>', tomarRevisor1, name='tomarRevisor1'),      
     path('tomarRevisor2/<int:pk>', tomarRevisor2, name='tomarRevisor2'),      

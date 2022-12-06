@@ -71,11 +71,11 @@ const pieConfig2 = {
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
          */
-        backgroundColor: ['#0694a2', '#1c64f2', '#7e3af2', '#e02424'],
+        backgroundColor: ['#2192FF', '#FCE700', '#7e3af2', '#38E54D', '#D83B01'],
         label: 'Dataset 1',
       },
     ],
-    labels: ['INICIADA', 'EN PROCESO', 'PROROGA', 'FINALIZADA'],
+    labels: ['INICIADA', 'EN PROCESO', 'PROROGA', 'FINALIZADA', 'RECHAZADA'],
   },
   options: {
     responsive: true,

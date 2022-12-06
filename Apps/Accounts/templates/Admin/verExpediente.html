@@ -88,13 +88,18 @@
 
                 {% if field.id_for_label in data %}
                 {% if field.id_for_label == 'id_dictamen' and semestre < 13 %} {% else %} <div
-                    class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    class="min-w-0 p-4 mb-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     {% if field.value %}
+                    <span hidden="hidden" class="elementValue">{{field.label}}</span>
                     <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         {{field.label}} PDF
                     </a>
+                    <div class="relative">
+                        <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:shadow-outline-red btnDelete"
+                          href="{% url 'eliminarDocExpediente' expediente.id field.id_for_label %}">Eliminar</a>
+                    </div>
                     {% else %}
                     <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
                         {{field.label_tag}}
@@ -125,13 +130,18 @@
 
             {% for field in formE %}
             {% if not field.id_for_label in data %}
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <div class="min-w-0 p-4 mb-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 {% if field.value %}
+                <span hidden="hidden" class="elementValue">{{field.label}}</span>
                 <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                     <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                         class="mx-auto d-block">
                     {{field.label}} PDF
                 </a>
+                <div class="relative">
+                    <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:shadow-outline-red btnDelete"
+                      href="{% url 'eliminarDocExpediente' expediente.id field.id_for_label %}">Eliminar</a>
+                </div>                
                 {% else %}
                 <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
                     {{field.label_tag}}
@@ -183,11 +193,16 @@
                     {{field.label}}
                 </p>
                 {% if field.value %}
+                <span hidden="hidden" class="elementValue">{{field.label}}</span>
                 <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                     <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                         class="mx-auto d-block">
                     {{field.label}} PDF
                 </a>
+                <div class="relative">
+                    <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:shadow-outline-red btnDelete"
+                      href="{% url 'eliminarDocR1' r1.id field.label %}">Eliminar</a>
+                </div>
                 <br>
                 {% else %}
                 <div
@@ -224,11 +239,16 @@
                         {{field.label}}
                     </p>
                     {% if field.value %}
+                    <span hidden="hidden" class="elementValue">{{field.label}}</span>
                     <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         {{field.label}} PDF
                     </a>
+                    <div class="relative">
+                        <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:shadow-outline-red btnDelete"
+                          href="{% url 'eliminarDocR2' r2.id field.label %}">Eliminar</a>
+                    </div>
                     <br>
                     {% else %}
                     <div
@@ -269,11 +289,16 @@
                         {{field.label}}
                     </p>
                     {% if field.value %}
+                    <span hidden="hidden" class="elementValue">{{field.label}}</span>
                     <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
                         {{field.label}} PDF
                     </a>
+                    <div class="relative">
+                        <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:shadow-outline-red btnDelete"
+                          href="{% url 'eliminarDocRF' rF.id field.label %}">Eliminar</a>
+                    </div>
                     <br>
                     {% else %}
                     <div
@@ -350,4 +375,8 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/deleteManagement/exDocs.js' %}"></script>
 {% endblock %}

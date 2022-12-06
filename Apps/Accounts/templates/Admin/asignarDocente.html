@@ -100,27 +100,30 @@
                                     {{docente.estatus}}
                                 </span>
                             </td>
-                            <td class="px-4 py-3">
+                            <span hidden="hidden" class="elementValue">{{docente}}</span>
+                            <td class="px-4 py-3 btnSelect">
                                 <div class="flex items-center justify-center">
                                     {% if revisor1 %}
-                                    <a href="{% url 'asignarRevisor1I' pkA=anteproyecto.id pkD=docente.id %}">
+                                    <a href="{% url 'asignarRevisor1I' pkA=anteproyecto.id pkD=docente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                                         {% elif revisor2 %}
-                                        <a href="{% url 'asignarRevisor2I' pkA=anteproyecto.id pkD=docente.id %}">
+                                        <a href="{% url 'asignarRevisor2I' pkA=anteproyecto.id pkD=docente.id %}"
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                                             {% elif asesorI %}
-                                            <a href="{% url 'asignarAsesorI' pkR=residencia.id pkD=docente.id %}">
+                                            <a href="{% url 'asignarAsesorI' pkR=residencia.id pkD=docente.id %}"
+                                                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                                                 {% elif revisor %}
-                                                <a href="{% url 'asignarRevisor' pkR=residencia.id pkD=docente.id %}">
+                                                <a href="{% url 'asignarRevisor' pkR=residencia.id pkD=docente.id %}"
+                                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                                                     {% endif %}
-                                                    <button
-                                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                                                        aria-label="Like">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                            class="w-6 h-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                                                        </svg>
-                                                    </button>
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                                    </svg>
+
                                                 </a>
                                 </div>
                             </td>
@@ -150,83 +153,87 @@
                                     <a href="{% url 'asignarRevisor1' prev_page anteproyecto.id %}">
                                         {% endif %}
 
-                                {% elif revisor2 %}
+                                        {% elif revisor2 %}
 
-                                {% if prev_page == 0 %}
-                                <a href="{% url 'asignarRevisor2' n_buttons anteproyecto.id %}">
-                                    {% else %}
-                                    <a href="{% url 'asignarRevisor2' prev_page anteproyecto.id %}">
-                                        {% endif %}
-                                
-                                {% elif asesorI %}
+                                        {% if prev_page == 0 %}
+                                        <a href="{% url 'asignarRevisor2' n_buttons anteproyecto.id %}">
+                                            {% else %}
+                                            <a href="{% url 'asignarRevisor2' prev_page anteproyecto.id %}">
+                                                {% endif %}
 
-                                {% if prev_page == 0 %}
-                                <a href="{% url 'asignarAsesorIL' n_buttons residencia.id %}">
-                                    {% else %}
-                                    <a href="{% url 'asignarAsesorIL' prev_page residencia.id %}">
-                                        {% endif %}
+                                                {% elif asesorI %}
 
-                                {% elif revisor %}
+                                                {% if prev_page == 0 %}
+                                                <a href="{% url 'asignarAsesorIL' n_buttons residencia.id %}">
+                                                    {% else %}
+                                                    <a href="{% url 'asignarAsesorIL' prev_page residencia.id %}">
+                                                        {% endif %}
 
-                                {% if prev_page == 0 %}
-                                <a href="{% url 'asignarRevisorL' n_buttons residencia.id %}">
-                                    {% else %}
-                                    <a href="{% url 'asignarRevisorL' prev_page residencia.id %}">
-                                        {% endif %}
+                                                        {% elif revisor %}
 
-                                {% endif %}
+                                                        {% if prev_page == 0 %}
+                                                        <a href="{% url 'asignarRevisorL' n_buttons residencia.id %}">
+                                                            {% else %}
+                                                            <a
+                                                                href="{% url 'asignarRevisorL' prev_page residencia.id %}">
+                                                                {% endif %}
 
-                                        <button
-                                            class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                            aria-label="Previous">
-                                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                                <path
-                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
-                                            </svg>
-                                        </button>
-                                    </a>
+                                                                {% endif %}
+
+                                                                <button
+                                                                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                                                    aria-label="Previous">
+                                                                    <svg aria-hidden="true" class="w-4 h-4 fill-current"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path
+                                                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                                            clip-rule="evenodd" fill-rule="evenodd">
+                                                                        </path>
+                                                                    </svg>
+                                                                </button>
+                                                            </a>
                             </li>
-                            
+
                             {% for button in buttons %}
                             {% if button == page %}
                             <li>
                                 {% if revisor1 %}
                                 <a href="{% url 'asignarRevisor1' button anteproyecto.id %}">
-                                {% elif revisor2 %}
-                                <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
-                                {% elif asesorI %}
-                                <a href="{% url 'asignarAsesorIL' button residencia.id %}">
-                                {% elif revisor %}
-                                <a href="{% url 'asignarRevisorL' button residencia.id %}">
-                                {% endif %}                                
-                                    <button
-                                        class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        {{button}}
-                                    </button>
-                                </a>
+                                    {% elif revisor2 %}
+                                    <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
+                                        {% elif asesorI %}
+                                        <a href="{% url 'asignarAsesorIL' button residencia.id %}">
+                                            {% elif revisor %}
+                                            <a href="{% url 'asignarRevisorL' button residencia.id %}">
+                                                {% endif %}
+                                                <button
+                                                    class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                                    {{button}}
+                                                </button>
+                                            </a>
                             </li>
                             {% else %}
                             <li>
                                 {% if revisor1 %}
                                 <a href="{% url 'asignarRevisor1' button anteproyecto.id %}">
-                                {% elif revisor2 %}
-                                <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
-                                {% elif asesorI %}
-                                <a href="{% url 'asignarAsesorIL' button residencia.id %}">
-                                {% elif revisor %}
-                                <a href="{% url 'asignarRevisorL' button residencia.id %}">
-                                {% endif %}      
-                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        {{button}}
-                                    </button>
-                                </a>
+                                    {% elif revisor2 %}
+                                    <a href="{% url 'asignarRevisor2' button anteproyecto.id %}">
+                                        {% elif asesorI %}
+                                        <a href="{% url 'asignarAsesorIL' button residencia.id %}">
+                                            {% elif revisor %}
+                                            <a href="{% url 'asignarRevisorL' button residencia.id %}">
+                                                {% endif %}
+                                                <button
+                                                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                                    {{button}}
+                                                </button>
+                                            </a>
                             </li>
                             {% endif %}
                             {% endfor %}
 
-                            
-                            <li>                                
+
+                            <li>
                                 {% if revisor1 %}
 
                                 {% if next_page > n_buttons %}
@@ -235,7 +242,7 @@
                                     <a href="{% url 'asignarRevisor1' next_page anteproyecto.id %}">
                                         {% endif %}
 
-                                {% elif revisor2 %}
+                                        {% elif revisor2 %}
 
                                         {% if next_page > n_buttons %}
                                         <a href="{% url 'asignarRevisor2' 1 anteproyecto.id %}">
@@ -243,16 +250,15 @@
                                             <a href="{% url 'asignarRevisor2' next_page anteproyecto.id %}">
                                                 {% endif %}
 
-                                {% elif asesorI %}
+                                                {% elif asesorI %}
 
                                                 {% if next_page > n_buttons %}
                                                 <a href="{% url 'asignarAsesorIL' 1 residencia.id %}">
                                                     {% else %}
-                                                    <a
-                                                        href="{% url 'asignarAsesorIL' next_page residencia.id %}">
+                                                    <a href="{% url 'asignarAsesorIL' next_page residencia.id %}">
                                                         {% endif %}
 
-                                {% elif revisor %}
+                                                        {% elif revisor %}
 
                                                         {% if next_page > n_buttons %}
                                                         <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
@@ -261,7 +267,7 @@
                                                                 href="{% url 'asignarRevisorL' next_page residencia.id %}">
                                                                 {% endif %}
 
-                                {% endif %}
+                                                                {% endif %}
                                                                 <button
                                                                     class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                                                                     aria-label="Next">
@@ -275,7 +281,7 @@
                                                                 </button>
                                                             </a>
                             </li>
-                            
+
                         </ul>
                     </nav>
                 </span>
@@ -310,7 +316,7 @@
             <!-- Modal body -->
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                
+
                 <div class="mt-2 mb-4">
                     <!-- Modal title -->
                     <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
@@ -364,4 +370,8 @@
     </div>
 </main>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/uploadManagement/asignarD.js' %}"></script>
 {% endblock %}

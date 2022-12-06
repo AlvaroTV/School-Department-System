@@ -14,7 +14,11 @@
         </div>
         {% if group == 'student'%}
         <div class="absolute inset-y-0 right-0">
-            <a href="#">
+            {% if materias %}
+            <a href="{% url 'anteproyecto' %}">
+            {% else %}
+            
+            {% endif %}
                 <button
                     class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     Guardar
@@ -91,6 +95,9 @@
 
 {% block scripts %}
 {% if group == 'teacher' %}
+<script src="{% static 'js/messages/docentes.js' %}"></script>
 <script src="{% static 'js/deleteManagement/materias.js' %}"></script>
+{% else %}
+<script src="{% static 'js/messages/estudiantes.js' %}"></script>
 {% endif %}
 {% endblock %}

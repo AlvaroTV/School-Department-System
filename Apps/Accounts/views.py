@@ -79,6 +79,10 @@ def studentPage(request):
     anteproyecto = student.anteproyecto
     proyecto = student.residencia
     expediente = student.expediente    
+    observacion = None
+    observaciones = None
+    fechaObservacion = None
+    
     try:
         observacion = anteproyecto.observacion
         observaciones = ObservacionDocente.objects.filter(observacion=observacion)       
@@ -87,8 +91,7 @@ def studentPage(request):
         fechaObservacion = fechaObservacion + timedelta(days=dias)                   
         fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                    
     except:
-        observacion = None
-        observaciones = None
+        pass
     context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones}    
     return render(request, 'Student/dashboard.html', context)
 
@@ -572,18 +575,19 @@ def proyectoResidencia(request):
     group = user.groups.all()[0].name
     estudiante = user.estudiante                                    
     anteproyecto = estudiante.anteproyecto   
-    residencia = estudiante.residencia
+    residencia = estudiante.residencia        
         
     if residencia:                                                
         dependencia = residencia.dependencia                   
-
+        asesorI = residencia.r_asesorInterno
+        revisor = residencia.r_revisor
         estudiantes = Estudiante.objects.filter(residencia = residencia)                
         formR = ResidenciaViewForm(instance = residencia)                                
         formD = DependenciaViewForm(instance = dependencia)
         formT = TitularViewForm(instance = dependencia.titular)
         formDom = DomicilioViewForm(instance = dependencia.domicilio)
         formAE = AsesorEViewForm(instance = residencia.asesorExterno)                                
-        context = {'group': group,'formR': formR, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'residencia': residencia}
+        context = {'group': group,'formR': formR, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'residencia': residencia, 'asesorI': asesorI, 'revisor': revisor,}
         return render(request, 'Student/residencia.html', context)
         
     context = {'group': group, 'residencia': residencia}

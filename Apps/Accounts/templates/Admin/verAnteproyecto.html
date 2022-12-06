@@ -463,7 +463,8 @@
     </div>
     {% elif group == 'teacher'%}
     <div class="h-fit min-h-full flex justify-end">
-      <a href="{% url 'tomarRevisor1' anteproyecto.id %}">
+      <span hidden="hidden" class="elementValueA">{{anteproyecto.a_nombre}}</span>
+      <a href="{% url 'tomarRevisor1' anteproyecto.id %}" class="btnSelect">
         <button
           class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
           Tomar Anteproyecto Revisor 1
@@ -567,7 +568,8 @@
     </div>
     {% elif group == 'teacher'%}
     <div class="h-fit min-h-full flex justify-end">
-      <a href="{% url 'tomarRevisor2' anteproyecto.id %}">
+      <span hidden="hidden" class="elementValueA">{{anteproyecto.a_nombre}}</span>
+      <a href="{% url 'tomarRevisor2' anteproyecto.id %}" class="btnSelect">
         <button
           class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
           Tomar Anteproyecto Revisor 2
@@ -709,5 +711,9 @@
 {% endblock %}
 
 {% block scripts %}
+{% if group == 'admin'%}
 <script src="{% static 'js/deleteManagement/verAnteproyecto.js' %}"></script>
+{% else %}
+<script src="{% static 'js/uploadManagement/tomarA.js' %}"></script>
+{% endif %}
 {% endblock %}

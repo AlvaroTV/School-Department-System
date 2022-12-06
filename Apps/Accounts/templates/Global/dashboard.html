@@ -128,11 +128,11 @@
             <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
                 <!-- Chart legend -->
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"></span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#2192FF;"></span>
                     <span>INICIADA</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"></span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FCE700;"></span>
                     <span>EN PROCESO</span>
                 </div>
                 <div class="flex items-center">
@@ -140,8 +140,12 @@
                     <span>PROROGA</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 bg-red-600 rounded-full"></span>
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#9CFF2E;"></span>
                     <span>FINALIZADA</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>                    
+                    <span>RECHAZADA</span>
                 </div>
             </div>
         </div>
@@ -213,7 +217,7 @@
     <div class="grid gap-6 mb-8 md:grid-cols-1">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Anteproyectos registrados por mes
+                Proyectos registrados por mes
             </h4>
             <canvas id="prueba"></canvas>            
         </div>        

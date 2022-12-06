@@ -8,10 +8,9 @@
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Reportes Parciales
         </h2>
-        <div class="grid gap-6 mb-8 md:grid-cols-2">
-
-            <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
-                {% csrf_token %}
+        <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            <div class="grid gap-6 mb-8 md:grid-cols-2">
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
                         Reporte parcial 1
@@ -23,7 +22,7 @@
                     <br>
                     <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
                         {{field.label}}
-                    </p>                    
+                    </p>
                     {% if field.value %}
                     <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
@@ -43,14 +42,13 @@
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
                     <p class="text-teal-500">* Podra subirlo una vez su anteproyecto haya sido ACEPTADO</p>
-                    
+
                     {% endif %}
                     {% endfor %}
                 </div>
-            </form>
 
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+
+
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
                         Reporte parcial 2
@@ -87,10 +85,9 @@
                     {% endif %}
                     {% endfor %}
                 </div>
-            </form>
 
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+
+
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
                         Reporte Final
@@ -98,8 +95,8 @@
                     {% if rF_fechaEntrega and not rF.rf_formatoEvaluacion and not rF.rf_hojaRevisores %}
                     {% if r1.r1_hojaRevisores or r1.r1_formatoEvaluacion %}
                     <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{rF_fechaEntrega}} </p>
-                    {% endif %}                    
-                    {% endif %}                    
+                    {% endif %}
+                    {% endif %}
                     {% if rF.calificacion %}
                     <p class="text-green-500"><strong>Calificacion:</strong> {{rF.calificacion}}</p>
                     {% endif %}
@@ -107,7 +104,7 @@
                     <br>
                     <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
                         {{field.label}}
-                    </p>                    
+                    </p>
                     {% if field.value %}
                     <a class="text-green-500" href="/images/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
@@ -130,8 +127,9 @@
                     {% endif %}
                     {% endfor %}
                 </div>
-            </form>            
-        </div>        
+
+            </div>
+        </form>
     </div>
 
 </main>

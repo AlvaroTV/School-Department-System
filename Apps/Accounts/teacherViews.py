@@ -167,14 +167,16 @@ def materias(request):
             materias = perfilAcademico.materias.all()
         except:        
             materias = None    
+            
     elif group == 'student':
         estudiante = request.user.estudiante
         anteproyecto = estudiante.anteproyecto
         estado = anteproyecto.estatus
         if estado == 'ACEPTADO':
             return redirect('404')
+        
         q_materias = Anteproyecto_materia.objects.filter(anteproyecto=anteproyecto)        
-        materias = []
+        materias = []        
         for m in q_materias:
             materias.append(m.materia)
             print(m.materia)
@@ -323,8 +325,9 @@ def anteproyectoA(request, pk):
     fechaObservacion = None
     formEstadoR1 = None
     formEstadoR2 = None
-    data = ['id_mision']        
-    lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'RECHAZADO']
+    data = ['id_mision']                
+    estadoR1 = anteproyecto.estatusR1    
+    estadoR2 = anteproyecto.estatusR2        
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
@@ -355,11 +358,17 @@ def anteproyectoA(request, pk):
             formEstadoR1 = AnteproyectoEstadoFormR1(request.POST, instance = anteproyecto)        
             if formEstadoR1.is_valid():
                 formEstadoR1.save()
+                if anteproyecto.estatusR1 == 'ACEPTADO' and anteproyecto.estatusR2 == 'ACEPTADO':
+                    anteproyecto.estatus = 'REVISADO'
+                    anteproyecto.save()
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
         else:
             formEstadoR2 = AnteproyectoEstadoFormR2(request.POST, instance = anteproyecto)        
             if formEstadoR2.is_valid():
                 formEstadoR2.save()
+                if anteproyecto.estatusR1 == 'ACEPTADO' and anteproyecto.estatusR2 == 'ACEPTADO':
+                    anteproyecto.estatus = 'REVISADO'
+                    anteproyecto.save()
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
     context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'formEstadoR2': formEstadoR2, 'data': data, 'editar': editar}    
@@ -416,4 +425,19 @@ def residenciaH(request):
     context = {'group': group}    
     return render(request, 'Teacher/residenciaH.html', context)
 
-    
+def verReporte(request, pk):    
+    estudiante = Estudiante.objects.get(id = pk)    
+    group = request.user.groups.all()[0].name
+    docente = request.user.docente
+    anteproyecto = estudiante.anteproyecto    
+    expediente = estudiante.expediente
+    r1 = None    
+    r2 = None
+    rF = None
+    if expediente:
+        r1 = expediente.reporteParcial1
+        r2 = expediente.reporteParcial2
+        rF = expediente.reporteFinal   
+        
+    context = {'group': group, 'estudiante': estudiante, 'r1': r1, 'r2': r2, 'rF': rF}    
+    return render(request, 'Teacher/verReporte.html', context)
