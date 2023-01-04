@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 #from django.db.models import Count
 from datetime import date, timedelta, datetime
 import math
@@ -14,12 +15,8 @@ from .decorators import *
 from .adminViews import filtrar_anteproyectos, ordenar_anteproyectos, filtrar_residencias, ordenar_residencias
 # Create your views here.
 
-def plantilla(request):
-    group = request.user.groups.all()[0].name
-    docente = request.user.docente
-    context = {'group': group}    
-    return render(request, 'Teacher/materias.html', context)
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def teacherProfile(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
@@ -30,9 +27,11 @@ def teacherProfile(request):
         perfilAcademico = None
         materias = None
     
-    context = {'group': group, 'docente': docente, 'materias': materias}    
+    context = {'group': group, 'docente': docente, 'materias': materias, 'title': 'Perfil'}    
     return render(request, 'Teacher/profile.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def teacherSettings(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente        
@@ -51,19 +50,23 @@ def teacherSettings(request):
             formD.save()
             return redirect('teacherProfile')
         
-    context = {'group': group, 'docente': docente, 'formD': formD, 'materias': materias}    
+    context = {'group': group, 'docente': docente, 'formD': formD, 'materias': materias, 'title': 'Configuracion'}    
     return render(request, 'Teacher/settings.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def anteproyectosTeacher(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     estados = ['ACEPTADO', 'RECHAZADO']
-    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados).order_by('periodoInicio')
-    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados).order_by('periodoInicio')            
+    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados).order_by('fechaEntrega')
+    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados).order_by('fechaEntrega')            
     
-    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2}    
+    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2, 'title': 'Anteproyectos Activos'}    
     return render(request, 'Teacher/anteproyectos.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def anteproyectosH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
@@ -100,26 +103,30 @@ def anteproyectosH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     prev_page2 = page2-1        
     
         
-    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2, 'totalA1': totalA1, 'totalA2': totalA2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2}    
+    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2, 'totalA1': totalA1, 'totalA2': totalA2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2, 'title': 'Anteproyectos Historicos'}    
     return render(request, 'Teacher/anteproyectosH.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def residenciasTeacher(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['ACEPTADO', 'RECHAZADO']
+    estados = ['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA']
     all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente).exclude(estatus__in=estados)
     all_residenciasR = Residencia.objects.filter(r_revisor=docente).exclude(estatus__in=estados)            
     
-    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR}    
+    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'title': 'Residencias Activas'}    
     return render(request, 'Teacher/residencias.html', context)    
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def residenciasH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['ACEPTADO', 'RECHAZADO']
+    estados = ['RECHAZADA', 'NO FINALIZADA', 'FINALIZADA']
     
     all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente, estatus__in=estados)
-    all_residenciasR = Residencia.objects.filter(r_revisor=docente, estatus__in=estados)
+    all_residenciasR = Residencia.objects.filter(r_revisor=docente, estatus__in=estados)        
     
     start1 = (page1-1)*10    
     end1 = page1*10
@@ -149,9 +156,11 @@ def residenciasH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     next_page2 = page2+1
     prev_page2 = page2-1   
     
-    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'totalR1': totalR1, 'totalR2': totalR2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2}    
+    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'totalR1': totalR1, 'totalR2': totalR2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2, 'title': 'Residencias Historicas'}    
     return render(request, 'Teacher/residenciasH.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# Poner un Decorator para Estudiante y Maestro
 def materias(request):
     group = request.user.groups.all()[0].name
     all_materias = Materia.objects.all()
@@ -260,7 +269,7 @@ def materias(request):
             
         all_semestres.append(dataRow)                
     
-    context = {'group': group, 'all_semestres': all_semestres, 'materias': materias}    
+    context = {'group': group, 'all_semestres': all_semestres, 'materias': materias, 'title': 'Materias'}    
     return render(request, 'Teacher/materias.html', context)
 
 def tomarRevisor1(request, pk):    
@@ -285,7 +294,7 @@ def tomarRevisor2(request, pk):
 
 def seleccionarMateria(request, materiaPK):
     group = request.user.groups.all()[0].name
-    materia = Materia.objects.get(id = int(materiaPK))    
+    materia = Materia.objects.get(id = materiaPK)    
     docente = request.user.docente        
     perfil_academico = docente.perfilAcademico
     if not perfil_academico:
@@ -301,11 +310,13 @@ def seleccionarMateria(request, materiaPK):
     
 def removeMateria(request, materiaPK):
     docente = request.user.docente
-    materia = Materia.objects.get(id = int(materiaPK))
+    materia = Materia.objects.get(id = materiaPK)
     perfil_academico = docente.perfilAcademico
     perfil_academico.materias.remove(materia)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def anteproyectoA(request, pk):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
@@ -325,13 +336,14 @@ def anteproyectoA(request, pk):
     fechaObservacion = None
     formEstadoR1 = None
     formEstadoR2 = None
-    data = ['id_mision']                
+    data = ['id_mision', 'id_codigoUnion']                
     estadoR1 = anteproyecto.estatusR1    
     estadoR2 = anteproyecto.estatusR2        
+    actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
-        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-id')                                    
+        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-fechaElaboracion')                                    
         dias = 5 + observacion.incrementarDias
         fechaObservacion = fechaObservacion + timedelta(days=dias)           
         fechaCorte = fechaObservacion + timedelta(days=1)                     
@@ -371,9 +383,11 @@ def anteproyectoA(request, pk):
                     anteproyecto.save()
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
-    context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'formEstadoR2': formEstadoR2, 'data': data, 'editar': editar}    
+    context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'formEstadoR2': formEstadoR2, 'data': data, 'editar': editar, 'actualizaciones': actualizaciones, 'title': 'Anteproyectos Activos'}    
     return render(request, 'Teacher/anteproyectoA.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def agregarComentario(request, pk):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
@@ -407,24 +421,32 @@ def agregarComentario(request, pk):
     context = {'group': group, 'anteproyecto': anteproyecto,}    
     return render(request, 'Teacher/addComment.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def anteproyectoH(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     context = {'group': group}    
     return render(request, 'Teacher/anteproyectoH.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def residenciaA(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     context = {'group': group}    
     return render(request, 'Teacher/residenciaA.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def residenciaH(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     context = {'group': group}    
     return render(request, 'Teacher/residenciaH.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
 def verReporte(request, pk):    
     estudiante = Estudiante.objects.get(id = pk)    
     group = request.user.groups.all()[0].name
@@ -441,3 +463,12 @@ def verReporte(request, pk):
         
     context = {'group': group, 'estudiante': estudiante, 'r1': r1, 'r2': r2, 'rF': rF}    
     return render(request, 'Teacher/verReporte.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@teacher_only
+def actualizacion_est_leido(request, pk):
+    actualizacion = Actualizacion_anteproyecto.objects.get(id=pk)
+    actualizacion.estado = 'LEIDO'
+    actualizacion.save()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
+    

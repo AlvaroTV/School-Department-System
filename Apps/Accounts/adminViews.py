@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 #from django.db.models import Count
 from datetime import date, timedelta, datetime
 import math
@@ -13,6 +14,7 @@ from .decorators import *
 from .views import generarCodigo, obtenerCodigo, buscarCodigo
 # Create your views here.
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def anteproyectos(request, page, orderB, filter):
     group = request.user.groups.all()[0].name    
@@ -31,7 +33,7 @@ def anteproyectos(request, page, orderB, filter):
             end = anteproyectos.count()
             totalA = all_anteproyectos.count()                        
             search = '.'             
-            context = {'group': group, 'anteproyectos': anteproyectos, 'totalA': totalA, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter}
+            context = {'group': group, 'anteproyectos': anteproyectos, 'totalA': totalA, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter, 'title': 'Anteproyectos'}
             return render(request, 'Admin/anteproyectos.html', context)    
     
     all_anteproyectos = filtrar_anteproyectos(all_anteproyectos, filter)
@@ -44,9 +46,10 @@ def anteproyectos(request, page, orderB, filter):
     buttons = [item for item in range(1, n_buttons+1)]
     next_page = page+1
     prev_page = page-1    
-    context = {'group': group, 'anteproyectos': anteproyectos, 'totalA': totalA, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter}
+    context = {'group': group, 'anteproyectos': anteproyectos, 'totalA': totalA, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter, 'title': 'Anteproyectos'}
     return render(request, 'Admin/anteproyectos.html', context)    
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def residencias(request, page, orderB, filter):
     group = request.user.groups.all()[0].name   
@@ -65,7 +68,7 @@ def residencias(request, page, orderB, filter):
             end = residencias.count()
             totalR = all_residencias.count()                        
             search = '.'                         
-            context = {'group': group, 'residencias': residencias, 'totalR': totalR, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter}
+            context = {'group': group, 'residencias': residencias, 'totalR': totalR, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter, 'title': 'Residencias'}
             return render(request, 'Admin/residencias.html', context)            
         
     all_residencias = filtrar_residencias(all_residencias, filter)
@@ -79,9 +82,10 @@ def residencias(request, page, orderB, filter):
     next_page = page+1
     prev_page = page-1    
     
-    context = {'group': group, 'residencias': residencias, 'totalR': totalR, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter}
+    context = {'group': group, 'residencias': residencias, 'totalR': totalR, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter, 'title': 'Residencias'}
     return render(request, 'Admin/residencias.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def expedientes(request, page, orderB, filter):
     group = request.user.groups.all()[0].name      
@@ -101,7 +105,7 @@ def expedientes(request, page, orderB, filter):
             totalE = all_estudiantes.count()            
             asesorI = '.'    
             search = '.'             
-            context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter}
+            context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'filter': filter, 'title': 'Expedientes'}
             return render(request, 'Admin/expedientes.html', context)   
             
     all_estudiantes = filtrar_expedientes(all_estudiantes, filter)
@@ -114,9 +118,10 @@ def expedientes(request, page, orderB, filter):
     buttons = [item for item in range(1, n_buttons+1)]
     next_page = page+1
     prev_page = page-1    
-    context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter}
+    context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'filter': filter, 'title': 'Expedientes'}
     return render(request, 'Admin/expedientes.html', context)   
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def verExpediente(request, pk):
     data = ['id_dictamen', 'id_solicitudResidencia', 'id_anteproyecto', 'id_horario', 'id_cartaAceptacion', 'id_cartaCompromiso', 'id_cronograma', 'id_cartaPresentacion']    
@@ -138,7 +143,7 @@ def verExpediente(request, pk):
             formEstado.save()   
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
     
-    context = {'group': group, 'data': data, 'estudiante': estudiante, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'formE': formE, 'form1': form1, 'form2': form2, 'formF': formF, 'formEstado': formEstado}
+    context = {'group': group, 'data': data, 'estudiante': estudiante, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'formE': formE, 'form1': form1, 'form2': form2, 'formF': formF, 'formEstado': formEstado, 'title': 'Expediente'}
     return render(request, 'Admin/verExpediente.html', context)             
 
 @admin_only
@@ -147,6 +152,7 @@ def eliminarExpediente(request, pk):
     expediente.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def estudiantes(request, page, orderB):
     group = request.user.groups.all()[0].name    
@@ -165,7 +171,7 @@ def estudiantes(request, page, orderB):
             totalE = all_estudiantes.count()            
             asesorI = '.'    
             search = '.'             
-            context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search}
+            context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'title': 'Estudiantes'}
             return render(request, 'Admin/estudiantes.html', context)   
                 
     all_estudiantes = ordenar_estudiantes(all_estudiantes, orderB)
@@ -177,9 +183,10 @@ def estudiantes(request, page, orderB):
     buttons = [item for item in range(1, n_buttons+1)]
     next_page = page+1
     prev_page = page-1    
-    context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB}
+    context = {'group': group, 'estudiantes': estudiantes, 'totalE': totalE, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'title': 'Estudiantes'}
     return render(request, 'Admin/estudiantes.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def docentes(request, page, orderB):
     group = request.user.groups.all()[0].name    
@@ -198,7 +205,7 @@ def docentes(request, page, orderB):
             end = docentes.count()
             totalD = all_docentes.count()                        
             search = '.'      
-            context = {'group': group, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search}
+            context = {'group': group, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'title': 'Docentes'}
             return render(request, 'Admin/docentes.html', context)            
             
     all_docentes = ordenar_docentes(all_docentes, orderB)
@@ -210,14 +217,16 @@ def docentes(request, page, orderB):
     buttons = [item for item in range(1, n_buttons+1)]
     next_page = page+1
     prev_page = page-1    
-    context = {'group': group, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB}
+    context = {'group': group, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'title': 'Docentes'}
     return render(request, 'Admin/docentes.html', context)     
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @publicView
 def verAnteproyecto(request, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)    
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
     revisor1 = anteproyecto.revisor1 
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
@@ -230,12 +239,12 @@ def verAnteproyecto(request, pk):
     fechaCorte = None
     fechaActual = date.today
     fechaObservacion = None
-    data = ['id_mision']        
+    data = ['id_mision', 'id_codigoUnion']        
     lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'REVISADO' ,'RECHAZADO']
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
-        observaciones = ObservacionDocente.objects.filter(observacion = observacion)                                
+        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-fechaElaboracion')                                
         dias = 5 + observacion.incrementarDias
         fechaObservacion = fechaObservacion + timedelta(days=dias)           
         fechaCorte = fechaObservacion + timedelta(days=1)                     
@@ -244,9 +253,14 @@ def verAnteproyecto(request, pk):
     if anteproyecto.numIntegrantes == 1: data.append('id_codigoUnion')
                      
     formA = AnteproyectoViewForm(instance = anteproyecto)                                        
-    formD = DependenciaViewForm(instance = dependencia)
-    formT = TitularViewForm(instance = dependencia.titular)
-    formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    if dependencia:
+        formD = DependenciaViewForm(instance = dependencia)
+        formT = TitularViewForm(instance = dependencia.titular)
+        formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    else:
+        formD = None
+        formT = None
+        formDom = None
     formDoc = AnteproyectoDocForm(instance = anteproyecto)
     formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
     formEstado = AnteproyectoEstadoForm(instance = anteproyecto)        
@@ -263,9 +277,7 @@ def verAnteproyecto(request, pk):
                     r_revisor = anteproyecto.revisor2,
                     nombre = anteproyecto.a_nombre,
                     tipoProyecto = anteproyecto.tipoProyecto,
-                    numIntegrantes = anteproyecto.numIntegrantes,
-                    periodoInicio = anteproyecto.periodoInicio,
-                    periodoFin = anteproyecto.periodoFin
+                    numIntegrantes = anteproyecto.numIntegrantes                    
                 )        
                 residencia.save()                                                        
 
@@ -283,9 +295,10 @@ def verAnteproyecto(request, pk):
             formEstado.save()
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
-    context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data}
+    context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data, 'actualizaciones': actualizaciones,'title': 'Anteproyecto'}
     return render(request, 'Admin/verAnteproyecto.html', context)           
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editarAnteproyectoAdmin(request, pk):
     group = request.user.groups.all()[0].name
@@ -338,7 +351,7 @@ def editarAnteproyectoAdmin(request, pk):
                     anteproyecto.save() 
                     return redirect('verAnteproyecto', pk = anteproyecto.id)                               
     
-    context = {'group': group, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje, 'group': group, 'data': data}                
+    context = {'group': group, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje, 'group': group, 'data': data, 'title': 'Editar Anteproyecto'}                
     return render(request, 'Admin/editarAnteproyecto.html', context)        
 
 @admin_only
@@ -353,10 +366,11 @@ def eliminarResidencia(request, pk):
     residencia.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editarObservaciones(request, pk):
     group = request.user.groups.all()[0].name
-    docente = request.user.docente
+    docente = None
     anteproyecto = Anteproyecto.objects.get(id = pk)
     observacion = anteproyecto.observacion
     fechaObservacion = None
@@ -369,7 +383,7 @@ def editarObservaciones(request, pk):
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
-        observaciones = ObservacionDocente.objects.filter(observacion = observacion)                                
+        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-fechaElaboracion')                                
         dias = 5 + observacion.incrementarDias
         fechaObservacion = fechaObservacion + timedelta(days=dias)           
         fechaCorte = fechaObservacion + timedelta(days=1)                     
@@ -415,7 +429,7 @@ def editarObservaciones(request, pk):
                                     
         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                    
     
-    context = {'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'group': group, 'observaciones': observaciones, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual}    
+    context = {'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'group': group, 'observaciones': observaciones, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Editar Observaciones'}    
     return render(request, 'Admin/editObservaciones.html', context)        
 
 @admin_only
@@ -424,6 +438,7 @@ def eliminarObservacion(request, pk):
     observacion.delete()    
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @publicView
 def verEstudiante(request, pk):
     group = request.user.groups.all()[0].name
@@ -433,9 +448,10 @@ def verEstudiante(request, pk):
     residencia = estudiante.residencia
     expediente = estudiante.expediente
     
-    context = {'group': group, 'estudiante': estudiante, 'domicilio': domicilio, 'anteproyecto': anteproyecto, 'residencia': residencia, 'expediente': expediente,}    
+    context = {'group': group, 'estudiante': estudiante, 'domicilio': domicilio, 'anteproyecto': anteproyecto, 'residencia': residencia, 'expediente': expediente, 'title': 'Estudiante'}    
     return render(request, 'Admin/verEstudiante.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editarEstudiante(request, pk):
     group = request.user.groups.all()[0].name
@@ -458,7 +474,7 @@ def editarEstudiante(request, pk):
     
         return redirect('verEstudiante', estudiante.id)
     
-    context = {'group': group, 'estudiante': estudiante, 'anteproyecto': anteproyecto, 'formE': formE, 'formD': formD}    
+    context = {'group': group, 'estudiante': estudiante, 'anteproyecto': anteproyecto, 'formE': formE, 'formD': formD, 'title': 'Editar Estudiante'}    
     return render(request, 'Student/settings.html', context)        
 
 @admin_only
@@ -468,6 +484,7 @@ def removeEstudiante(request, pk):
     estudiante.save()  
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def asignarRevisor1(request, page, pk):
     group = request.user.groups.all()[0].name
@@ -487,7 +504,7 @@ def asignarRevisor1(request, page, pk):
             end = docentes.count()
             totalD = all_docentes.count()            
             revisor1 = '.'                 
-            context = {'group': group, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end}    
+            context = {'group': group, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'title': 'Asignar Revisor'}    
             return render(request, 'Admin/asignarDocente.html', context)                    
     
     docentes = all_docentes[start:end]    
@@ -500,7 +517,7 @@ def asignarRevisor1(request, page, pk):
     prev_page = page-1            
     revisor1 = '.'
     
-    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}
     return render(request, 'Admin/asignarDocente.html', context)        
 
 @admin_only
@@ -522,6 +539,7 @@ def removeRevisor1(request, pk):
     anteproyecto.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def asignarRevisor2(request, page, pk):
     group = request.user.groups.all()[0].name
@@ -541,7 +559,7 @@ def asignarRevisor2(request, page, pk):
             end = docentes.count()
             totalD = all_docentes.count()            
             revisor2 = '.'                 
-            context = {'group': group, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end}    
+            context = {'group': group, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'title': 'Asignar Revisor'}    
             return render(request, 'Admin/asignarDocente.html', context)                    
     
     docentes = all_docentes[start:end]    
@@ -554,7 +572,7 @@ def asignarRevisor2(request, page, pk):
     prev_page = page-1            
     
     revisor2 = '.'
-    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}
     return render(request, 'Admin/asignarDocente.html', context)        
 
 @admin_only
@@ -575,6 +593,7 @@ def removeRevisor2(request, pk):
     anteproyecto.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @publicView
 def verDocente(request, pk):
     group = request.user.groups.all()[0].name
@@ -615,9 +634,10 @@ def verDocente(request, pk):
                          residencias_activas_r.count()
                          ]
             
-    context = {'group': group, 'docente': docente, 'actividad_docente': actividad_docente, 'materias': materias}        
+    context = {'group': group, 'docente': docente, 'actividad_docente': actividad_docente, 'materias': materias, 'title': 'Ver Docente'}        
     return render(request, 'Admin/verDocente.html', context)    
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editarDocente(request, pk):
     group = request.user.groups.all()[0].name
@@ -631,9 +651,10 @@ def editarDocente(request, pk):
             return redirect('verDocente', docente.id)
             
     
-    context = {'group': group, 'docente': docente, 'formD': formD}
+    context = {'group': group, 'docente': docente, 'formD': formD, 'title': 'Editar Docente'}
     return render(request, 'Admin/editarDocente.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def altaDocente(request):
     group = request.user.groups.all()[0].name
@@ -656,9 +677,10 @@ def altaDocente(request):
             
             return redirect('docentes', 1, 0)
     
-    context = {'group': group, 'formD': formD, 'formU': formU, 'data': data}
+    context = {'group': group, 'formD': formD, 'formU': formU, 'data': data, 'title': 'Alta Docente'}
     return render(request, 'Admin/altaDocente.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @publicView
 def verResidencia(request, pk):
     group = request.user.groups.all()[0].name
@@ -678,9 +700,10 @@ def verResidencia(request, pk):
             formER.save()      
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
-    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'asesorI': asesorI, 'revisor': revisor, 'dependencia': dependencia, 'formR': formR, 'formD': formD, 'formER': formER, 'data': data,}
+    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'asesorI': asesorI, 'revisor': revisor, 'dependencia': dependencia, 'formR': formR, 'formD': formD, 'formER': formER, 'data': data, 'title': 'Ver Residencia'}
     return render(request, 'Admin/verResidencia.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editarResidenciaAdmin(request, pk):
     group = request.user.groups.all()[0].name
@@ -726,9 +749,10 @@ def editarResidenciaAdmin(request, pk):
                     residencia.save() 
                     return redirect('verResidencia', pk = residencia.id)                                 
     
-    context = {'group': group, 'formR': formR, 'formD': formD, 'formT': formT, 'formDom': formDom, 'formAE': formAE, 'residencia': residencia, 'mensaje':mensaje}    
+    context = {'group': group, 'formR': formR, 'formD': formD, 'formT': formT, 'formDom': formDom, 'formAE': formAE, 'residencia': residencia, 'mensaje':mensaje, 'title': 'Editar Residencia'}    
     return render(request, 'Admin/editarResidencia.html', context)        
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def asignarAsesorIL(request, page, pk):
     group = request.user.groups.all()[0].name
@@ -748,7 +772,7 @@ def asignarAsesorIL(request, page, pk):
             end = docentes.count()
             totalD = all_docentes.count()            
             asesorI = '.'                 
-            context = {'group': group, 'residencia': residencia, 'asesorI': asesorI, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end}    
+            context = {'group': group, 'residencia': residencia, 'asesorI': asesorI, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'title': 'Asignar Asesor I'}    
             return render(request, 'Admin/asignarDocente.html', context)                    
         
     docentes = all_docentes[start:end]    
@@ -760,7 +784,7 @@ def asignarAsesorIL(request, page, pk):
     next_page = page+1
     prev_page = page-1        
     asesorI = '.'
-    context = {'group': group, 'residencia': residencia, 'asesorI':asesorI, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
+    context = {'group': group, 'residencia': residencia, 'asesorI':asesorI, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Asesor I'}
     return render(request, 'Admin/asignarDocente.html', context)            
 
 @admin_only
@@ -778,6 +802,7 @@ def removeAsesorI(request, pk):
     residencia.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def asignarRevisorL(request, page, pk):
     group = request.user.groups.all()[0].name
@@ -797,7 +822,7 @@ def asignarRevisorL(request, page, pk):
             end = docentes.count()
             totalD = all_docentes.count()            
             revisor = '.'                 
-            context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end}    
+            context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'title': 'Asignar Revisor'}    
             return render(request, 'Admin/asignarDocente.html', context)                    
     
     docentes = all_docentes[start:end]        
@@ -810,7 +835,7 @@ def asignarRevisorL(request, page, pk):
     prev_page = page-1        
     revisor = '.'        
     
-    context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}    
+    context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}    
     return render(request, 'Admin/asignarDocente.html', context)            
 
 @admin_only
@@ -910,13 +935,10 @@ def ordenar_anteproyectos(anteproyectos, orderB):
     elif orderB == 2:
         all_anteproyectos = all_anteproyectos.order_by('-a_nombre')        
     elif orderB == 3:
-        all_anteproyectos = all_anteproyectos.order_by('periodoInicio')    
+        all_anteproyectos = all_anteproyectos.order_by('-fechaEntrega')    
     elif orderB == 4:
-        all_anteproyectos = all_anteproyectos.order_by('-periodoInicio')    
-    elif orderB == 5:
-        all_anteproyectos = all_anteproyectos.order_by('periodoFin')    
-    elif orderB == 6:
-        all_anteproyectos = all_anteproyectos.order_by('-periodoFin')        
+        all_anteproyectos = all_anteproyectos.order_by('fechaEntrega')    
+    
     return all_anteproyectos
 
 def buscar_anteproyecto(anteproyectos, text, opc):
@@ -930,48 +952,31 @@ def buscar_anteproyecto(anteproyectos, text, opc):
         try:
             month_number = int(text)
             if month_number > 0 and month_number <= 12:                        
-                all_anteproyectos = all_anteproyectos.filter(periodoInicio__month=month_number)                                                   
+                all_anteproyectos = all_anteproyectos.filter(fechaEntrega__month=month_number)                                                   
             else:
                 month_number = None
-                all_anteproyectos = all_anteproyectos.filter(periodoInicio__month=month_number)                                                   
+                all_anteproyectos = all_anteproyectos.filter(fechaEntrega__month=month_number)                                                   
         except:                    
             MONTHS = {'ENERO':1, 'FEBRERO':2, 'MARZO':3, 'ABRIL':4, 'MAYO':5, 'JUNIO':6, 'JULIO':7, 'AGOSTO':8, 'SEPTIEMBRE':9, 'OCTUBRE':10, 'NOVIEMBRE':11, 'DICIEMBRE':12}                                                
             try:
                 text = text.upper()
                 month_number = MONTHS[text]
-                all_anteproyectos = all_anteproyectos.filter(periodoInicio__month=month_number)                                                   
+                all_anteproyectos = all_anteproyectos.filter(fechaEntrega__month=month_number)                                                   
             except:
                 month_number = None
-                all_anteproyectos = all_anteproyectos.filter(periodoInicio__month=month_number)                                                                                       
+                all_anteproyectos = all_anteproyectos.filter(fechaEntrega__month=month_number)                                                                                       
     elif opc == 4:
         try:
-            month_number = int(text)
-            if month_number > 0 and month_number <= 12:                        
-                all_anteproyectos = all_anteproyectos.filter(periodoFin__month=month_number)                                                   
-            else:
-                month_number = None
-                all_anteproyectos = all_anteproyectos.filter(periodoFin__month=month_number)                                                   
-        except:                    
-            MONTHS = {'ENERO':1, 'FEBRERO':2, 'MARZO':3, 'ABRIL':4, 'MAYO':5, 'JUNIO':6, 'JULIO':7, 'AGOSTO':8, 'SEPTIEMBRE':9, 'OCTUBRE':10, 'NOVIEMBRE':11, 'DICIEMBRE':12}                                                
-            try:
-                text = text.upper()
-                month_number = MONTHS[text]
-                all_anteproyectos = all_anteproyectos.filter(periodoFin__month=month_number)                                                   
-            except:
-                month_number = None
-                all_anteproyectos = all_anteproyectos.filter(periodoFin__month=month_number)                                                                                       
+            year = int(text) 
+            all_anteproyectos = all_anteproyectos.filter(fechaEntrega__year=year)                               
+        except:
+            text = None                
     elif opc == 5:                
         try:
             year = int(text) 
-            all_anteproyectos = all_anteproyectos.filter(periodoInicio__year=year)                               
+            all_anteproyectos = all_anteproyectos.filter(fechaEntrega__year=year)                               
         except:
-            text = None                
-    elif opc == 6:       
-        try:
-            year = int(text) 
-            all_anteproyectos = all_anteproyectos.filter(periodoFin__year=year)                               
-        except:
-            text = None         
+            text = None                           
     
     return all_anteproyectos 
 
@@ -1073,6 +1078,8 @@ def filtrar_expedientes(estudiantes, filter):
         all_expedientes = all_expedientes.filter(estatus = 'PROCESO')
     elif filter == 3:
         all_expedientes = all_expedientes.filter(estatus = 'COMPLETO')        
+    elif filter == 4:
+        all_expedientes = all_expedientes.filter(estatus = 'FINALIZADO')        
     all_estudiantes = all_estudiantes.filter(expediente__in = all_expedientes)    
     return all_estudiantes
 

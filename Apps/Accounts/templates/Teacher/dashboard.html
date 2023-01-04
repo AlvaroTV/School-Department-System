@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container grid px-6 mx-auto">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Dashboard del maestro
+        Panel del docente
     </h2>
-    
+
 
     <div class="grid gap-6 my-8 md:grid-cols-2 xl:grid-cols-4">
         <!-- Card -->
@@ -136,8 +136,7 @@
                         <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                         <th class="px-4 py-3">Dependencia</th>
                         <th class="px-4 py-3">Estatus</th>
-                        <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                        <th class="px-4 py-3 text-center">Periodo Fin</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>
                         <th class="px-4 py-3 text-center"># Integrantes</th>
                         <th class="px-4 py-3 text-center">Ver Anteproyecto</th>
                     </tr>
@@ -187,11 +186,8 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoFin|date:"d/M/Y"}}
+                        <td class="px-4 py-3 text-sm text-center">
+                            {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
                         </td>
                         <td class="px-4 py-3 text-center">
                             {{anteproyecto.numIntegrantes}}
@@ -220,6 +216,85 @@
         </div>
 
     </div>
+    
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Actualizaciones
+    </h2>
+    <div class="mb-8 w-full overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            {% if actualizaciones %}
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">Anteproyecto</th>
+                        <th class="px-4 py-3 text-center">Fecha</th>
+                        <th class="px-4 py-3">Descripción</th>
+                        <th class="px-4 py-3 text-center">Ver</th>
+                        <th class="px-4 py-3 text-center">Marcar como leído</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for actualizacion in actualizaciones %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3 text-md">{{actualizacion.anteproyecto.a_nombre}}</td>
+                        <td class="px-4 py-3 text-md text-center">{{actualizacion.fecha|date:"d/M/Y"}}</td>
+                        <td class="px-4 py-3 text-md text-green-500">{{actualizacion.descripcion}}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                <a href="{% url 'anteproyectoA' actualizacion.anteproyecto.id %}">
+                                    <button
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                                        aria-label="Like">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </button>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                <a href="{% url 'actualizacionEstDocumento' actualizacion.id %}">
+                                    <button
+                                        class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500"
+                                        aria-label="Like">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-6 h-6">
+                                            <path fill-rule="evenodd"
+                                                d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+
+
+                                    </button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <p
+                    class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg">
+                    No hay actualizaciones de ningún documento del anteproyecto aún
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                    </svg>
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 {% endblock %}
+

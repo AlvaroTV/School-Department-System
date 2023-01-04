@@ -1,11 +1,15 @@
 from datetime import date
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 import os
+import uuid
 
 # Create your models here.
-class Materia(models.Model):
+class Materia(models.Model):    
     SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     clave = models.CharField(max_length=10, null=True, blank=True)
     nombre = models.CharField(max_length=150, null=True, blank=True)
     semestre = models.IntegerField(choices=SEMESTRES)     
@@ -15,6 +19,7 @@ class Materia(models.Model):
 
 class Domicilio(models.Model):
     ESTADOS = (('Aguascalientes', 'Aguascalientes'),('Baja California', 'Baja California'),('Baja California Sur', 'Baja California Sur'),('Campeche', 'Campeche'),('Chiapas', 'Chiapas'),('Chihuahua', 'Chihuahua'),('Coahuila', 'Coahuila'),('Colima', 'Colima'),('Ciudad de México', 'Ciudad de México'),('Durango', 'Durango'),('Guanajuato', 'Guanajuato'),('Guerrero', 'Guerrero'),('Hidalgo', 'Hidalgo'),('Jalisco', 'Jalisco'),('Estado de Mexico', 'Estado de Mexico'),('Michoacan', 'Michoacan'),('Morelos', 'Michoacan'),('Nayarit', 'Nayarit'),('Nuevo Leon', 'Nuevo Leon'),('Oaxaca', 'Oaxaca'),('Puebla', 'Puebla'),('Queretaro', 'Queretaro'),('Quintana Roo', 'Quintana Roo'),('San Luis Potosi', 'San Luis Potosi'),('Sinaloa', 'Sinaloa'),('Sonora', 'Sonora'),('Tabasco', 'Tabasco'),('Tamaulipas', 'Tamaulipas'),('Tlaxcala', 'Tlaxcala'),('Veracruz', 'Veracruz'),('Yucatan', 'Yucatan'),('Zacatecas', 'Zacatecas'))
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     calle = models.CharField(max_length=200, null=True, blank=True)
     colonia = models.CharField(max_length=200, null=True, blank=True)
     municipio = models.CharField(max_length=200, null=True, blank=True)
@@ -22,6 +27,7 @@ class Domicilio(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Oaxaca')
 
 class TitularDependencia(models.Model):
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     t_nombre = models.CharField(max_length=100)
     t_apellidoP = models.CharField(max_length=70)
     t_apellidoM = models.CharField(max_length=70)
@@ -30,46 +36,51 @@ class TitularDependencia(models.Model):
     def __str__(self):
         return f'{self.t_nombre} {self.t_apellidoP} {self.t_apellidoM}'
 
-class ReporteParcial1(models.Model):    
-    r1_hojaRevisores = models.FileField(upload_to='records/reporte1/hojaRevisores/', null=True, blank=True)            
-    r1_formatoEvaluacion = models.FileField(upload_to='records/reporte1/formatoEvaluacion/', null=True, blank=True)            
+class ReporteParcial1(models.Model):   
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    r1_hojaRevisores = models.FileField(upload_to='records/reporte1/hojaRevisores/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    r1_formatoEvaluacion = models.FileField(upload_to='records/reporte1/formatoEvaluacion/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
     r1_fechaEntrega = models.DateField(null=True, default=date.today)
     
-class ReporteParcial2(models.Model):    
-    r2_hojaRevisores = models.FileField(upload_to='records/reporte2/hojaRevisores/', null=True, blank=True)            
-    r2_formatoEvaluacion = models.FileField(upload_to='records/reporte2/formatoEvaluacion/', null=True, blank=True)            
+class ReporteParcial2(models.Model):  
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    r2_hojaRevisores = models.FileField(upload_to='records/reporte2/hojaRevisores/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    r2_formatoEvaluacion = models.FileField(upload_to='records/reporte2/formatoEvaluacion/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
     r2_fechaEntrega = models.DateField(null=True, default=date.today)    
     
-class ReporteFinal(models.Model):    
-    rf_hojaRevisores = models.FileField(upload_to='records/reporteF/hojaRevisores/', null=True, blank=True)            
-    rf_formatoEvaluacion = models.FileField(upload_to='records/reporteF/formatoEvaluacion/', null=True, blank=True)            
+class ReporteFinal(models.Model):   
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    rf_hojaRevisores = models.FileField(upload_to='records/reporteF/hojaRevisores/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    rf_formatoEvaluacion = models.FileField(upload_to='records/reporteF/formatoEvaluacion/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
     rf_fechaEntrega = models.DateField(null=True, default=date.today)    
     calificacion = models.IntegerField(null=True, blank=True)    
 
 class Expediente(models.Model):    
-    ESTATUS = (('INICIAL', 'INICIAL'), ('PROCESO', 'PROCESO'), ('COMPLETO', 'COMPLETO'))
+    ESTATUS = (('INICIAL', 'INICIAL'), ('PROCESO', 'PROCESO'), ('COMPLETO', 'COMPLETO'), ('FINALIZADO', 'FINALIZADO'))
     # Llaves foraneas
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     reporteParcial1 = models.ForeignKey(ReporteParcial1, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteParcial2 = models.ForeignKey(ReporteParcial2, on_delete=models.SET_NULL, null=True, blank=True)    
     reporteFinal = models.ForeignKey(ReporteFinal, on_delete=models.SET_NULL, null=True, blank=True)   
           
-    estatus = models.CharField(max_length=15, choices=ESTATUS, default='INICIAL', blank=True)     
-    solicitudResidencia = models.FileField(upload_to='records/solicitudResidencia/', null=True, blank=True)     
-    anteproyecto = models.FileField(upload_to='records/anteproyectoAceptado/', null=True, blank=True)            
-    dictamen = models.FileField(upload_to='records/dictamen/', null=True, blank=True)            
-    horario = models.FileField(upload_to='records/horario/', null=True, blank=True)            
-    cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True)                               
-    cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True)     
-    cartaPresentacion = models.FileField(upload_to='records/cartaP/', null=True, blank=True)            
-    cartaAceptacion = models.FileField(upload_to='records/cartaAceptacion/', null=True, blank=True)            
-    cartaLiberacion = models.FileField(upload_to='records/cartaLiberacion/', null=True, blank=True)                
-    manualUsuario = models.FileField(upload_to='records/manualUsuario/', null=True, blank=True)            
-    manualTecnico = models.FileField(upload_to='records/manualTecnico/', null=True, blank=True)                    
+    estatus = models.CharField(max_length=15, choices=ESTATUS, default='INICIAL')     
+    solicitudResidencia = models.FileField(upload_to='records/solicitudResidencia/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])     
+    anteproyecto = models.FileField(upload_to='records/anteproyectoAceptado/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    dictamen = models.FileField(upload_to='records/dictamen/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    horario = models.FileField(upload_to='records/horario/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    cartaCompromiso = models.FileField(upload_to='records/cartaC/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])                               
+    cronograma = models.FileField(upload_to='records/crono/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])     
+    cartaPresentacion = models.FileField(upload_to='records/cartaP/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    cartaAceptacion = models.FileField(upload_to='records/cartaAceptacion/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    cartaLiberacion = models.FileField(upload_to='records/cartaLiberacion/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])                
+    manualUsuario = models.FileField(upload_to='records/manualUsuario/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])            
+    manualTecnico = models.FileField(upload_to='records/manualTecnico/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])                    
 
 class PerfilAcademico(models.Model):
     # Llaves Foraneas
     materias = models.ManyToManyField( Materia, blank=True)
     
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     especialidad = models.CharField(max_length=50, null=True, blank=True)
 
 
@@ -78,6 +89,7 @@ class Docente(models.Model):
     
     perfilAcademico = models.OneToOneField(PerfilAcademico, null=True, blank=True, on_delete=models.SET_NULL)
     
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre = models.CharField(max_length=100)
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)
@@ -93,8 +105,8 @@ class Docente(models.Model):
     def __str__(self):
         return f'{self.nombre} {self.apellidoP} {self.apellidoM}'     
 
-class Observacion(models.Model):
-    # Llaves foraneas        
+class Observacion(models.Model):    
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     fechaCreacion = models.DateField(default=date.today)
     incrementarDias = models.PositiveIntegerField(default=0)
 
@@ -102,9 +114,10 @@ class ObservacionDocente(models.Model):
     # Llaves foraneas
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, null=True, blank=True)
     observacion = models.ForeignKey(Observacion, on_delete=models.CASCADE, null=True, blank=True)
-        
+    
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     observacionD = models.CharField(max_length=3000, blank=True, null=True)
-    fechaElaboracion = models.DateField(default=date.today)
+    fechaElaboracion = models.DateTimeField(auto_now_add=True)
     
 class Dependencia(models.Model):
     OPCIONES = (('INDUSTRIAL', 'INDUSTRIAL'), ('SERVICIOS', 'SERVICIOS'), ('PUBLICO', 'PUBLICO'), ('PRIVADO', 'PRIVADO'), ('OTRO', 'OTRO'),)
@@ -112,7 +125,8 @@ class Dependencia(models.Model):
     # Llaves foraneas
     domicilio = models.OneToOneField(Domicilio, on_delete=models.CASCADE, null=True)
     titular = models.OneToOneField(TitularDependencia, on_delete=models.CASCADE, null=True)
-        
+    
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     d_nombre = models.CharField(max_length=100)
     rfc = models.CharField(max_length=13, null=True, blank=True)
     giro = models.CharField(max_length=20, choices=OPCIONES, default='PUBLICO', blank=True)    
@@ -127,6 +141,7 @@ class AsesorExterno(models.Model):
     # Llaves foraneas
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
     
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre = models.CharField(max_length=100)
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)
@@ -137,7 +152,7 @@ class AsesorExterno(models.Model):
 
 class Residencia(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PROROGA', 'PROROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
+    ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PRORROGA', 'PRORROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
     
     # Llaves foraneas
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
@@ -145,6 +160,7 @@ class Residencia(models.Model):
     r_asesorInterno = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='r_asesorInterno')
     r_revisor = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name='r_revisor')
     
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS)         
     numIntegrantes = models.IntegerField(default=1)
@@ -156,6 +172,7 @@ class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
     ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     ESTADOSR = (('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    N_INTEGRANTES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
     
     # Llave foranea
     #docentes = models.ManyToManyField(Docente, blank=True)    
@@ -164,24 +181,37 @@ class Anteproyecto(models.Model):
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
     asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
     observacion = models.OneToOneField(Observacion, on_delete=models.SET_NULL, null=True, blank=True)
-        
+    
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     a_nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS, default='PROPUESTA PROPIA')     
-    fechaEntrega = models.DateTimeField(auto_now_add=True)
-    numIntegrantes = models.IntegerField(default=1)
+    fechaEntrega = models.DateField(default=date.today)
+    numIntegrantes = models.IntegerField(choices=N_INTEGRANTES, default=1)
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='ENVIADO', blank=True)
-    estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE', blank=True)
-    estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE', blank=True)    
-    codigoUnion = models.CharField(max_length=10, null=True, blank=True)
-    periodoInicio = models.DateField(null=True, default=date.today)
-    periodoFin = models.DateField(null=True)    
-    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', null=True, blank=True)                        
+    estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')
+    estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')    
+    codigoUnion = models.CharField(max_length=10, null=True, blank=True)    
+    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf'])], default=None)                        
+
+class Actualizacion_anteproyecto(models.Model):
+    ESTADOS = (('NO LEIDO', 'NO LEIDO'), ('LEIDO', 'LEIDO'))
+    TIPOS = (('ACTUALIZADO', 'ACTUALIZADO'), ('REMOVIDO', 'REMOVIDO'))
+    
+    # Llaves foraneas
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)    
+    fecha = models.DateTimeField(auto_now_add=True)
+    descripcion = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=15, choices=TIPOS, default='ACTUALIZADO')
+    estado = models.CharField(max_length=10, choices=ESTADOS, default='NO LEIDO')
 
 class Anteproyecto_materia(models.Model):
     # Llaves foraneas
     anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
     materia = models.ForeignKey(Materia, on_delete=models.SET_NULL, null=True, blank=True)
     
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     compatibilidad = models.IntegerField(null=True, blank=True)
 
 class Estudiante(models.Model):    
@@ -200,6 +230,7 @@ class Estudiante(models.Model):
     residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Atributos
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre = models.CharField(max_length=100)
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)

@@ -159,6 +159,48 @@
     </div>
   </div>
 
+  <div class="grid gap-6 mb-8 md:grid-cols-1">
+    <br>
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+          Documento Anteproyecto
+        </h4>
+        <form action="" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if not anteproyecto.anteproyectoDoc %}
+          <div
+            class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
+            <h4>
+              No se ha subido el documento del Anteproyecto
+            </h4>
+            <div class="inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+          </div>
+
+          {% else %}
+          <a class="text-green-500" href="/images/{{formDoc.anteproyectoDoc.value}}" target="_blank">
+            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
+            {{formDoc.anteproyectoDoc.label}} PDF
+          </a>
+          {% if group == 'admin' %}
+          <div class="relative">
+            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
+              href="{% url 'removeDoc' anteproyecto.id %}">Eliminar</a>
+          </div>
+          {% endif %}
+          {% endif %}
+          <br>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="grid gap-6 mb-2 md:grid-cols-2">
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
       Datos generales
@@ -219,6 +261,7 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           {% for observacion in observaciones %}
           <tr class="text-gray-700 dark:text-gray-400">
+            {% if observacion.docente %}
             <td class="px-4 py-3">
               <div class="flex items-center text-sm">
                 <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
@@ -231,8 +274,26 @@
                 </div>
               </div>
             </td>
+            {% else %}
+            <td class="px-4 py-3">
+              <div class="flex items-center text-sm">
+                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                  <img class="object-cover w-full h-full rounded-full"
+                    src="{% static 'images/profilesPic/admin/admin1.jpg' %}" alt="" loading="lazy" />
+                  <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                </div>
+                <div>
+                  <p class="font-semibold whitespace-no-wrap">Administrador</p>
+                </div>
+              </div>
+            </td>
+            {% endif %}
             <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
-            <td class="px-4 py-3 text-md">{{observacion.observacionD}}</td>
+            <td class="px-4 py-3 text-md">
+              {% autoescape off %}
+              {{observacion.observacionD}}
+              {% endautoescape %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -252,52 +313,53 @@
       {% endif %}
     </div>
   </div>
-  {% endif %}
 
-  <div class="grid gap-6 mb-8 md:grid-cols-1">
-    <br>
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+  <h4 class="mt-8 text-lg font-semibold text-gray-600 dark:text-gray-300">
+    Actualizaciones
+  </h4>
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      {% if actualizaciones %}
+      <table class="w-full">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 text-center">Fecha</th>
+            <th class="px-4 py-3">Descripción</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          {% for actualizacion in actualizaciones %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-md text-center">{{actualizacion.fecha|date:"d/M/Y"}}</td>
+            {% if actualizacion.tipo == 'ACTUALIZADO' %}
+            <td class="px-4 py-3 text-md text-green-500">{{actualizacion.descripcion}}</td>
+            {% else %}
+            <td class="px-4 py-3 text-md text-red-600">{{actualizacion.descripcion}}</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-          Documento Anteproyecto
-        </h4>
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% if not anteproyecto.anteproyectoDoc %}
-          <div
-            class="mb-4 text-lg text-center items-center justify-center font-semibold text-red-600 dark:text-red-300">
-            <h4>
-              No se ha subido el documento del Anteproyecto
-            </h4>
-            <div class="inline-block">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-              </svg>
-            </div>
-          </div>
-
-          {% else %}
-          <a class="text-green-500" href="/images/{{formDoc.anteproyectoDoc.value}}" target="_blank">
-            <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
-            {{formDoc.anteproyectoDoc.label}} PDF
-          </a>
-          {% if group == 'admin' %}
-          <div class="relative">
-            <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
-              href="{% url 'removeDoc' anteproyecto.id %}">Eliminar</a>
-          </div>
-          {% endif %}
-          {% endif %}
-          <br>
-        </form>
+        <p
+          class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg">
+          No se ha actualizado el documento del anteproyecto aún
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+          </svg>
+        </p>
       </div>
+      {% endif %}
     </div>
   </div>
+  {% endif %}
 
   <br>
-  <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+  <h4 class="mt-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
     Datos de los integrantes
   </h4>
   <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -461,16 +523,6 @@
         </button>
       </a>
     </div>
-    {% elif group == 'teacher'%}
-    <div class="h-fit min-h-full flex justify-end">
-      <span hidden="hidden" class="elementValueA">{{anteproyecto.a_nombre}}</span>
-      <a href="{% url 'tomarRevisor1' anteproyecto.id %}" class="btnSelect">
-        <button
-          class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
-          Tomar Anteproyecto Revisor 1
-        </button>
-      </a>
-    </div>
     {% endif %}
     {% endif %}
 
@@ -566,27 +618,20 @@
         </button>
       </a>
     </div>
-    {% elif group == 'teacher'%}
-    <div class="h-fit min-h-full flex justify-end">
-      <span hidden="hidden" class="elementValueA">{{anteproyecto.a_nombre}}</span>
-      <a href="{% url 'tomarRevisor2' anteproyecto.id %}" class="btnSelect">
-        <button
-          class="float-right ml-2 bg-blue-400 hover:bg-blue-600 text-gray-600 dark:text-gray-300 text-sm font-bold rounded px-2 py-1">
-          Tomar Anteproyecto Revisor 2
-        </button>
-      </a>
-    </div>
     {% endif %}
     {% endif %}
 
     <br>
     <h4 class="mb-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
-      Datos de la dependencia
+      Datos de la Organización o Empresa
     </h4>
     <div class="grid gap-6 mb-2 md:grid-cols-1">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
         <form action="" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
+
+          {% if formD %}
+
           {% for field in formD %}
           {% if not field.id_for_label in data %}
           <label class="block mt-4 text-sm">
@@ -605,6 +650,8 @@
               placeholder="Your message...">{{ dependencia.mision }}</textarea>
           </label>
 
+          {% if dependencia.domicilio %}
+
           {% for field in formDom %}
           {% if not field.id_for_label in data %}
           <label class="block mt-4 text-sm">
@@ -615,10 +662,26 @@
           {% endif %}
           {% endfor %}
 
+          {% else %}
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <p
+              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+              No se ha asignado una direccion a la Organización o Empresa.
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clip-rule="evenodd" />
+              </svg>
+            </p>
+          </div>
+          {% endif %}
+
           <br>
           <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
             Titular de la dependencia
           </h4>
+
+          {% if dependencia.titular %}
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
             <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
@@ -632,10 +695,25 @@
               disabled="" required="" id="id_t_nombre">
           </label>
 
+          {% else %}
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <p
+              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+              No se ha asignado un titular para la Organización o Empresa.
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clip-rule="evenodd" />
+              </svg>
+            </p>
+          </div>
+          {% endif %}
+
           <br>
           <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
             Asesor Externo
           </h4>
+          {% if anteproyecto.asesorExterno %}
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
             <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno}}" maxlength="100"
@@ -648,7 +726,33 @@
               class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
               disabled="" required="" id="id_t_nombre">
           </label>
+          {% else %}
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <p
+              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+              No se ha asignado un asesor externo de la Organización o Empresa.
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clip-rule="evenodd" />
+              </svg>
+            </p>
+          </div>
+          {% endif %}
           <br>
+          {% else %}
+          <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <p
+              class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+              No se ha asignado una Organización o Empresa para este Anteproyecto.
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clip-rule="evenodd" />
+              </svg>
+            </p>
+          </div>
+          {% endif %}
         </form>
       </div>
     </div>

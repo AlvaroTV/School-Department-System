@@ -5,7 +5,7 @@
 
 <div class="container grid px-6 mx-auto">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Anteproyectos pasados Revisor 1
+        Anteproyectos pasados - Revisor 1
     </h2>
 
     {% if not search %}
@@ -79,8 +79,7 @@
                         <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                         <th class="px-4 py-3">Dependencia</th>
                         <th class="px-4 py-3">Estatus</th>
-                        <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                        <th class="px-4 py-3 text-center">Periodo Fin</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>                        
                         <th class="px-4 py-3 text-center"># Integrantes</th>
                         <th class="px-4 py-3 text-center">Ver Anteproyecto</th>                        
                     </tr>
@@ -130,12 +129,9 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoFin|date:"d/M/Y"}}
-                        </td>
+                        <td class="px-4 py-3 text-sm text-center">
+                            {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                        </td>                        
                         <td class="px-4 py-3 text-center">
                             {{anteproyecto.numIntegrantes}}
                         </td>
@@ -170,7 +166,7 @@
             <span class="col-span-2"></span>
             <!-- Pagination -->
             {% if buttons1 %}
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end1">
+            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
                         <li>
@@ -179,7 +175,8 @@
                                 {% else %}
                                 <a href="{% url 'anteproyectosH' prev_page1 page2 orderB1 orderB2 filter1 filter2 %}">
                                     {% endif %}
-                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
                                         aria-label="Previous">
                                         <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                             <path
@@ -230,11 +227,12 @@
                 </nav>
             </span>
             {% endif %}
-        </div>
-    </div>
+        </div>        
+
+    </div>    
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Anteproyectos pasados Revisor 2
+        Anteproyectos pasados - Revisor 2
     </h2>
 
     {% if not search %}
@@ -308,8 +306,7 @@
                         <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                         <th class="px-4 py-3">Dependencia</th>
                         <th class="px-4 py-3">Estatus</th>
-                        <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                        <th class="px-4 py-3 text-center">Periodo Fin</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>                        
                         <th class="px-4 py-3 text-center"># Integrantes</th>
                         <th class="px-4 py-3 text-center">Ver Anteproyecto</th>                        
                     </tr>
@@ -359,12 +356,9 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoFin|date:"d/M/Y"}}
-                        </td>
+                        <td class="px-4 py-3 text-sm text-center">
+                            {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                        </td>                        
                         <td class="px-4 py-3 text-center">
                             {{anteproyecto.numIntegrantes}}
                         </td>
@@ -399,7 +393,7 @@
             <span class="col-span-2"></span>
             <!-- Pagination -->
             {% if buttons2 %}
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end1">
+            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
                         <li>
@@ -408,7 +402,8 @@
                                 {% else %}
                                 <a href="{% url 'anteproyectosH' page1 prev_page2 orderB1 orderB2 filter1 filter2 %}">
                                     {% endif %}
-                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                    <button
+                                        class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
                                         aria-label="Previous">
                                         <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                             <path
@@ -439,7 +434,7 @@
                         {% endif %}
                         {% endfor %}
                         <li>
-                            {% if next_page1 > n_buttons1 %}
+                            {% if next_page2 > n_buttons2 %}
                             <a href="{% url 'anteproyectosH' page1 1 orderB1 orderB2 filter1 filter2 %}">
                                 {% else %}
                                 <a href="{% url 'anteproyectosH' page1 next_page2 orderB1 orderB2 filter1 filter2 %}">
@@ -460,7 +455,7 @@
             </span>
             {% endif %}
         </div>
-    </div>
+    </div>    
 
 </div>
 

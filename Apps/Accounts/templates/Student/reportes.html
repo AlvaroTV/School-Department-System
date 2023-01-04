@@ -30,7 +30,7 @@
                         {{field.label}} PDF
                     </a>
                     <br>
-                    {% elif estatus == 'ACEPTADO' %}
+                    {% elif estatus == 'ACEPTADO' and residencia.periodoInicio %}
                     {{field}}
                     <div class="relative">
                         <br>
@@ -41,8 +41,8 @@
                     {% else %}
                     <img src="{% static 'images/warning-sign.png' %}" width=120" height="40" class="mx-auto d-block">
                     <p class="text-red-600">No puede enviar este archivo aun</p>
-                    <p class="text-teal-500">* Podra subirlo una vez su anteproyecto haya sido ACEPTADO</p>
-
+                    <p class="text-teal-500">* Podra subirlo una vez su anteproyecto haya sido ACEPTADO</p>                    
+                    <p class="text-teal-500">* Podra subirlo una vez haya especificado el periodo de inicio y fin de su residencia</p>                    
                     {% endif %}
                     {% endfor %}
                 </div>
@@ -137,5 +137,8 @@
 {% endblock %}
 
 {% block scripts %}
+{% if anteproyecto.estatus == 'ACEPTADO' and not residencia.periodoInicio %}
+<script src="{% static 'js/messages/student_files.js' %}"></script>
+{% endif %}
 <script src="{% static 'js/uploadManagement/files.js' %}"></script>
 {% endblock %}

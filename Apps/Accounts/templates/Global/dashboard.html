@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container grid px-6 mx-auto">
+<div class="container grid px-6 mx-auto" id="reportPage">
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Panel del administrador
@@ -81,11 +81,60 @@
                 </p>
             </div>
         </div>
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            {% if anteproyectosRE > 0 %}
+            <a href="{% url 'anteproyectos' 1 0 5 %}">
+            {% endif %}
+                <div class="p-3 mr-4 text-teal-500 bg-y-100 rounded-full dark:text-teal-100 dark:bg-y-700">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                        <path fill-rule="evenodd"
+                            d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </a>
+            <div>
+                <p class="mb-2 text-sm text-center font-medium text-gray-600 dark:text-gray-400">
+                    Anteproyectos listos para autorizar
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{anteproyectosRE}}
+                </p>
+            </div>
+        </div>
+        <!-- Card -->
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            {% if epedientesC > 0 %}
+            <a href="{% url 'expedientes' 1 0 3 %}">
+            {% endif %}
+                <div
+                    class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                        <path fill-rule="evenodd"
+                            d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </a>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Expedientes completos
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{epedientesC}}
+                </p>
+            </div>
+        </div>
     </div>
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Graficas
+        Gráficas
     </h2>
+    <a href="#" id="downloadPdf" hidden="hidden">Download Report Page as PDF</a>
+    <br /><br />
     <div class="grid gap-6 mb-8 md:grid-cols-2">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
@@ -115,7 +164,7 @@
                     <span>ACEPTADO</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>                    
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>
                     <span>RECHAZADO</span>
                 </div>
             </div>
@@ -137,14 +186,14 @@
                 </div>
                 <div class="flex items-center">
                     <span class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"></span>
-                    <span>PROROGA</span>
+                    <span>PRORROGA</span>
                 </div>
                 <div class="flex items-center">
                     <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#9CFF2E;"></span>
                     <span>FINALIZADA</span>
                 </div>
                 <div class="flex items-center">
-                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>                    
+                    <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#D83B01;"></span>
                     <span>RECHAZADA</span>
                 </div>
             </div>
@@ -167,7 +216,7 @@
             <canvas id="bars1" style="display: block; width: 572px; height: 286px;" class="chartjs-render-monitor"
                 width="572" height="286"></canvas>
             <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-                <!-- Chart legend -->                
+                <!-- Chart legend -->
                 <div class="flex items-center">
                     <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#FF6D28;"></span>
                     <span>Total Estudiantes</span>
@@ -197,7 +246,7 @@
             <canvas id="bars2" style="display: block; width: 572px; height: 286px;" class="chartjs-render-monitor"
                 width="572" height="286"></canvas>
             <div class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400">
-                <!-- Chart legend -->                
+                <!-- Chart legend -->
                 <div class="flex items-center">
                     <span class="inline-block w-3 h-3 mr-1 rounded-full" style="background-color:#A149FA;"></span>
                     <span>Total Estudiantes</span>
@@ -211,16 +260,16 @@
                     <span>Residencias Registradas</span>
                 </div>
             </div>
-        </div>        
-    </div>        
+        </div>
+    </div>
 
     <div class="grid gap-6 mb-8 md:grid-cols-1">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
                 Proyectos registrados por mes
             </h4>
-            <canvas id="prueba"></canvas>            
-        </div>        
+            <canvas id="prueba"></canvas>
+        </div>
     </div>
     <!--Anteproyectos-->
     <span hidden="hidden" id="anteproyectosE">{{anteproyectosE}}</span>
@@ -242,6 +291,9 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="{% static 'js/download_charts.js' %}"></script>
 <script src="{% static 'js/charts-bars.js' %}" defer></script>
 <script src="{% static 'js/charts-lines.js' %}" defer></script>
 <script src="{% static 'js/charts-pie.js' %}" defer></script>

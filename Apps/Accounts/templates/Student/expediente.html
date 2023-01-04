@@ -4,7 +4,7 @@
 {% block content %}
 
 <main class="h-full pb-16 overflow-y-auto">
-  <!-- Remove everything INSIDE this div to a really blank page -->
+
   <div class="container px-6 mx-auto grid">
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -35,7 +35,7 @@
           {{field}}
           <div class="relative">
             <br>
-            {% if estatus == 'ACEPTADO' %}
+            {% if estatus == 'ACEPTADO' and residencia.periodoInicio %}
             <input type="submit" value="Enviar"
               class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             {% endif %}
@@ -70,7 +70,7 @@
         {{field}}
         <div class="relative">
           <br>
-          {% if estatus == 'ACEPTADO' %}
+          {% if estatus == 'ACEPTADO' and residencia.periodoInicio %}
           <input type="submit" value="Enviar"
             class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
           {% endif %}
@@ -192,5 +192,8 @@
 {% endblock %}
 
 {% block scripts %}
+{% if anteproyecto.estatus == 'ACEPTADO' and not residencia.periodoInicio %}
+<script src="{% static 'js/messages/student_files.js' %}"></script>
+{% endif %}
 <script src="{% static 'js/uploadManagement/files.js' %}"></script>
 {% endblock %}

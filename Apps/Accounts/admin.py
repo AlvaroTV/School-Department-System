@@ -20,4 +20,5 @@ admin.site.register(ObservacionDocente)
 admin.site.register(Materia)
 admin.site.register(PerfilAcademico)
 admin.site.register(Anteproyecto_materia)
+admin.site.register(Actualizacion_anteproyecto)
 

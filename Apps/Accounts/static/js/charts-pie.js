@@ -75,7 +75,7 @@ const pieConfig2 = {
         label: 'Dataset 1',
       },
     ],
-    labels: ['INICIADA', 'EN PROCESO', 'PROROGA', 'FINALIZADA', 'RECHAZADA'],
+    labels: ['INICIADA', 'EN PROCESO', 'PRORROGA', 'FINALIZADA', 'RECHAZADA'],
   },
   options: {
     responsive: true,

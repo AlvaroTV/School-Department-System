@@ -36,6 +36,15 @@
             <option value="{% url 'estudiantes' page 6 %}" >Apellido Paterno Z - A</option>
         </select>    
         </div>
+        {% else %}
+            <div class="absolute inset-y-0 left-0 ">
+                <a href="{% url 'estudiantes' 1 0 %}">
+                    <button
+                        class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        Todos los estudiantes
+                    </button>
+                </a>
+            </div>
         {% endif %}
         <div class="absolute inset-y-0 right-0 ">
             <button @click="openModal"
@@ -55,11 +64,13 @@
                         <th class="px-4 py-3">Numero de Control</th>
                         <th class="px-4 py-3">Estudiante</th>
                         <th class="px-4 py-3">Correo Electronico</th>
-                        <th class="px-4 py-3">Semestre</th>
-                        <th class="px-4 py-3">Anteproyecto</th>
-                        <th class="px-4 py-3">Residencia</th>
+                        <th class="px-4 py-3 text-center">Semestre</th>
+                        <th class="px-4 py-3 text-center">Anteproyecto</th>
+                        <th class="px-4 py-3 text-center">Residencia</th>
                         <th class="px-4 py-3">Ver Estudiante</th>
+                        {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
                         <th class="px-4 py-3">Eliminar</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -87,7 +98,7 @@
                         <td class="px-4 py-3">
                             {{estudiante.correoElectronico}}
                         </td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 text-center">
                             <div class="flex items-center justify-center">
                                 {{estudiante.semestre}}
                             </div>
@@ -134,6 +145,11 @@
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                     {{estudiante.residencia.estatus}}
                                 </span>
+                                {% elif estudiante.residencia.estatus == 'FINALIZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{estudiante.residencia.estatus}}
+                                </span>
                                 {% elif estudiante.residencia.estatus == 'EN PROCESO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
@@ -175,6 +191,7 @@
                             </div>
                         </td>
                         <span hidden="hidden" class="elementValue">{{estudiante}}</span>
+                        {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
                         <td class="px-4 py-3 text-md btnDelete">
                             <div class="flex items-center justify-center">
                                 <a href="{% url 'eliminarEstudiante' estudiante.id %}"
@@ -188,6 +205,7 @@
                                 </a>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>

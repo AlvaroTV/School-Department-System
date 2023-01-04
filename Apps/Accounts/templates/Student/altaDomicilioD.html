@@ -1,0 +1,45 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+{% if not dependencia.domicilio %}
+
+<div class="container px-6 mx-auto grid ">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Organizacion o Empresa: {{dependencia.d_nombre}}
+    </h2>
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Registro del domicilio de la Organizacion o Empresa
+    </h2>
+    <div class="grid gap-6 mb-8 md:grid-cols-3">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {% for field in formDom %}
+                <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                    {{ field }}
+                </label>
+                <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                {% endfor %}
+
+                <br>
+                <div class="relative">
+                    <input type="submit"
+                        class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        name="Update Information" value="Enviar Informacion">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+{% include 'Global/404.html' %}
+
+{% endif %}
+
+{% endblock %}

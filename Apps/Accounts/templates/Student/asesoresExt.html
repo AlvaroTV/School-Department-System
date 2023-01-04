@@ -1,0 +1,77 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+{% if not asesorE %}
+
+<div class="container px-6 mx-auto grid ">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Organizacion o Empresa: {{dependencia.d_nombre}}
+    </h2>
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Asesores externos pertenecientes a la Organizacion o Empresa
+    </h4>
+
+    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3 text-center">Nombre</th>
+                        <th class="px-4 py-3 text-center">Puesto</th>
+                        <th class="px-4 py-3 text-center">Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for asesor in all_asesores %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            {{asesor}}
+                        </td>
+                        <td class="px-4 py-3">
+                            {{asesor.puesto}}
+                        </td>
+                        <span hidden="hidden" class="elementValue">{{asesor}}</span>
+                        <td class="px-4 py-3 text-sm btnSelect">
+                            <div class="flex items-center justify-center">
+                                <a href="{% url 'asignar_asesorE' asesor.id %}"
+                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br>
+    <div class="relative">
+        <a href="{% url 'alta_asesorE' %}">
+            <button
+                class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                Dar de alta un asesor externo
+            </button>
+        </a>
+    </div>
+</div>
+
+{% else %}
+
+{% include 'Global/404.html' %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/uploadManagement/asignarAsesorE.js' %}"></script>
+{% endblock %}

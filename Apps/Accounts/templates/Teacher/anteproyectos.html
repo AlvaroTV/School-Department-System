@@ -5,7 +5,7 @@
 
 <div class="container grid px-6 mx-auto">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Anteproyectos Activos Revisor 1
+        Anteproyectos Activos - Revisor 1
     </h2>
 
     <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
@@ -18,8 +18,7 @@
                         <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                         <th class="px-4 py-3">Dependencia</th>
                         <th class="px-4 py-3">Estatus</th>
-                        <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                        <th class="px-4 py-3 text-center">Periodo Fin</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>                        
                         <th class="px-4 py-3 text-center"># Integrantes</th>
                         <th class="px-4 py-3 text-center">Ver Anteproyecto</th>
                     </tr>
@@ -69,12 +68,9 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoFin|date:"d/M/Y"}}
-                        </td>
+                        <td class="px-4 py-3 text-sm text-center">
+                            {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                        </td>                        
                         <td class="px-4 py-3 text-center">
                             {{anteproyecto.numIntegrantes}}
                         </td>
@@ -104,7 +100,7 @@
     </div>
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Anteproyectos Activos Revisor 2
+        Anteproyectos Activos - Revisor 2
     </h2>
 
     <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
@@ -117,8 +113,7 @@
                         <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                         <th class="px-4 py-3">Dependencia</th>
                         <th class="px-4 py-3">Estatus</th>
-                        <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                        <th class="px-4 py-3 text-center">Periodo Fin</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>                        
                         <th class="px-4 py-3 text-center"># Integrantes</th>
                         <th class="px-4 py-3 text-center">Ver Anteproyecto</th>
                     </tr>
@@ -168,12 +163,9 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            {{anteproyecto.periodoFin|date:"d/M/Y"}}
-                        </td>
+                        <td class="px-4 py-3 text-sm text-center">
+                            {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                        </td>                        
                         <td class="px-4 py-3 text-center">
                             {{anteproyecto.numIntegrantes}}
                         </td>

@@ -282,6 +282,7 @@
                     Un Revisor le sera asignado pronto.
                 </p>
             </div>
+            {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
             <div class="h-fit min-h-full flex justify-end">
                 <a href="{% url 'asignarAsesorIL' 1 residencia.id %}">
                     <button
@@ -290,6 +291,7 @@
                     </button>
                 </a>
             </div>
+            {% endif %}
             {% endif %}
 
             <br>
@@ -377,6 +379,7 @@
                     Un Revisor le sera asignado pronto.
                 </p>
             </div>
+            {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
             <div class="h-fit min-h-full flex justify-end">
                 <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
                     <button
@@ -385,6 +388,7 @@
                     </button>
                 </a>
             </div>
+            {% endif %}
             {% endif %}
 
             <br>

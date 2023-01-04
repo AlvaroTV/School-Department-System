@@ -5,7 +5,7 @@
 
 <div class="container grid px-6 mx-auto">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Proyectos de Residencia pasados Asesor Interno
+        Proyectos de Residencia pasados - Asesor Interno
     </h2>
 
     {% if not search %}
@@ -93,10 +93,10 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    {% for residencia in all_anteproyectosA %}
+                    {% for residencia in all_residenciasA %}
                     <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
-                            {{residencia.a_nombre}}
+                            {{residencia.nombre}}
                         </td>
                         <td class="px-4 py-3">
                             {{residencia.tipoProyecto}}
@@ -105,27 +105,27 @@
                             {{residencia.dependencia}}
                         </td>
                         <td class="px-4 py-3 text-xs whitespace-no-wrap">
-                            {% if residencia.estatus == 'ACEPTADO' %}
+                            {% if residencia.estatus == 'FINALIZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'ENVIADO' %}
+                            {% elif residencia.estatus == 'INICIADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'EN REVISION' %}
+                            {% elif residencia.estatus == 'EN PROCESO' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-teal-700 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'RECHAZADO' %}
+                            {% elif residencia.estatus == 'RECHAZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'REVISADO' %}
+                            {% elif residencia.estatus == 'NO FINALIZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
                                 {{residencia.estatus}}
@@ -168,7 +168,6 @@
                 </tbody>
             </table>
         </div>
-
         <div
             class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
             <span class="flex items-center col-span-3">
@@ -177,7 +176,7 @@
             <span class="col-span-2"></span>
             <!-- Pagination -->
             {% if buttons1 %}
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end1">
+            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
                         <li>
@@ -238,10 +237,10 @@
             </span>
             {% endif %}
         </div>
-    </div>
+    </div>    
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Proyectos de Residencia pasados Revisor
+        Proyectos de Residencia pasados - Revisor
     </h2>
 
     {% if not search %}
@@ -329,10 +328,10 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    {% for residencia in all_anteproyectosR %}
+                    {% for residencia in all_residenciasR %}
                     <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
-                            {{residencia.a_nombre}}
+                            {{residencia.nombre}}
                         </td>
                         <td class="px-4 py-3">
                             {{residencia.tipoProyecto}}
@@ -341,27 +340,27 @@
                             {{residencia.dependencia}}
                         </td>
                         <td class="px-4 py-3 text-xs whitespace-no-wrap">
-                            {% if residencia.estatus == 'ACEPTADO' %}
+                            {% if residencia.estatus == 'FINALIZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'ENVIADO' %}
+                            {% elif residencia.estatus == 'INICIADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'EN REVISION' %}
+                            {% elif residencia.estatus == 'EN PROCESO' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-teal-700 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'RECHAZADO' %}
+                            {% elif residencia.estatus == 'RECHAZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                                 {{residencia.estatus}}
                             </span>
-                            {% elif residencia.estatus == 'REVISADO' %}
+                            {% elif residencia.estatus == 'NO FINALIZADA' %}
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
                                 {{residencia.estatus}}
@@ -404,7 +403,6 @@
                 </tbody>
             </table>
         </div>
-
         <div
             class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
             <span class="flex items-center col-span-3">
@@ -413,7 +411,7 @@
             <span class="col-span-2"></span>
             <!-- Pagination -->
             {% if buttons2 %}
-            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end1">
+            <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                 <nav aria-label="Table navigation">
                     <ul class="inline-flex items-center">
                         <li>
@@ -453,7 +451,7 @@
                         {% endif %}
                         {% endfor %}
                         <li>
-                            {% if next_page1 > n_buttons1 %}
+                            {% if next_page2 > n_buttons2 %}
                             <a href="{% url 'residenciasH' page1 1 orderB1 orderB2 filter1 filter2 %}">
                                 {% else %}
                                 <a href="{% url 'residenciasH' page1 next_page2 orderB1 orderB2 filter1 filter2 %}">
@@ -475,6 +473,7 @@
             {% endif %}
         </div>
     </div>
+
 
 </div>
 

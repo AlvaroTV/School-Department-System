@@ -1,7 +1,6 @@
 
 Swal.fire({
-    title: 'Seleccione aquellas materias que esten mas relacionadas con su proyecto de residencia.',
-    text: 'Se requiere al menos una materia',
+    title: 'Seleccione aquellas materias que se encuentren relacionadas con su proyecto de residencia.',    
     width: 600,
     padding: '3em',
     color: '#716add',

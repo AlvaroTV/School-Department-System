@@ -1,7 +1,9 @@
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import *
 from .adminViews import *
 from .teacherViews import *
+import uuid
 
 urlpatterns = [    
     # Globales           
@@ -14,15 +16,29 @@ urlpatterns = [
     path('teacher/', teacherPage, name='teacher'),
     path('createStudent/', createStudent, name='createStudent'),                    
     path('faqs/', faqs, name='faqs'),                    
+    path('faqs_s/', student_faqs, name='student_faqs'),                    
+    path('faqs_t/', teacher_faqs, name='teacher_faqs'),   
+    path('password_reset', password_reset_request, name='password_reset'),    
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='Global/password_reset/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="Global/password_reset/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='Global/password_reset/password_reset_complete.html'), name='password_reset_complete'),             
     
     # Estudiante                
     path('profile/', estudianteViewProfile, name='studentProfile'),
     path('settings/', estudianteSettings, name='studentSettings'),
     path('expediente/', expediente, name='expediente'),    
     path('anteproyecto/', anteproyecto, name='anteproyecto'),
+    path('dependencias/<int:page>/<int:orderB>', dependencias, name='dependencias'),
+    path('asignarDependencia/<uuid:pk>', asignar_dependencia, name='asignar_dependencia'),
+    path('altaDependencia/', alta_dependencia, name='alta_dependencia'),
+    path('altaTitularD/', alta_titular_d, name='alta_titular_d'),
+    path('altaDomicilioD/', alta_domicilio_d, name='alta_domicilio_d'),
+    path('asesoresExternos/', asesoresE, name='asesoresExternos'),
+    path('asignarAsesorE/<uuid:pk>', asignar_asesorE, name='asignar_asesorE'),
+    path('altaAsesorE/', alta_asesorE, name='alta_asesorE'),
     path('editAnteproyecto/', editarAnteproyecto, name='editarAnteproyecto'),
     path('reportes/', reportes, name='reportes'),    
-    path('removeDoc/<int:pk>', removeDoc, name='removeDoc'),    
+    path('removeDoc/<uuid:pk>', removeDoc, name='removeDoc'),    
     path('residencia/', proyectoResidencia, name='residencia'),    
     path('compatibilidadA/<materiaPK>', compatibilidadA, name='compatibilidadA'),    
         
@@ -33,67 +49,68 @@ urlpatterns = [
     path('estudiantes/<int:page>/<int:orderB>', estudiantes, name='estudiantes'),        
     path('docentes/<int:page>/<int:orderB>', docentes, name='docentes'),       
     
-    path('verExpediente/<int:pk>', verExpediente, name='verExpediente'),           
-    path('eliminarExpediente/<int:pk>', eliminarExpediente, name='eliminarExpediente'),           
+    path('verExpediente/<uuid:pk>', verExpediente, name='verExpediente'),           
+    path('eliminarExpediente/<uuid:pk>', eliminarExpediente, name='eliminarExpediente'),           
      
-    path('verAnteproyecto/<int:pk>', verAnteproyecto, name='verAnteproyecto'),        
-    path('editarAnteproyectoAdmin/<int:pk>', editarAnteproyectoAdmin, name='editarAnteproyectoAdmin'),        
-    path('eliminarAnteproyecto/<int:pk>', eliminarAnteproyecto, name='eliminarAnteproyecto'),        
+    path('verAnteproyecto/<uuid:pk>', verAnteproyecto, name='verAnteproyecto'),        
+    path('editarAnteproyectoAdmin/<uuid:pk>', editarAnteproyectoAdmin, name='editarAnteproyectoAdmin'),        
+    path('eliminarAnteproyecto/<uuid:pk>', eliminarAnteproyecto, name='eliminarAnteproyecto'),        
     
-    path('editarObservaciones/<int:pk>', editarObservaciones, name='editarObservaciones'),        
-    path('eliminarObservacion/<int:pk>', eliminarObservacion, name='eliminarObservacion'),   
+    path('editarObservaciones/<uuid:pk>', editarObservaciones, name='editarObservaciones'),        
+    path('eliminarObservacion/<uuid:pk>', eliminarObservacion, name='eliminarObservacion'),   
     
-    path('verEstudiante/<int:pk>', verEstudiante, name='verEstudiante'),       
-    path('editarEstudiante/<int:pk>', editarEstudiante, name='editarEstudiante'),       
-    path('removeEstudiante/<int:pk>', removeEstudiante, name='removeEstudiante'),       
+    path('verEstudiante/<uuid:pk>', verEstudiante, name='verEstudiante'),       
+    path('editarEstudiante/<uuid:pk>', editarEstudiante, name='editarEstudiante'),       
+    path('removeEstudiante/<uuid:pk>', removeEstudiante, name='removeEstudiante'),       
     
-    path('asignarRevisor1/<int:page>/<int:pk>', asignarRevisor1, name='asignarRevisor1'),           
-    path('asignarRevisor1I/<int:pkA>/<int:pkD>', asignarRevisor1I, name='asignarRevisor1I'),           
-    path('removeRevisor1/<int:pk>', removeRevisor1, name='removeRevisor1'),           
+    path('asignarRevisor1/<int:page>/<uuid:pk>', asignarRevisor1, name='asignarRevisor1'),           
+    path('asignarRevisor1I/<uuid:pkA>/<uuid:pkD>', asignarRevisor1I, name='asignarRevisor1I'),           
+    path('removeRevisor1/<uuid:pk>', removeRevisor1, name='removeRevisor1'),           
     
-    path('asignarRevisor2/<int:page>/<int:pk>', asignarRevisor2, name='asignarRevisor2'),           
-    path('asignarRevisor2I/<int:pkA>/<int:pkD>', asignarRevisor2I, name='asignarRevisor2I'),           
-    path('removeRevisor2/<int:pk>', removeRevisor2, name='removeRevisor2'),           
+    path('asignarRevisor2/<int:page>/<uuid:pk>', asignarRevisor2, name='asignarRevisor2'),           
+    path('asignarRevisor2I/<uuid:pkA>/<uuid:pkD>', asignarRevisor2I, name='asignarRevisor2I'),           
+    path('removeRevisor2/<uuid:pk>', removeRevisor2, name='removeRevisor2'),           
     
-    path('asignarAsesorIL/<int:page>/<int:pk>', asignarAsesorIL, name='asignarAsesorIL'),           
-    path('asignarAsesorI/<int:pkR>/<int:pkD>', asignarAsesorI, name='asignarAsesorI'),           
-    path('removeAsesorI/<int:pk>', removeAsesorI, name='removeAsesorI'),           
+    path('asignarAsesorIL/<int:page>/<uuid:pk>', asignarAsesorIL, name='asignarAsesorIL'),           
+    path('asignarAsesorI/<uuid:pkR>/<uuid:pkD>', asignarAsesorI, name='asignarAsesorI'),           
+    path('removeAsesorI/<uuid:pk>', removeAsesorI, name='removeAsesorI'),           
     
-    path('asignarRevisorL/<int:page>/<int:pk>', asignarRevisorL, name='asignarRevisorL'),           
-    path('asignarRevisor/<int:pkR>/<int:pkD>', asignarRevisor, name='asignarRevisor'),           
-    path('removeRevisor/<int:pk>', removeRevisor, name='removeRevisor'),           
+    path('asignarRevisorL/<int:page>/<uuid:pk>', asignarRevisorL, name='asignarRevisorL'),           
+    path('asignarRevisor/<uuid:pkR>/<uuid:pkD>', asignarRevisor, name='asignarRevisor'),           
+    path('removeRevisor/<uuid:pk>', removeRevisor, name='removeRevisor'),           
     
-    path('verDocente/<int:pk>', verDocente, name='verDocente'),           
-    path('editarDocente/<int:pk>', editarDocente, name='editarDocente'),           
+    path('verDocente/<uuid:pk>', verDocente, name='verDocente'),           
+    path('editarDocente/<uuid:pk>', editarDocente, name='editarDocente'),           
     path('altaDocente/', altaDocente, name='altaDocente'), 
     
-    path('verResidencia/<int:pk>', verResidencia, name='verResidencia'),        
-    path('eliminarResidencia/<int:pk>', eliminarResidencia, name='eliminarResidencia'),        
-    path('editarResidenciaAdmin/<int:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
+    path('verResidencia/<uuid:pk>', verResidencia, name='verResidencia'),        
+    path('eliminarResidencia/<uuid:pk>', eliminarResidencia, name='eliminarResidencia'),        
+    path('editarResidenciaAdmin/<uuid:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
     
-    path('eliminarEstudiante/<int:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
-    path('eliminarDocente/<int:pk>', eliminarDocente, name='eliminarDocente'),
-    path('eliminarDocExpediente/<int:pk>/<file_name>', eliminarDocExpediente, name='eliminarDocExpediente'),
-    path('eliminarDocR1/<int:pk>/<file_name>', eliminarDocR1, name='eliminarDocR1'),
-    path('eliminarDocR2/<int:pk>/<file_name>', eliminarDocR2, name='eliminarDocR2'),
-    path('eliminarDocRF/<int:pk>/<file_name>', eliminarDocRF, name='eliminarDocRF'),
+    path('eliminarEstudiante/<uuid:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
+    path('eliminarDocente/<uuid:pk>', eliminarDocente, name='eliminarDocente'),
+    path('eliminarDocExpediente/<uuid:pk>/<file_name>', eliminarDocExpediente, name='eliminarDocExpediente'),
+    path('eliminarDocR1/<uuid:pk>/<file_name>', eliminarDocR1, name='eliminarDocR1'),
+    path('eliminarDocR2/<uuid:pk>/<file_name>', eliminarDocR2, name='eliminarDocR2'),
+    path('eliminarDocRF/<uuid:pk>/<file_name>', eliminarDocRF, name='eliminarDocRF'),
     
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      
     path('tSettings/', teacherSettings, name='teacherSettings'),
     
     path('anteproyectosTeacher/', anteproyectosTeacher, name='anteproyectosTeacher'),      
-    path('anteproyectoA/<int:pk>', anteproyectoA, name='anteproyectoA'),
-    path('agregarComentario/<int:pk>', agregarComentario, name='agregarComentario'),
+    path('anteproyectoA/<uuid:pk>', anteproyectoA, name='anteproyectoA'),
+    path('agregarComentario/<uuid:pk>', agregarComentario, name='agregarComentario'),
     path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),    
     path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      
-    path('verReporte/<int:pk>', verReporte, name='verReporte'),          
+    path('verReporte/<uuid:pk>', verReporte, name='verReporte'),          
     
-    path('tomarRevisor1/<int:pk>', tomarRevisor1, name='tomarRevisor1'),      
-    path('tomarRevisor2/<int:pk>', tomarRevisor2, name='tomarRevisor2'),      
+    path('tomarRevisor1/<uuid:pk>', tomarRevisor1, name='tomarRevisor1'),      
+    path('tomarRevisor2/<uuid:pk>', tomarRevisor2, name='tomarRevisor2'),      
     path('anteproyectosH/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', anteproyectosH, name='anteproyectosH'),      
     path('residenciasH/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', residenciasH, name='residenciasH'),      
     path('materias/', materias, name='materias'),          
     path('seleccionarMateria/<materiaPK>', seleccionarMateria, name='seleccionarMateria'),  
     path('removeMateria/<materiaPK>', removeMateria, name='removeMateria'),  
+    path('actualizacionEstDocumento/<uuid:pk>', actualizacion_est_leido, name='actualizacionEstDocumento'),  
 ]

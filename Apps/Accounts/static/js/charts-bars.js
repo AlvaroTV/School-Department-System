@@ -34,6 +34,14 @@ const barConfig1 = {
     ],
   },
   options: {
+    scales: {
+      yAxes: [{
+        display: true,
+        ticks: {          
+          beginAtZero: true   // minimum value will be 0.
+        }
+      }]
+    },
     responsive: true,
     legend: {
       display: false,
@@ -70,6 +78,14 @@ const barConfig2 = {
     ],
   },
   options: {
+    scales: {
+      yAxes: [{
+        display: true,
+        ticks: {          
+          beginAtZero: true   // minimum value will be 0.
+        }
+      }]
+    },
     responsive: true,
     legend: {
       display: false,
@@ -92,8 +108,8 @@ function list_to_array(list) {
 }
 
 function split_list(data, numArrays) {
-  const length = (data.length)/numArrays;
-  console.log('lenght:',length);
+  const length = (data.length) / numArrays;
+  console.log('lenght:', length);
   var inicio = 0
   var fin = 0
   var final_data = []
@@ -107,9 +123,9 @@ function split_list(data, numArrays) {
   //0 - 3       Inicio = 6 * 0 = 0  // Fin = (4 * 1)-1 = 3  
   for (let i = 0; i <= (numArrays - 1); i++) {
     inicio = length * i
-    fin = (length*(i+1))    
-    final_data.push(data.slice(inicio, fin));    
-  } 
-  
+    fin = (length * (i + 1))
+    final_data.push(data.slice(inicio, fin));
+  }
+
   return final_data;
 }

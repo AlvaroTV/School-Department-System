@@ -8,45 +8,39 @@
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Anteproyectos
         </h2>
-        
-        {% if not search %}            
+
+        {% if not search %}
         <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-300">
             Ordenar por
         </h4>
         {% endif %}
 
         <div class="relative mb-6 h-12">
-            {% if not search %}            
+            {% if not search %}
             <div class="absolute inset-y-0 left-0 ">
                 <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
                     <select id="s1"
                         onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">                        
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         {% if orderB == 1 %}
                         <option selected>Nombre Anteproyecto A - Z</option>
                         {% elif orderB == 2 %}
                         <option selected>Nombre Anteproyecto Z - A</option>
-                        {% elif orderB == 3 %}                        
-                        <option selected>Periodo Inicio (Menor a Mayor)</option>
+                        {% elif orderB == 3 %}
+                        <option selected>Fecha Entrega (Recientes)</option>
                         {% elif orderB == 4 %}
-                        <option selected>Periodo Inicio (Mayor a Menor)</option>
-                        {% elif orderB == 5 %}
-                        <option selected>Periodo Fin (Menor a Mayor)</option>
-                        {% elif orderB == 6 %}
-                        <option selected>Periodo Fin (Mayor a Menor)</option>
+                        <option selected>Fecha Entrega (Antiguos)</option>
                         {% else %}
                         <option selected>Seleccionar</option>
-                        {% endif %}                                                        
+                        {% endif %}
                         <option value="{% url 'anteproyectos' page 1 filter %}">Nombre Anteproyecto A - Z</option>
-                        <option value="{% url 'anteproyectos' page 2 filter %}">Nombre Anteproyecto Z - A</option>                        
-                        <option value="{% url 'anteproyectos' page 3 filter %}">Periodo Inicio (Menor a Mayor)</option>
-                        <option value="{% url 'anteproyectos' page 4 filter %}">Periodo Inicio (Mayor a Menor)</option>
-                        <option value="{% url 'anteproyectos' page 5 filter %}">Periodo Fin (Menor a Mayor)</option>
-                        <option value="{% url 'anteproyectos' page 6 filter %}">Periodo Fin (Mayor a Menor)</option>
+                        <option value="{% url 'anteproyectos' page 2 filter %}">Nombre Anteproyecto Z - A</option>
+                        <option value="{% url 'anteproyectos' page 3 filter %}">Fecha Entrega (Recientes)</option>
+                        <option value="{% url 'anteproyectos' page 4 filter %}">Fecha Entrega (Antiguos)</option>
                     </select>
 
                     <select id="s2"
-                    onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                        onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         <option selected="">Filtrar por estatus</option>
@@ -56,10 +50,19 @@
                         <option value="{% url 'anteproyectos' page orderB 3 %}">PENDIENTE</option>
                         <option value="{% url 'anteproyectos' page orderB 4 %}">EN REVISION</option>
                         <option value="{% url 'anteproyectos' page orderB 5 %}">REVISADO</option>
-                        <option value="{% url 'anteproyectos' page orderB 6 %}">RECHAZADO</option>                        
-                        <option value="{% url 'anteproyectos' page orderB 7 %}">TODOS</option>                        
+                        <option value="{% url 'anteproyectos' page orderB 6 %}">RECHAZADO</option>
+                        <option value="{% url 'anteproyectos' page orderB 7 %}">TODOS</option>
                     </select>
                 </div>
+            </div>
+            {% else %}
+            <div class="absolute inset-y-0 left-0 ">
+                <a href="{% url 'anteproyectos' 1 0 0 %}">
+                    <button
+                        class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        Todos los anteproyectos
+                    </button>
+                </a>
             </div>
             {% endif %}
             <div class="absolute inset-y-0 right-0 ">
@@ -68,7 +71,7 @@
                     Buscar Anteproyecto
                 </button>
             </div>
-        </div>        
+        </div>
 
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
@@ -80,11 +83,12 @@
                             <th class="px-4 py-3 text-center">Tipo de proyecto</th>
                             <th class="px-4 py-3">Dependencia</th>
                             <th class="px-4 py-3">Estatus</th>
-                            <th class="px-4 py-3 text-center">Periodo Inicio</th>
-                            <th class="px-4 py-3 text-center">Periodo Fin</th>
+                            <th class="px-4 py-3 text-center">Fecha Entrega</th>
                             <th class="px-4 py-3 text-center"># Integrantes</th>
                             <th class="px-4 py-3 text-center">Ver Anteproyecto</th>
+                            {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
                             <th class="px-4 py-3 text-center">Eliminar</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -132,11 +136,8 @@
                                 </span>
                                 {% endif %}
                             </td>
-                            <td class="px-4 py-3 text-sm">
-                                {{anteproyecto.periodoInicio|date:"d/M/Y"}}
-                            </td>
-                            <td class="px-4 py-3 text-sm">
-                                {{anteproyecto.periodoFin|date:"d/M/Y"}}
+                            <td class="px-4 py-3 text-sm text-center">
+                                {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
                             </td>
                             <td class="px-4 py-3 text-center">
                                 {{anteproyecto.numIntegrantes}}
@@ -159,6 +160,7 @@
                                 </div>
                             </td>
                             <span hidden="hidden" class="elementValue">{{anteproyecto.a_nombre}}</span>
+                            {% if group == 'admin' or group == 'jefe_depto_vinculacion' %}
                             <td class="px-4 py-3 text-md btnDelete">
                                 <div class="flex items-center justify-center">
                                     <a href="{% url 'eliminarAnteproyecto' anteproyecto.id %}"
@@ -172,6 +174,7 @@
                                     </a>
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -291,10 +294,8 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option selected value="1">Nombre</option>
                                     <option value="2">Dependencia</option>
-                                    <option value="3">Perido Inicio (Mes)</option>
-                                    <option value="4">Perido Fin (Mes)</option>
-                                    <option value="5">Perido Inicio (Year)</option>
-                                    <option value="6">Perido Fin (Year)</option>
+                                    <option value="3">Fecha Entrega (Mes)</option>                                    
+                                    <option value="4">Fecha Entrega (Year)</option>                                    
                                 </select>
                             </div>
                             <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">

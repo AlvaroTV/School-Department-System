@@ -50,6 +50,7 @@
                         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                             {% for observacion in observaciones %}
                             <tr class="text-gray-700 dark:text-gray-400">
+                                {% if observacion.docente %}
                                 <td class="px-4 py-3">
                                     <div class="flex items-center text-sm">
                                         <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
@@ -59,12 +60,32 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <p class="font-semibold">{{observacion.docente}}</p>
+                                            <p class="font-semibold whitespace-no-wrap">{{observacion.docente}}</p>
                                         </div>
                                     </div>
                                 </td>
+                                {% else %}
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center text-sm">
+                                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                            <img class="object-cover w-full h-full rounded-full"
+                                                src="{% static 'images/profilesPic/admin/admin1.jpg' %}" alt=""
+                                                loading="lazy" />
+                                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold whitespace-no-wrap">Administrador</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endif %}
                                 <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
-                                <td class="px-4 py-3 text-md">{{observacion.observacionD}}</td>
+                                <td class="px-4 py-3 text-md">
+                                    {% autoescape off %}
+                                    {{observacion.observacionD}}
+                                    {% endautoescape %}
+                                </td>
                                 <span hidden="hidden" class="elementValue">{{observacion.docente}}</span>
                                 <td class="px-4 py-3 text-md flex items-center justify-center btnDelete">
                                     <a href="{% url 'eliminarObservacion' observacion.id %}" type="button"
