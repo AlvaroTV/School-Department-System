@@ -53,7 +53,7 @@
                                     tabindex="0">
                                     <span class="d-none d-sm-block">Subir nueva imagen</span>
                                     <i class="bx bx-upload d-block d-sm-none"></i>
-                                </label>                                
+                                </label>
                                 <input type="file" name="fotoUsuario" accept="image/*"
                                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                                     id="id_fotoUsuario">
@@ -68,6 +68,10 @@
 
                     <div
                         class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 grid gap-6 mb-8 md:grid-cols-2">
+                        <label class="block text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Estatus</span>
+                            {{formD.estatus}}
+                        </label>
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Nombre(s)</span>
                             {{formD.nombre}}
@@ -96,10 +100,6 @@
                             <span class="text-gray-700 dark:text-gray-400">Correo institucional:</span>
                             {{formD.correoElectronico}}
                         </label>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Número de seguro social:</span>
-                            {{formD.numSeguridadSocial}}
-                        </label>
                     </div>
                 </div>
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
@@ -107,73 +107,41 @@
                         Perfil Academico
                     </h4>
                     <label class="block text-sm items-center ">
-
                         <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block "
                             height="150" width="150" id="imageschool" />
-
-
-
                     </label>
                     <br>
                     <div>
                         <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Número de control</span>
-                            {{formD.numControl}}
+                            <span class="text-gray-700 dark:text-gray-400">Puesto:</span>
+                            {{formD.puesto}}
                         </label>
                         <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Carrera:</span>
-                            {{formD.carrera}}
-                        </label>
+                        <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                            <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                                Materias:
+                            </li>
+                            {% if materias %}
+                            {% for materia in materias %}
+                            <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                                <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                                    * {{ materia.nombre }}
+                                </span>
+                            </li>
+                            {% endfor %}
+                            {% else %}
+                            <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                                <span class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
+                                    No tiene materias seleccionadas
+                                </span>
+                            </li>
+                            {% endif %}
+                        </ul>
                         <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Semestre</span>
-                            {{formD.semestre}}
-                        </label>
-                        <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Especialidad:</span>
-                            <input
-                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                placeholder=" especiality" />
-                        </label>
                     </div>
                 </div>
             </div>
-            <div class="grid gap-6 mb-8 md:grid-cols-1">
-                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                    <h4 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300">
-                        Información de contacto
-                    </h4>
-                    <div>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Calle y Número</span>
-                            {{formD.calle}}
-                        </label>
-                        <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Colonia:</span>
-                            {{formD.colonia}}
-                        </label>
-                        <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Codigo postal</span>
-                            {{formD.codigoPostal}}
-                        </label>
-                        <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Municipio:</span>
-                            {{formD.municipio}}
-                        </label>
-                        <br>
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Estado:</span>
-                            {{formD.estado}}
-                        </label>
-                    </div>
 
-                </div>
-            </div>
             <div>
                 <input type="submit"
                     class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"

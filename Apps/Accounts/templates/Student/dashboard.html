@@ -161,16 +161,14 @@
             <table class="w-full">
                 <thead>
                     <tr
-                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                        <th class="px-4 py-3">Fecha</th>
-                        <th class="px-4 py-3">Aviso</th>
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">                        
+                        <th class="px-4 py-3 text-center">Aviso</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     {% for aviso in avisos %}
                     <tr class="text-gray-700 dark:text-gray-400">
-                        <td class="px-4 py-3 text-md">{{aviso.fecha}}</td>
-                        <td class="px-4 py-3 text-md">
+                        <td class="block mx-auto px-4 py-3 text-md text-center object-none object-center">
                             {% autoescape off %}
                             {{aviso.descripcion}}
                             {% endautoescape %}
@@ -194,7 +192,7 @@
             {% endif %}
 
         </div>
-    </div>
+    </div>    
 
     {% if not anteproyecto.estatus == 'ACEPTADO' %}
 

@@ -3,8 +3,16 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+from django.core.exceptions import ValidationError
 import os
 import uuid
+
+# Validator
+def validate_nonzero(value):
+    if value == 0:
+        raise ValidationError("El tiempo debe ser mayor a 0")
 
 # Create your models here.
 class Materia(models.Model):    
@@ -97,7 +105,7 @@ class Docente(models.Model):
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)        
     curp = models.CharField(max_length=18, null=True, blank=True)
     rfc = models.CharField(max_length=13, null=True, blank=True)
-    estatus = models.CharField(max_length=15, choices=ESTATUS, default='ACTIVO', blank=True)     
+    estatus = models.CharField(max_length=15, choices=ESTATUS, default='ACTIVO')     
     puesto = models.CharField(max_length=70, null=True, blank=True)     
     fotoUsuario = models.ImageField(default='profilepicD.jpg', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)   
@@ -116,7 +124,7 @@ class ObservacionDocente(models.Model):
     observacion = models.ForeignKey(Observacion, on_delete=models.CASCADE, null=True, blank=True)
     
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
-    observacionD = models.CharField(max_length=3000, blank=True, null=True)
+    observacionD = RichTextField(blank=True, null=True)
     fechaElaboracion = models.DateTimeField(auto_now_add=True)
     
 class Dependencia(models.Model):
@@ -248,3 +256,16 @@ class Estudiante(models.Model):
     def __str__(self):
         return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
     
+class Avisos(models.Model):
+    ENTIDADES = (('ESTUDIANTES', 'ESTUDIANTES'), ('DOCENTES', 'DOCENTES'), ('TODOS', 'TODOS'), ('PRIVADO', 'PRIVADO'))
+    
+    # Llaves foraneas
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)    
+    docente = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    # Atributos
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    fechaCreacion = models.DateTimeField(auto_now_add=True)
+    entidad = models.CharField(max_length=20, choices=ENTIDADES, default='TODOS')
+    tiempoVida = models.PositiveIntegerField(default=1, validators =[validate_nonzero]) 
+    descripcion = RichTextUploadingField(blank=True, null=True)    

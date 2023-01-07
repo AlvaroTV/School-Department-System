@@ -19,6 +19,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Substr
 from django.db.models import Count
 from datetime import date, timedelta
+from django.utils import timezone
+import pytz
 import string  
 import random  
 import math
@@ -89,15 +91,41 @@ def home(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
-def studentPage(request):
+def studentPage(request):    
     group = request.user.groups.all()[0].name
     student = request.user.estudiante
     anteproyecto = student.anteproyecto
     proyecto = student.residencia
-    expediente = student.expediente    
+    expediente = student.expediente  
+    
+    
+    all_avisos = Avisos.objects.all().order_by('-fechaCreacion')  
+    if all_avisos:
+        for aviso in all_avisos:
+            fin_aviso = aviso.fechaCreacion + timedelta(days=aviso.tiempoVida)
+            fecha_actual = timezone.now()            
+            print(f'Fecha de Creacion: {aviso.fechaCreacion}')
+            print(f'Fecha eliminacion: {fin_aviso}')
+            print(f'Fehca Actual: {fecha_actual}')
+            print('Fechas con el cambio:')
+            fin_aviso = convert_to_localtime(fin_aviso)
+            fecha_actual = convert_to_localtime(fecha_actual)
+            print('Fecha de Creacion: ', convert_to_localtime(aviso.fechaCreacion))            
+            print('Fecha eliminacion: ', fin_aviso)            
+            print('Fecha Actual: ', fecha_actual)            
+            if fecha_actual > fin_aviso:
+                print('Eliminar este aviso')
+                aviso.delete()
+            print('\n================================')
+            
+    avisosP = all_avisos.filter(estudiante = student)
+    avisosT = all_avisos.filter(entidad = 'TODOS')
+    avisosE = all_avisos.filter(entidad = 'ESTUDIANTES')
+    avisos = avisosP | avisosT | avisosE    
+    
     observacion = None
     observaciones = None
-    fechaObservacion = None
+    fechaObservacion = None    
         
     try:
         observacion = anteproyecto.observacion
@@ -108,13 +136,38 @@ def studentPage(request):
         fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                    
     except:
         pass
-    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones, 'title': 'Inicio'}    
+    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones, 'avisos':avisos, 'title': 'Inicio'}    
     return render(request, 'Student/dashboard.html', context)
 
 @login_required(login_url='login')
 def teacherPage(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
+    
+    all_avisos = Avisos.objects.all().order_by('-fechaCreacion')  
+    if all_avisos:
+        for aviso in all_avisos:
+            fin_aviso = aviso.fechaCreacion + timedelta(days=aviso.tiempoVida)
+            fecha_actual = timezone.now()            
+            print(f'Fecha de Creacion: {aviso.fechaCreacion}')
+            print(f'Fecha eliminacion: {fin_aviso}')
+            print(f'Fehca Actual: {fecha_actual}')
+            print('Fechas con el cambio:')
+            fin_aviso = convert_to_localtime(fin_aviso)
+            fecha_actual = convert_to_localtime(fecha_actual)
+            print('Fecha de Creacion: ', convert_to_localtime(aviso.fechaCreacion))            
+            print('Fecha eliminacion: ', fin_aviso)            
+            print('Fecha Actual: ', fecha_actual)            
+            if fecha_actual > fin_aviso:
+                print('Eliminar este aviso')
+                aviso.delete()
+            print('\n================================')
+            
+    avisosP = all_avisos.filter(docente = docente)
+    avisosT = all_avisos.filter(entidad = 'TODOS')
+    avisosD = all_avisos.filter(entidad = 'DOCENTES')
+    avisos = avisosP | avisosT | avisosD
+    
     all_anteproyectos = Anteproyecto.objects.all()
     all_residencias = Residencia.objects.all()
     all_anteproyectos_E = all_anteproyectos.filter(estatus = 'ENVIADO')
@@ -142,7 +195,7 @@ def teacherPage(request):
     all_anteproyectos_activos = anteproyectos_activos_r1 | anteproyectos_activos_r2
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto__in=all_anteproyectos_activos, tipo='ACTUALIZADO').exclude(estado='LEIDO').order_by('-fecha')
     
-    context = {'group': group, 'docente': docente, 'anteproyectos': all_anteproyectos_E, 'actividad_docente': actividad_docente, 'actualizaciones': actualizaciones,'title': 'Inicio'}
+    context = {'group': group, 'docente': docente, 'anteproyectos': all_anteproyectos_E, 'actividad_docente': actividad_docente, 'actualizaciones': actualizaciones, 'avisos': avisos, 'title': 'Inicio'}
     return render(request, 'Teacher/dashboard.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -287,6 +340,8 @@ def estudianteSettings(request):
 @login_required(login_url='login')
 def expediente(request):
     data = ['id_dictamen', 'id_solicitudResidencia', 'id_anteproyecto', 'id_horario', 'id_cartaAceptacion', 'id_cartaCompromiso', 'id_cronograma', 'id_cartaPresentacion']    
+    # Documentos a los que se le agrega una fecha limite para su entrega (5 Dias)
+    data2 = ['id_anteproyecto', 'id_cartaLiberacion']
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
@@ -299,15 +354,41 @@ def expediente(request):
     rF = None
     fecha20d = None            
     fecha6w = None                
+    expediente_completo = True
     
+    if expediente:
+    
+        expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]    
+        
+        if expediente.estatus != 'FINALIZADO':
+            for i in expediente_list:
+                if not expediente_list[i]:
+                    if i == 'dictamen':
+                        if semestre > 12:                            
+                            expediente_completo = False
+                    else:
+                        expediente_completo = False                                
+                        
+        if expediente_completo:            
+            reporte1 = ReporteParcial1.objects.filter(id = expediente.reporteParcial1.id).values()[0]
+            reporte2 = ReporteParcial2.objects.filter(id = expediente.reporteParcial2.id).values()[0]
+            reporteF = ReporteFinal.objects.filter(id = expediente.reporteFinal.id).values()[0]
+            all_reportes = [reporte1['r1_hojaRevisores'], reporte1['r1_formatoEvaluacion'], reporte2['r2_hojaRevisores'], reporte2['r2_formatoEvaluacion'], reporteF['rf_hojaRevisores'], reporteF['rf_formatoEvaluacion']]                        
+            
+            expediente_completo = not None in all_reportes
+            
+            if expediente_completo:
+                expediente.estatus = 'COMPLETO'
+                expediente.save()                                                        
+        
     try:
         estatus = anteproyecto.estatus                       
     except:
         estatus = None
     
-    if anteproyecto and estatus == 'ACEPTADO' and residencia.periodoInicio:            
-        fecha20d = residencia.periodoInicio + timedelta(days=20)
-        fecha6w = residencia.periodoInicio + timedelta(weeks=6)            
+    if anteproyecto and estatus == 'ACEPTADO' and residencia.periodoInicio:              
+        fecha20d = residencia.periodoInicio + timedelta(days=20)        
+        fecha6w = residencia.periodoInicio + timedelta(weeks=6)         
                                 
     if expediente is None:         
         if estatus == 'ACEPTADO' and residencia.periodoInicio:            
@@ -316,10 +397,9 @@ def expediente(request):
                 formE = ExpedienteForm(request.POST, request.FILES)                        
                 if formE.is_valid():                                
                     expediente = formE.save()                
-                    estudiante.expediente = expediente                                
                     expediente.save() 
-                    estudiante.save()                                
-                    
+                    estudiante.expediente = expediente                                                    
+                    estudiante.save()                                                                        
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:            
             formE = ExpedienteViewForm()
@@ -337,7 +417,7 @@ def expediente(request):
             
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
-    context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
+    context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'data2': data2, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
     return render(request, 'Student/expediente.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -850,29 +930,18 @@ def editarAnteproyecto(request):
     group = request.user.groups.all()[0].name
     estudiante = request.user.estudiante         
     anteproyecto = estudiante.anteproyecto
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()        
-    dependencia = anteproyecto.dependencia
-    asesorExterno = anteproyecto.asesorExterno
-    titular = dependencia.titular
-    domicilio = dependencia.domicilio
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()                    
+    
     codigo = anteproyecto.codigoUnion
     numIntegrantes = anteproyecto.numIntegrantes
     mensaje = ''
     
-    formA = AnteproyectoEstForm(instance = anteproyecto)                                
-    formD = DependenciaForm(instance = dependencia)
-    formT = TitularForm(instance = titular)
-    formDom = DomicilioForm(instance = domicilio)
-    formAE = AsesorEForm(instance = asesorExterno)                 
+    formA = AnteproyectoEstForm(instance = anteproyecto)                                                    
     
     if request.method == 'POST':                        
-        formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                
-        formD = DependenciaForm(request.POST, instance = dependencia)
-        formT = TitularForm(request.POST, instance = titular)
-        formDom = DomicilioForm(request.POST, instance = domicilio)
-        formAE = AsesorEForm(request.POST, instance = asesorExterno)   
+        formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                          
                   
-        if formA.is_valid() and formD.is_valid() and formT.is_valid() and formAE.is_valid() and formDom.is_valid():
+        if formA.is_valid():
             numIntegrantes2 = int(formA['numIntegrantes'].value())                        
             
             if numIntegrantes2 < 1:
@@ -885,21 +954,12 @@ def editarAnteproyecto(request):
                                                                                                                                                                         
                 if numIntegrantes > numIntegrantes2 and estudiantes > numIntegrantes2:                                        
                     mensaje = 'No se puede reducir el numero de integrantes. No se pueden eliminar integrantes'                    
-                else:                                                
-                    domicilio = formDom.save()                  
-                    titular = formT.save()              
-                    asesorExterno = formAE.save()      
-                    dependencia = formD.save()            
-                    anteproyecto = formA.save()
-                    anteproyecto.dependencia = dependencia
-                    anteproyecto.asesorExterno = asesorExterno
-                    anteproyecto.codigoUnion = codigo
-                    asesorExterno.dependencia = dependencia
-                    asesorExterno.save()                                    
+                else:                                                                    
+                    anteproyecto = formA.save()                                      
                     anteproyecto.save() 
                     return redirect('anteproyecto')                               
     
-    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom,'data': data, 'anteproyecto': anteproyecto, 'dependencia': dependencia, 'mensaje': mensaje, 'group': group, 'title': 'Anteproyecto'}    
+    context = {'formA': formA, 'data': data, 'anteproyecto': anteproyecto, 'mensaje': mensaje, 'group': group, 'title': 'Editar Anteproyecto'}    
     return render(request, 'Student/editarAnteproyecto.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -1023,3 +1083,8 @@ def ordenar_dependencias(dependencias, orderB):
         all_dependencias = all_dependencias.order_by('-d_nombre')    
     return all_dependencias
     
+def convert_to_localtime(utctime):
+    fmt = '%d-%m-%Y %H:%M'
+    utc = utctime.replace(tzinfo=pytz.UTC)
+    localtz = utc.astimezone(timezone.get_current_timezone())
+    return localtz.strftime(fmt)

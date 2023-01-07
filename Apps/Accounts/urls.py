@@ -94,12 +94,17 @@ urlpatterns = [
     path('eliminarDocR2/<uuid:pk>/<file_name>', eliminarDocR2, name='eliminarDocR2'),
     path('eliminarDocRF/<uuid:pk>/<file_name>', eliminarDocRF, name='eliminarDocRF'),
     
+    path('avisos/', avisos, name='avisos'), 
+    path('crear_aviso/', crear_aviso, name='crear_aviso'), 
+    path('eliminar_aviso/<uuid:pk>', eliminar_aviso, name='eliminar_aviso'), 
+    
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      
     path('tSettings/', teacherSettings, name='teacherSettings'),
     
     path('anteproyectosTeacher/', anteproyectosTeacher, name='anteproyectosTeacher'),      
     path('anteproyectoA/<uuid:pk>', anteproyectoA, name='anteproyectoA'),
+    path('anteproyectoH/<uuid:pk>', anteproyectoH, name='anteproyectoH'),
     path('agregarComentario/<uuid:pk>', agregarComentario, name='agregarComentario'),
     path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),    
     path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      

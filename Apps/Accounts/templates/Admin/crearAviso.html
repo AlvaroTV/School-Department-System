@@ -1,0 +1,45 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block header %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Crear Aviso
+    </h2>
+
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 grid gap-6 mb-8 md:grid-cols-1">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <br>
+            {% for field in form %}
+            {% if field.id_for_label == 'id_descripcion' %}
+            <br>
+            <span class="text-gray-700 dark:text-gray-400">Descripcion del aviso:</span>
+            <br>
+            {{form.descripcion}}
+            {% else %}
+            <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                {{ field }}
+            </label>
+            <p id="messages" class="text-red-600">{{ field.errors }}</p>
+            {% endif %}
+            {% endfor %}
+
+            <br>
+            <div class="relative">
+                <input type="submit"
+                    class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    name="Update Information" value="Enviar Aviso">
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

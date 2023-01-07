@@ -160,7 +160,7 @@ def residenciasH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     return render(request, 'Teacher/residenciasH.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# Poner un Decorator para Estudiante y Maestro
+@d_teacher_student
 def materias(request):
     group = request.user.groups.all()[0].name
     all_materias = Materia.objects.all()
@@ -180,8 +180,11 @@ def materias(request):
     elif group == 'student':
         estudiante = request.user.estudiante
         anteproyecto = estudiante.anteproyecto
-        estado = anteproyecto.estatus
-        if estado == 'ACEPTADO':
+        if anteproyecto:
+            estado = anteproyecto.estatus    
+            if estado == 'ACEPTADO' or estado == 'RECHAZADO':
+                return redirect('404')
+        else:
             return redirect('404')
         
         q_materias = Anteproyecto_materia.objects.filter(anteproyecto=anteproyecto)        
@@ -393,40 +396,67 @@ def agregarComentario(request, pk):
     docente = request.user.docente
     anteproyecto = Anteproyecto.objects.get(id = pk)
     observacion = anteproyecto.observacion    
+    form = ObservacionDocenteForm()
     
-    if request.method == 'POST':               
-        rObservacion = request.POST['Dobservacion']
-        
-        if observacion:
-            nuevaObservacion = ObservacionDocente(
-                    docente = docente,
-                    observacion = observacion,
-                    observacionD = rObservacion
-            )
-            nuevaObservacion.save()            
-        else:
-            observacion = Observacion()
-            observacion.save()
-            anteproyecto.observacion = observacion
-            anteproyecto.save()        
-            nuevaObservacion = ObservacionDocente(
-                docente = docente,
-                observacion = observacion,
-                observacionD = rObservacion
-            )
-            nuevaObservacion.save()    
+    if request.method == 'POST':                       
+        form = ObservacionDocenteForm(request.POST)        
+        if form.is_valid():
+            if not observacion:
+                observacion = Observacion()
+                observacion.save()
+                anteproyecto.observacion = observacion
+                anteproyecto.save()        
+                
+            comentario = form.save()
+            comentario.docente = docente
+            comentario.observacion = observacion
+            comentario.save()                        
+            return redirect('anteproyectoA', anteproyecto.id)            
             
         return redirect('anteproyectoA', anteproyecto.id)
     
-    context = {'group': group, 'anteproyecto': anteproyecto,}    
+    context = {'group': group, 'form': form, 'anteproyecto': anteproyecto,}    
     return render(request, 'Teacher/addComment.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @teacher_only
-def anteproyectoH(request):
+def anteproyectoH(request, pk):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    context = {'group': group}    
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
+    revisor1 = anteproyecto.revisor1
+    revisor2 = anteproyecto.revisor2                
+    dependencia = anteproyecto.dependencia 
+    observacion = anteproyecto.observacion
+    data = ['id_mision', 'id_codigoUnion']     
+    
+    fechaObservacion = None
+    observaciones = None
+    dias = 0
+    fechaObservacion = None
+    fechaCorte = None
+    fechaActual = date.today
+    fechaObservacion = None
+    
+    if observacion:
+        fechaObservacion = observacion.fechaCreacion    
+        observaciones = ObservacionDocente.objects.filter(observacion = observacion).order_by('-fechaElaboracion')                                    
+        dias = 5 + observacion.incrementarDias
+        fechaObservacion = fechaObservacion + timedelta(days=dias)           
+        fechaCorte = fechaObservacion + timedelta(days=1)                     
+        fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                   
+               
+    
+    formA = AnteproyectoViewForm(instance = anteproyecto)                                        
+    formD = DependenciaViewForm(instance = dependencia)
+    formT = TitularViewForm(instance = dependencia.titular)
+    formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    formDoc = AnteproyectoDocForm(instance = anteproyecto)
+    formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)             
+    
+    context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'data': data, 'actualizaciones': actualizaciones, 'title': 'Anteproyecto Historico'}    
     return render(request, 'Teacher/anteproyectoH.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

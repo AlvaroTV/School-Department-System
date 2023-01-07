@@ -44,8 +44,7 @@ class AnteproyectoEstadoFormR2(ModelForm):
         super(AnteproyectoEstadoFormR2, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-
-            
+           
 class ExpedienteEstadoForm(ModelForm):
     class Meta:
         model = Expediente
@@ -71,3 +70,23 @@ class ResidenciaEstadoForm(ModelForm):
         super(ResidenciaEstadoForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+
+ENTIDADES = (('ESTUDIANTES', 'ESTUDIANTES'), ('DOCENTES', 'DOCENTES'), ('TODOS', 'TODOS'))
+class AvisosForm(ModelForm):    
+    class Meta:
+        model = Avisos
+        fields = '__all__'
+        exclude = ['id' ,'estudiante', 'docente']
+        labels = {
+            'entidad': 'Dirigido a',
+            'tiempoVida': 'Tiempo de duracion del aviso (dias)'
+            }
+    
+    def __init__(self, *args, **kwargs):
+        super(AvisosForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                        
+            if myField == 'entidad':
+                self.fields[myField].choices = ENTIDADES
+                print(self.fields[myField].choices)
+            

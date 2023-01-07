@@ -286,10 +286,10 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
-                        <td class="px-4 py-3 text-md">
-                            {% autoescape off %}
-                            {{observacion.observacionD}}
-                            {% endautoescape %}
+                        <td class="px-4 py-3">
+                            
+                            {{observacion.observacionD|safe}}
+                            
                         </td>
                     </tr>
                     {% endfor %}

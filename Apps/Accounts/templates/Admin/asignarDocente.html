@@ -32,20 +32,286 @@
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor 1
         </h4>
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Docentes recomendados para este Anteproyecto
+            </h4>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Docente</th>
+                            <th class="px-4 py-3">Numero Celular</th>
+                            <th class="px-4 py-3">Correo Electronico</th>
+                            <th class="px-4 py-3">Estatus</th>
+                            <th class="px-4 py-3">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for docente in recomendiciones %}
+                        {% if docente.estatus == 'ACTIVO' %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-sm">
+                                    <!-- Avatar with inset shadow -->
+                                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                        <img class="object-cover w-full h-full rounded-full"
+                                            src="{{docente.fotoUsuario.url}}" alt="" loading="lazy">
+                                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">{{docente}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.numCelular}}
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.correoElectronico}}
+                            </td>
+                            <td class="text-center px-4 py-3 text-xs">
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{docente.estatus}}
+                                </span>
+                            </td>
+                            <span hidden="hidden" class="elementValue">{{docente}}</span>
+                            <td class="px-4 py-3 btnSelect">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'asignarRevisor1I' pkA=anteproyecto.id pkD=docente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% elif revisor2 %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor 2
         </h4>
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Docentes recomendados para este Anteproyecto
+            </h4>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Docente</th>
+                            <th class="px-4 py-3">Numero Celular</th>
+                            <th class="px-4 py-3">Correo Electronico</th>
+                            <th class="px-4 py-3">Estatus</th>
+                            <th class="px-4 py-3">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for docente in recomendiciones %}
+                        {% if docente.estatus == 'ACTIVO' %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-sm">
+                                    <!-- Avatar with inset shadow -->
+                                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                        <img class="object-cover w-full h-full rounded-full"
+                                            src="{{docente.fotoUsuario.url}}" alt="" loading="lazy">
+                                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">{{docente}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.numCelular}}
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.correoElectronico}}
+                            </td>
+                            <td class="text-center px-4 py-3 text-xs">
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{docente.estatus}}
+                                </span>
+                            </td>
+                            <span hidden="hidden" class="elementValue">{{docente}}</span>
+                            <td class="px-4 py-3 btnSelect">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'asignarRevisor2I' pkA=anteproyecto.id pkD=docente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% elif asesorI %}
-        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Asignar Asesor Interno
-        </h4>
+        </h2>        
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Revisores anteriores
+            </h4>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Docente</th>
+                            <th class="px-4 py-3">Numero Celular</th>
+                            <th class="px-4 py-3">Correo Electronico</th>
+                            <th class="px-4 py-3">Estatus</th>
+                            <th class="px-4 py-3">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for docente in revisores %}
+                        {% if docente.estatus == 'ACTIVO' %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-sm">
+                                    <!-- Avatar with inset shadow -->
+                                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                        <img class="object-cover w-full h-full rounded-full"
+                                            src="{{docente.fotoUsuario.url}}" alt="" loading="lazy">
+                                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">{{docente}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.numCelular}}
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.correoElectronico}}
+                            </td>
+                            <td class="text-center px-4 py-3 text-xs">
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{docente.estatus}}
+                                </span>
+                            </td>
+                            <span hidden="hidden" class="elementValue">{{docente}}</span>
+                            <td class="px-4 py-3 btnSelect">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'asignarAsesorI' pkR=residencia.id pkD=docente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% elif revisor %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor
         </h4>
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Revisores anteriores
+            </h4>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Docente</th>
+                            <th class="px-4 py-3">Numero Celular</th>
+                            <th class="px-4 py-3">Correo Electronico</th>
+                            <th class="px-4 py-3">Estatus</th>
+                            <th class="px-4 py-3">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for docente in revisores %}
+                        {% if docente.estatus == 'ACTIVO' %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-sm">
+                                    <!-- Avatar with inset shadow -->
+                                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                        <img class="object-cover w-full h-full rounded-full"
+                                            src="{{docente.fotoUsuario.url}}" alt="" loading="lazy">
+                                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">{{docente}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.numCelular}}
+                            </td>
+                            <td class="text-center px-4 py-3">
+                                {{docente.correoElectronico}}
+                            </td>
+                            <td class="text-center px-4 py-3 text-xs">
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{docente.estatus}}
+                                </span>
+                            </td>
+                            <span hidden="hidden" class="elementValue">{{docente}}</span>
+                            <td class="px-4 py-3 btnSelect">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'asignarRevisor' pkR=residencia.id pkD=docente.id %}"
+                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% endif %}
-
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Todos los docentes
+        </h4>
         <div class="flex flex-col flex-wrap mb-4 space-y-4 md:flex-row-reverse md:items-end md:space-x-4">
             <div>
                 <button @click="openModal"
@@ -54,8 +320,6 @@
                 </button>
             </div>
         </div>
-
-
 
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
@@ -373,5 +637,10 @@
 {% endblock %}
 
 {% block scripts %}
+{% if revisor1 or revisor2 %}
 <script src="{% static 'js/uploadManagement/asignarD.js' %}"></script>
+{% elif asesorI or revisor %}
+<script src="{% static 'js/uploadManagement/asignarAsesorR.js' %}"></script>
+{% endif %}
+
 {% endblock %}

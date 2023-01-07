@@ -125,17 +125,17 @@
                                 </span>
                                 {% elif estudiante.expediente.estatus == 'FINALIZADO' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-teal-500 dark:text-blue-100">
+                                    class="px-2 py-1 font-semibold leading-tight text-blue-500 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
                                     {{estudiante.expediente.estatus}}
                                 </span>
                                 {% elif estudiante.expediente.estatus == 'COMPLETO' %}
-                                <span
-                                    class="px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                <span                                    
+                                    class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
                                     {{estudiante.expediente.estatus}}
                                 </span>
                                 {% elif estudiante.expediente.estatus == 'PROCESO' %}
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                                    class="px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
                                     {{estudiante.expediente.estatus}}
                                 </span>
                                 {% else %}

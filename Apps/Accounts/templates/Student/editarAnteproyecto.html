@@ -26,69 +26,13 @@
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {% for field in formA %}
-            {% if not field.id_for_label in data %}
+            {% for field in formA %}            
             <label class="block mt-4 text-sm">
               <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
               {{ field }}
             </label>
-            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-            {% endif %}
-            {% endfor %}
-
-            <br>
-            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-              Dependencia
-            </h2>
-
-            {% for field in formD %}
-            {% if not field.id_for_label in data %}
-            <label class="block mt-4 text-sm">
-              <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-              {{ field }}
-            </label>
-            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-            {% endif %}
-            {% endfor %}
-
-            <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-              Domicilio de la dependencia
-            </h4>
-            {% for field in formDom %}
-            {% if not field.id_for_label in data %}
-            <label class="block mt-4 text-sm">
-              <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-              {{ field }}
-            </label>
-            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-            {% endif %}
-            {% endfor %}
-
-            <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-              Titular de la dependencia
-            </h4>
-            {% for field in formT %}
-            {% if not field.id_for_label in data %}
-            <label class="block mt-4 text-sm">
-              <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-              {{ field }}
-            </label>
-            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-            {% endif %}
-            {% endfor %}
-
-            <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-              Asesor Externo
-            </h4>
-            {% for field in formAE %}
-            {% if not field.id_for_label in data %}
-            <label class="block mt-4 text-sm">
-              <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-              {{ field }}
-            </label>
-            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-            {% endif %}
-            {% endfor %}
+            <p id="messages" class="text-red-600">{{ field.errors }}</p>            
+            {% endfor %}            
 
             <br>
             <div class="relative">

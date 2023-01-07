@@ -43,6 +43,15 @@
             <option value="{% url 'docentes' page 6 %}">RFC Z - A</option>
         </select>
         </div>
+        {% else %}
+        <div class="absolute inset-y-0 left-0 ">
+            <a href="{% url 'docentes' 1 0 %}">
+                <button
+                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Todos los docentes
+                </button>
+            </a>
+        </div>
         {% endif %}
         <div class="absolute inset-y-0 right-0 ">
             <button @click="openModal"

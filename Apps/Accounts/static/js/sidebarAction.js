@@ -22,6 +22,8 @@ const docentes = document.getElementById('id_docentes')
 const a_docentes = document.getElementById('a_docentes')
 const materias = document.getElementById('id_materias')
 const a_materias = document.getElementById('a_materias')
+const avisos = document.getElementById('id_avisos')
+const a_avisos = document.getElementById('a_avisos')
 
 console.log('c:')
 console.log(url.pathname)
@@ -29,10 +31,10 @@ console.log(pathName)
 
 
 
-if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName =='anteproyectoH' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA' | pathName == 'dependencias' | pathName == 'altaDependencia' | pathName == 'asesoresExternos'| pathName == 'altaAsesorE' | pathName == 'altaDomicilioD' | pathName == 'altaTitularD') {
+if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA' | pathName == 'dependencias' | pathName == 'altaDependencia' | pathName == 'asesoresExternos'| pathName == 'altaAsesorE' | pathName == 'altaDomicilioD' | pathName == 'altaTitularD') {
     anteproyectos.hidden = false
     a_anteproyectos.classList.add("dark:text-gray-100");
-} else if (pathName == 'anteproyectosH' ) {
+} else if (pathName == 'anteproyectosH' | pathName =='anteproyectoH') {
     anteproyectosH.hidden = false    
     a_anteproyectosH.classList.add("dark:text-gray-100");
 } else if (pathName == 'residencias' | pathName == 'verResidencia' | pathName == 'editarResidenciaAdmin' | pathName == 'asignarAsesorIL' | pathName == 'asignarRevisorL' | pathName == 'residenciasTeacher' | pathName == 'residencia' | pathName == 'verReporte') {
@@ -47,7 +49,7 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'estudiantes' | pathName == 'verEstudiante') {
     estudiantes.hidden = false
     a_estudiantes.classList.add("dark:text-gray-100");
-} else if (pathName == 'docentes' | pathName == 'verDocente') {
+} else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente') {
     docentes.hidden = false
     a_docentes.classList.add("dark:text-gray-100");
 } else if (pathName == '' | pathName == 'teacher' | pathName == 'profile' | pathName == 'settings' | pathName == 'tProfile' | pathName == 'tSettings' | pathName == 'student' | pathName == 'faqs' | pathName == 'changePassword' | pathName == 'faqs' | pathName == 'faqs_s' | pathName == 'faqs_t'){
@@ -59,6 +61,9 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'reportes' ){
     reportes.hidden = false
     a_reportes.classList.add("dark:text-gray-100");
+} else if (pathName == 'avisos' | pathName == 'crear_aviso'){
+    avisos.hidden = false
+    a_avisos.classList.add("dark:text-gray-100");
 } 
 
 

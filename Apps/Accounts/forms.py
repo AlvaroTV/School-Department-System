@@ -217,7 +217,7 @@ class AnteproyectoEstForm(ModelForm):
         YEARSF= [x for x in range(today.year,today.year+3)]
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion']   
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion', 'anteproyectoDoc']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -371,8 +371,7 @@ class DependenciaForm(ModelForm):
             if myField == 'mision':
                 self.fields[myField].widget = forms.Textarea()
                 self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                        
-    
+                                            
 class DependenciaViewForm(ModelForm):
     class Meta:
         model = Dependencia
@@ -456,3 +455,16 @@ class AsesorEViewForm(ModelForm):
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
             self.fields[myField].widget.attrs['disabled'] = True
+
+class ObservacionDocenteForm(ModelForm):
+    class Meta:
+        model = ObservacionDocente
+        fields = ['observacionD']
+        labels = {
+            'observacionD': 'Descripcion de la observacion'
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(ObservacionDocenteForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            

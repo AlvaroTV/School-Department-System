@@ -140,7 +140,11 @@ def verExpediente(request, pk):
     if request.method == 'POST':
         formEstado = ExpedienteEstadoForm(request.POST, instance = expediente)     
         if formEstado.is_valid():
-            formEstado.save()   
+            formEstado.save()  
+            estado = formEstado.cleaned_data.get("estatus") 
+            if estado == 'FINALIZADO':
+                descripcion = '<hr /><p><strong><span style="color:#e74c3c"><big>Feliciades!!!! </big></span></strong></p><hr /><div><p style="margin-left:0px; margin-right:0px"><span style="color:#3498db"><em>Tu expediente ha sido revisado y se ha dado por finalizado. Ya puedes pasar a la oficina del departamento de vinculaci&oacute;n a recoger tu documento.</em></span></p><br/><div style="width:100%"><div style="height:0;padding-bottom:56.25%;position:relative;width:100%"><iframe allowfullscreen="" frameBorder="0" height="100%" src="https://giphy.com/embed/G96zgIcQn1L2xpmdxi/video" style="left:0;position:absolute;top:0" width="100%"></iframe></div></div>'
+                Avisos.objects.create(entidad = 'PRIVADO', tiempoVida = 7, descripcion = descripcion, estudiante = estudiante)
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
     
     context = {'group': group, 'data': data, 'estudiante': estudiante, 'expediente': expediente, 'r1': r1, 'r2': r2, 'rF': rF, 'formE': formE, 'form1': form1, 'form2': form2, 'formF': formF, 'formEstado': formEstado, 'title': 'Expediente'}
@@ -272,9 +276,7 @@ def verAnteproyecto(request, pk):
             if estadoInicial in lista and estadoFinal == 'ACEPTADO':
                 residencia = Residencia(
                     dependencia = dependencia,
-                    asesorExterno = anteproyecto.asesorExterno,
-                    r_asesorInterno = anteproyecto.revisor1,
-                    r_revisor = anteproyecto.revisor2,
+                    asesorExterno = anteproyecto.asesorExterno,                    
                     nombre = anteproyecto.a_nombre,
                     tipoProyecto = anteproyecto.tipoProyecto,
                     numIntegrantes = anteproyecto.numIntegrantes                    
@@ -644,14 +646,21 @@ def editarDocente(request, pk):
     docente = Docente.objects.get(id = pk)
     formD = DocenteForm(instance=docente)
     
+    try:
+        perfilAcademico = docente.perfilAcademico
+        materias = perfilAcademico.materias.all()        
+    except:
+        perfilAcademico = None
+        materias = None
+        
     if request.method == 'POST':
-        formD = DocenteForm(request.POST, instance=docente)
+        formD = DocenteForm(request.POST, request.FILES, instance=docente)
         if formD.is_valid():
             formD.save()
             return redirect('verDocente', docente.id)
             
     
-    context = {'group': group, 'docente': docente, 'formD': formD, 'title': 'Editar Docente'}
+    context = {'group': group, 'docente': docente, 'formD': formD, 'materias': materias, 'title': 'Editar Docente'}
     return render(request, 'Admin/editarDocente.html', context)        
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -760,7 +769,10 @@ def asignarAsesorIL(request, page, pk):
     all_docentes = Docente.objects.all()        
     start = (page-1)*10    
     end = page*10
-    
+    estudiante = Estudiante.objects.filter(residencia = residencia)[0]
+    anteproyecto = estudiante.anteproyecto
+    revisores = [anteproyecto.revisor1, anteproyecto.revisor2]
+        
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
         text = request.POST['search'] 
@@ -784,7 +796,7 @@ def asignarAsesorIL(request, page, pk):
     next_page = page+1
     prev_page = page-1        
     asesorI = '.'
-    context = {'group': group, 'residencia': residencia, 'asesorI':asesorI, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Asesor I'}
+    context = {'group': group, 'residencia': residencia, 'asesorI':asesorI, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'revisores': revisores, 'title': 'Asignar Asesor I'}
     return render(request, 'Admin/asignarDocente.html', context)            
 
 @admin_only
@@ -809,7 +821,10 @@ def asignarRevisorL(request, page, pk):
     residencia = Residencia.objects.get(id = pk)    
     all_docentes = Docente.objects.all()        
     start = (page-1)*10    
-    end = page*10                        
+    end = page*10           
+    estudiante = Estudiante.objects.filter(residencia = residencia)[0]
+    anteproyecto = estudiante.anteproyecto
+    revisores = [anteproyecto.revisor1, anteproyecto.revisor2]                 
     
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -835,8 +850,29 @@ def asignarRevisorL(request, page, pk):
     prev_page = page-1        
     revisor = '.'        
     
-    context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}    
+    context = {'group': group, 'residencia': residencia, 'revisor': revisor, 'docentes': docentes, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'revisores':revisores, 'title': 'Asignar Revisor'}    
     return render(request, 'Admin/asignarDocente.html', context)            
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def avisos(request):
+    group = request.user.groups.all()[0].name
+    avisos = Avisos.objects.all().order_by('-fechaCreacion')        
+    context = {'group': group, 'avisos': avisos, 'title': 'Avisos'}
+    return render(request, 'Admin/avisos.html', context)            
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def crear_aviso(request):
+    group = request.user.groups.all()[0].name
+    form = AvisosForm()
+    if request.method == 'POST':
+        form = AvisosForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('avisos')
+    context = {'group': group, 'form': form, 'title': 'Crear Aviso'}
+    return render(request, 'Admin/crearAviso.html', context)            
 
 @admin_only
 def asignarRevisor(request, pkR, pkD):
@@ -910,6 +946,12 @@ def eliminarDocRF(request, pk, file_name):
     file_name = str + file_name
     archivo = getattr(reporte,file_name)
     archivo.delete()    
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminar_aviso(request, pk):
+    aviso = Avisos.objects.get(id=pk)
+    aviso.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 def filtrar_anteproyectos(anteproyectos, filter):

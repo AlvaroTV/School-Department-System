@@ -29,10 +29,10 @@
         <!-- Card -->
         <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                     <path fill-rule="evenodd"
-                        d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                        clip-rule="evenodd"></path>
+                        d="M1.5 5.625c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v12.75c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 18.375V5.625zM21 9.375A.375.375 0 0020.625 9h-7.5a.375.375 0 00-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 00.375-.375v-1.5zm0 3.75a.375.375 0 00-.375-.375h-7.5a.375.375 0 00-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 00.375-.375v-1.5zm0 3.75a.375.375 0 00-.375-.375h-7.5a.375.375 0 00-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 00.375-.375v-1.5zM10.875 18.75a.375.375 0 00.375-.375v-1.5a.375.375 0 00-.375-.375h-7.5a.375.375 0 00-.375.375v1.5c0 .207.168.375.375.375h7.5zM3.375 15h7.5a.375.375 0 00.375-.375v-1.5a.375.375 0 00-.375-.375h-7.5a.375.375 0 00-.375.375v1.5c0 .207.168.375.375.375zm0-3.75h7.5a.375.375 0 00.375-.375v-1.5A.375.375 0 0010.875 9h-7.5A.375.375 0 003 9.375v1.5c0 .207.168.375.375.375z"
+                        clip-rule="evenodd" />
                 </svg>
             </div>
             <div>
@@ -66,10 +66,12 @@
         <!-- Card -->
         <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                     <path fill-rule="evenodd"
-                        d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                        clip-rule="evenodd"></path>
+                        d="M7.5 5.25a3 3 0 013-3h3a3 3 0 013 3v.205c.933.085 1.857.197 2.774.334 1.454.218 2.476 1.483 2.476 2.917v3.033c0 1.211-.734 2.352-1.936 2.752A24.726 24.726 0 0112 15.75c-2.73 0-5.357-.442-7.814-1.259-1.202-.4-1.936-1.541-1.936-2.752V8.706c0-1.434 1.022-2.7 2.476-2.917A48.814 48.814 0 017.5 5.455V5.25zm7.5 0v.09a49.488 49.488 0 00-6 0v-.09a1.5 1.5 0 011.5-1.5h3a1.5 1.5 0 011.5 1.5zm-3 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                        clip-rule="evenodd" />
+                    <path
+                        d="M3 18.4v-2.796a4.3 4.3 0 00.713.31A26.226 26.226 0 0012 17.25c2.892 0 5.68-.468 8.287-1.335.252-.084.49-.189.713-.311V18.4c0 1.452-1.047 2.728-2.523 2.923-2.12.282-4.282.427-6.477.427a49.19 49.19 0 01-6.477-.427C4.047 21.128 3 19.852 3 18.4z" />
                 </svg>
             </div>
             <div>
@@ -85,7 +87,7 @@
         <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             {% if anteproyectosRE > 0 %}
             <a href="{% url 'anteproyectos' 1 0 5 %}">
-            {% endif %}
+                {% endif %}
                 <div class="p-3 mr-4 text-teal-500 bg-y-100 rounded-full dark:text-teal-100 dark:bg-y-700">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
@@ -108,7 +110,7 @@
         <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             {% if epedientesC > 0 %}
             <a href="{% url 'expedientes' 1 0 3 %}">
-            {% endif %}
+                {% endif %}
                 <div
                     class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -125,6 +127,50 @@
                 </p>
                 <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
                     {{epedientesC}}
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            {% if anteproyectosE > 0 %}
+            <a href="{% url 'anteproyectos' 1 0 2 %}">
+                {% endif %}
+                <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                        <path fill-rule="evenodd"
+                            d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </a>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Anteproyectos pendientes
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{anteproyectosE}}
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            {% if residenciasI > 0 %}
+            <a href="{% url 'residencias' 1 0 1 %}">
+                {% endif %}
+                <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                        <path fill-rule="evenodd"
+                            d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </a>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Residencias pendientes
+                </p>
+                <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+                    {{residenciasI}}
                 </p>
             </div>
         </div>
