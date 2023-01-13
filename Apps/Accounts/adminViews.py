@@ -14,6 +14,8 @@ from .decorators import *
 from .views import generarCodigo, obtenerCodigo, buscarCodigo
 # Create your views here.
 
+import pandas as pd
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def anteproyectos(request, page, orderB, filter):
@@ -21,6 +23,18 @@ def anteproyectos(request, page, orderB, filter):
     all_anteproyectos = Anteproyecto.objects.all()     
     start = (page-1)*10    
     end = page*10
+    
+    #all_anteproyectos_e = all_anteproyectos.filter(estatus = 'ENVIADO')
+    #all_anteproyectos_v = all_anteproyectos_e.values()
+    #all_anteproyectos_list = list(all_anteproyectos_v)
+    #all_anteproyectos_e_list = list(all_anteproyectos_e)
+    #df_a = pd.DataFrame(all_anteproyectos_list)
+    #df_a.to_csv('anteproyectos.csv', index=False)        
+    #
+    #all_anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto__in = all_anteproyectos_e_list).values()
+    #all_anteproyecto_materia_list = list(all_anteproyecto_materia)
+    #df_am = pd.DataFrame(all_anteproyecto_materia_list)
+    #df_am.to_csv('anteproyecto_materia.csv', index=False)            
     
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -196,8 +210,23 @@ def docentes(request, page, orderB):
     group = request.user.groups.all()[0].name    
     all_docentes = Docente.objects.all()
     start = (page-1)*10    
-    end = page*10
+    end = page*10            
     
+    #all_docentes_v = all_docentes.values()
+    #all_docentes_list = list(all_docentes_v)
+    #df_d = pd.DataFrame(all_docentes_list)
+    #df_d.to_csv('docentes.csv', index=False)
+    #
+    #all_materias = Materia.objects.all().values()
+    #all_materias_list = list(all_materias)
+    #df_m = pd.DataFrame(all_materias_list)
+    #df_m.to_csv('materias.csv', index=False)    
+    #
+    #perfil_academico = PerfilAcademico.materias.through.objects.all().values()    
+    #perfil_academico_list = list(perfil_academico)    
+    #df_pa = pd.DataFrame(perfil_academico_list)
+    #df_pa.to_csv('perfilacademico_materias.csv', index=False)
+        
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
         text = request.POST['search'] 
@@ -605,7 +634,7 @@ def verDocente(request, pk):
     
     try:
         perfilAcademico = docente.perfilAcademico
-        materias = perfilAcademico.materias.all()        
+        materias = perfilAcademico.materias.all()                
     except:
         perfilAcademico = None
         materias = None
@@ -805,6 +834,9 @@ def asignarAsesorI(request, pkR, pkD):
     docente = Docente.objects.get(id = pkD)
     residencia.r_asesorInterno = docente
     residencia.save()
+    if residencia.r_revisor and residencia.estatus == 'INICIADA':        
+        residencia.estatus = 'EN PROCESO'
+        residencia.save()
     return redirect('verResidencia', residencia.id)
 
 @admin_only
@@ -880,6 +912,9 @@ def asignarRevisor(request, pkR, pkD):
     docente = Docente.objects.get(id = pkD)
     residencia.r_revisor = docente
     residencia.save()
+    if residencia.r_asesorInterno and residencia.estatus == 'INICIADA':        
+        residencia.estatus = 'EN PROCESO'
+        residencia.save()
     return redirect('verResidencia', residencia.id)
 
 @admin_only

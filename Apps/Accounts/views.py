@@ -593,37 +593,43 @@ def anteproyecto(request):
                     return redirect('materias')                                        
                     
     else:
-        data.clear()
-        data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision'])                 
-        actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
-        if anteproyecto.numIntegrantes == 1:            
-            data.append('id_codigoUnion')  
-        
-        revisor1 = anteproyecto.revisor1
-        revisor2 = anteproyecto.revisor2                 
-        dependencia = anteproyecto.dependencia   
-        if dependencia:
-            titular = dependencia.titular
-            domicilio = dependencia.domicilio
+        anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)
+        print(anteproyecto_materia)
+        if anteproyecto_materia:
+            data.clear()
+            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision'])                 
+            actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
+            if anteproyecto.numIntegrantes == 1:            
+                data.append('id_codigoUnion')  
+            
+            revisor1 = anteproyecto.revisor1
+            revisor2 = anteproyecto.revisor2                 
+            dependencia = anteproyecto.dependencia   
+            
+            if dependencia:
+                titular = dependencia.titular
+                domicilio = dependencia.domicilio
+            else:
+                titular = None
+                domicilio = None               
+            formA = AnteproyectoViewForm(instance = anteproyecto)                                        
+            formD = DependenciaViewForm(instance = dependencia)
+            formT = TitularViewForm(instance = titular)
+            formDom = DomicilioViewForm(instance = domicilio)
+            formDoc = AnteproyectoDocForm(instance = anteproyecto)
+            formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
+            
+            if request.method == 'POST':        
+                formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)
+                if formDoc.is_valid():                
+                    formDoc.save()
+                    actualizacion = Actualizacion_anteproyecto(anteproyecto = anteproyecto, descripcion = 'Se actualizó el documento del Anteproyecto')
+                    actualizacion.save()
+                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia}    
+            return render(request, 'Student/anteproyecto2.html', context)
         else:
-            titular = None
-            domicilio = None               
-        formA = AnteproyectoViewForm(instance = anteproyecto)                                        
-        formD = DependenciaViewForm(instance = dependencia)
-        formT = TitularViewForm(instance = titular)
-        formDom = DomicilioViewForm(instance = domicilio)
-        formDoc = AnteproyectoDocForm(instance = anteproyecto)
-        formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
-        
-        if request.method == 'POST':        
-            formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)
-            if formDoc.is_valid():                
-                formDoc.save()
-                actualizacion = Actualizacion_anteproyecto(anteproyecto = anteproyecto, descripcion = 'Se actualizó el documento del Anteproyecto')
-                actualizacion.save()
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-        context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones}    
-        return render(request, 'Student/anteproyecto2.html', context)
+            return redirect('materias')                                        
             
     context = {'formA': formA, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto'}    
     return render(request, 'Student/anteproyecto2.html', context)
