@@ -6,6 +6,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 from .models import *
 
 
@@ -327,7 +328,7 @@ class ResidenciaDateForm(ModelForm):
             print(myField)
             if myField == 'periodoInicio':
                 self.fields[myField].widget.attrs['placeholder'] = 'Periodo de Inicio'
-                self.fields[myField].widget.attrs['id'] = 'id_periodoI'
+                self.fields[myField].widget.attrs['id'] = 'id_periodoI'                
             else:
                 self.fields[myField].widget.attrs['placeholder'] = 'Periodo de Fin'
                 self.fields[myField].widget.attrs['id'] = 'id_periodoF'

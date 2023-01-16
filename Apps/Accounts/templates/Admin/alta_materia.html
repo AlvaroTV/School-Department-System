@@ -1,0 +1,39 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Alta Materia</h2>
+
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Nombre de la materia:</span>
+                {{form.nombre}}
+            </label>
+            <div class="grid gap-6 my-6 md:grid-cols-2">
+                <label class="block text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">Clave:</span>
+                    {{form.clave}}
+                    <p id="messages" class="text-red-600">{{ form.clave.errors }}</p>
+                </label>
+                
+
+                <label class="block text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">Semestre:</span>
+                    {{form.semestre}}
+                </label>
+
+                <br>
+                <div class="relative">
+                    <input type="submit"
+                        class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                        name="Update Information" value="Enviar Informacion">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% endblock %}

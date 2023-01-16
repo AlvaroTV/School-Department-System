@@ -88,8 +88,22 @@
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <form action="" method="POST" enctype="multipart/form-data">
-                        {% for field in formR %}
-                        {% if not field.id_for_label in data %}
+                        {% for field in formR %}                                                
+                        {% if field.id_for_label == 'id_periodoInicio' %}
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            <input type="text" name="periodoInicio" value="{{residencia.periodoInicio|date:" d/M/Y"}}"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_periodoInicio">
+                        </label>
+                        {% elif field.id_for_label == 'id_periodoFin' %}
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            <input type="text" name="periodoFin" value="{{residencia.periodoFin|date:"d/M/Y"}}"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_periodoFin">                            
+                        </label>
+                        {% else %}
                         <label class="block mt-4 text-sm">
                             <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
                             {{ field }}

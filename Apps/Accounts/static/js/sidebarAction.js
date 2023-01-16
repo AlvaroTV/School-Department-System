@@ -24,6 +24,10 @@ const materias = document.getElementById('id_materias')
 const a_materias = document.getElementById('a_materias')
 const avisos = document.getElementById('id_avisos')
 const a_avisos = document.getElementById('a_avisos')
+const materias_admin = document.getElementById('id_materias_ad')
+const a_materias_admin = document.getElementById('a_materias_ad')
+const dependencias_admin = document.getElementById('id_dependencias_ad')
+const a_dependencias_admin = document.getElementById('a_dependencias_ad')
 
 console.log('c:')
 console.log(url.pathname)
@@ -64,8 +68,13 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'avisos' | pathName == 'crear_aviso'){
     avisos.hidden = false
     a_avisos.classList.add("dark:text-gray-100");
-} 
-
+} else if (pathName == 'materias_a' | pathName == 'altaMateria' | pathName == 'editarMateria'){
+    materias_admin.hidden = false
+    a_materias_admin.classList.add("dark:text-gray-100");
+} else if (pathName == 'dependencias_a' | pathName == 'alta_dependencia' | pathName == 'editar_dependencia' | pathName == 'ver_dependencia' | pathName == 'altaDependencia_a' | pathName == 'alta_titular_dep' | pathName == 'alta_domicilio_dep'){
+    dependencias_admin.hidden = false
+    a_dependencias_admin.classList.add("dark:text-gray-100");
+}
 
 
 //window.location.href.toString().split(window.location.host)[1]

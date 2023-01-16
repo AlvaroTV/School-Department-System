@@ -18,8 +18,8 @@ def validate_nonzero(value):
 class Materia(models.Model):    
     SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
-    clave = models.CharField(max_length=10, null=True, blank=True)
-    nombre = models.CharField(max_length=150, null=True, blank=True)
+    clave = models.CharField(max_length=10, unique=True, null=True, error_messages = {"unique":"Existe otra materia con esta clave."})
+    nombre = models.CharField(max_length=150, null=True)
     semestre = models.IntegerField(choices=SEMESTRES)     
     
     def __str__(self):
@@ -136,7 +136,7 @@ class Dependencia(models.Model):
     
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     d_nombre = models.CharField(max_length=100)
-    rfc = models.CharField(max_length=13, null=True, blank=True)
+    rfc = models.CharField(max_length=13, null=True, unique=True, error_messages = {"unique":"Existe otra Organizacion o Empresa con este RFC."})
     giro = models.CharField(max_length=20, choices=OPCIONES, default='PUBLICO', blank=True)    
     numCelular = models.CharField(max_length=20)
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)    

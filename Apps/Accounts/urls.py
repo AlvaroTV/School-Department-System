@@ -47,7 +47,9 @@ urlpatterns = [
     path('residencias/<int:page>/<int:orderB><int:filter>', residencias, name='residencias'),        
     path('expedientes/<int:page>/<int:orderB><int:filter>', expedientes, name='expedientes'),        
     path('estudiantes/<int:page>/<int:orderB>', estudiantes, name='estudiantes'),        
-    path('docentes/<int:page>/<int:orderB>', docentes, name='docentes'),       
+    path('docentes/<int:page>/<int:orderB>', docentes, name='docentes'),           
+    path('materias_a/<int:page>/<int:orderB>/<int:filter>', materias_a, name='materias_a'),           
+    path('dependencias_a/<int:page>/<int:orderB>/<int:filter>', dependencias_a, name='dependencias_a'),           
     
     path('verExpediente/<uuid:pk>', verExpediente, name='verExpediente'),           
     path('eliminarExpediente/<uuid:pk>', eliminarExpediente, name='eliminarExpediente'),           
@@ -83,12 +85,22 @@ urlpatterns = [
     path('editarDocente/<uuid:pk>', editarDocente, name='editarDocente'),           
     path('altaDocente/', altaDocente, name='altaDocente'), 
     
+    path('editarMateria/<uuid:pk>', editarMateria, name='editarMateria'),           
+    path('altaMateria/', altaMateria, name='altaMateria'),       
+    
+    path('altaDependencia_a/', altaDependencia, name='altaDependencia_a'),       
+    path('alta_titular_dep/<uuid:pk>', alta_titular_dep, name='alta_titular_dep'),       
+    path('alta_domicilio_dep/<uuid:pk>', alta_domicilio_dep, name='alta_domicilio_dep'),       
+    path('ver_dependencia/<uuid:pk>', ver_dependencia, name='ver_dependencia'),              
+    
     path('verResidencia/<uuid:pk>', verResidencia, name='verResidencia'),        
     path('eliminarResidencia/<uuid:pk>', eliminarResidencia, name='eliminarResidencia'),        
     path('editarResidenciaAdmin/<uuid:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
     
     path('eliminarEstudiante/<uuid:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
     path('eliminarDocente/<uuid:pk>', eliminarDocente, name='eliminarDocente'),
+    path('eliminarMateria/<uuid:pk>', eliminarMateria, name='eliminarMateria'),
+    path('eliminar_dependencia/<uuid:pk>', eliminar_dependencia, name='eliminar_dependencia'),
     path('eliminarDocExpediente/<uuid:pk>/<file_name>', eliminarDocExpediente, name='eliminarDocExpediente'),
     path('eliminarDocR1/<uuid:pk>/<file_name>', eliminarDocR1, name='eliminarDocR1'),
     path('eliminarDocR2/<uuid:pk>/<file_name>', eliminarDocR2, name='eliminarDocR2'),

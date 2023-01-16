@@ -906,6 +906,197 @@ def crear_aviso(request):
     context = {'group': group, 'form': form, 'title': 'Crear Aviso'}
     return render(request, 'Admin/crearAviso.html', context)            
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def materias_a(request, page, orderB, filter):
+    group = request.user.groups.all()[0].name    
+    all_materias = Materia.objects.all()
+    start = (page-1)*10    
+    end = page*10                    
+        
+    if request.method == 'POST':
+        opc = int(request.POST['search_options'])
+        text = request.POST['search'] 
+                        
+        if text:
+            all_materias = buscar_materia(all_materias, text, opc)                                                                                            
+            materias = all_materias
+            start = 0
+            end = materias.count()
+            totalD = all_materias.count()                        
+            search = '.'      
+            context = {'group': group, 'materias': materias, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'title': 'Materias'}
+            return render(request, 'Admin/materias.html', context)            
+    
+    all_materias = filtrar_materias(all_materias, filter)            
+    all_materias = ordenar_materias(all_materias, orderB)
+    materias = all_materias[start:end]    
+    if end != materias.count():
+        end = end-10+materias.count()
+    totalD = all_materias.count()
+    n_buttons = math.ceil(totalD/10)
+    buttons = [item for item in range(1, n_buttons+1)]
+    next_page = page+1
+    prev_page = page-1    
+    context = {'group': group, 'materias': materias, 'totalD': totalD, 'buttons': buttons, 'page': page, 'filter': filter, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'title': 'Materias'}
+    return render(request, 'Admin/materias.html', context)     
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def editarMateria(request, pk):
+    group = request.user.groups.all()[0].name    
+    materia = Materia.objects.get(id = pk)
+    form =  MateriaForm(instance = materia)
+    
+    if request.method == 'POST':
+        form = MateriaForm(request.POST, instance = materia)
+        if form.is_valid():
+            form.save()
+            return redirect('materias_a', 1, 0, 0)
+    
+    context = {'group': group, 'materia': materia, 'form': form, 'title': 'Editar Materia'}
+    return render(request, 'Admin/editar_materia.html', context)            
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def altaMateria(request):
+    group = request.user.groups.all()[0].name    
+    form = MateriaForm()    
+    
+    if request.method == 'POST':
+        form = MateriaForm(request.POST)            
+        if form.is_valid():            
+            form.save()                            
+            return redirect('materias_a', 1, 0, 0)
+    
+    context = {'group': group, 'form': form, 'title': 'Alta Materia'}
+    return render(request, 'Admin/alta_materia.html', context)        
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def dependencias_a(request, page, orderB, filter):
+    group = request.user.groups.all()[0].name    
+    all_dependencias = Dependencia.objects.all()
+    start = (page-1)*10    
+    end = page*10                    
+        
+    if request.method == 'POST':
+        opc = int(request.POST['search_options'])
+        text = request.POST['search'] 
+                        
+        if text:
+            all_dependencias = buscar_dependencia(all_dependencias, text, opc)                                                                                            
+            dependencias = all_dependencias
+            start = 0
+            end = dependencias.count()
+            totalD = all_dependencias.count()                        
+            search = '.'      
+            context = {'group': group, 'dependencias': dependencias, 'totalD': totalD, 'page': page, 'start': start+1, 'end': end, 'orderB': orderB, 'search': search, 'title': 'Organizaciones o Empresas'}
+            return render(request, 'Admin/dependencias.html', context)            
+    
+    all_dependencias = filtrar_dependencias(all_dependencias, filter)            
+    all_dependencias = ordenar_dependencias(all_dependencias, orderB)
+    dependencias = all_dependencias[start:end]    
+    if end != dependencias.count():
+        end = end-10+dependencias.count()
+    totalD = all_dependencias.count()
+    n_buttons = math.ceil(totalD/10)
+    buttons = [item for item in range(1, n_buttons+1)]
+    next_page = page+1
+    prev_page = page-1    
+    context = {'group': group, 'dependencias': dependencias, 'totalD': totalD, 'buttons': buttons, 'page': page, 'filter': filter, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'orderB': orderB, 'title': 'Organizaciones o Empresas'}
+    return render(request, 'Admin/dependencias.html', context)     
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def ver_dependencia(request, pk):
+    group = request.user.groups.all()[0].name    
+    dependencia = Dependencia.objects.get(id = pk)
+    domicilio = dependencia.domicilio
+    titular = dependencia.titular
+    
+    formD =  DependenciaViewForm(instance = dependencia)
+    formDom = DomicilioViewForm(instance = domicilio)
+    formT = TitularViewForm(instance = titular)
+    
+    context = {'group': group, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'title': 'Editar Materia'}
+    return render(request, 'Admin/ver_dependencia.html', context)  
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def editar_dependencia(request, pk):
+    group = request.user.groups.all()[0].name    
+    dependencia = Dependencia.objects.get(id = pk)
+    form =  DependenciaForm(instance = dependencia)
+    
+    if request.method == 'POST':
+        form = DependenciaForm(request.POST, instance = dependencia)
+        if form.is_valid():
+            form.save()
+            return redirect('materias_a', 1, 0, 0)
+    
+    context = {'group': group, 'materia': dependencia, 'form': form, 'title': 'Editar Materia'}
+    return render(request, 'Admin/editar_materia.html', context)            
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def altaDependencia(request):
+    group = request.user.groups.all()[0].name    
+    form = DependenciaForm()
+    
+    if request.method == 'POST':
+        form = DependenciaForm(request.POST)            
+        if form.is_valid():            
+            dependencia = form.save()                                        
+            return redirect('alta_titular_dep', dependencia.id)
+    
+    context = {'group': group, 'form': form, 'title': 'Alta Organización o Empresa'}
+    return render(request, 'Admin/alta_dependencia.html', context)        
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def alta_titular_dep(request, pk):
+    group = request.user.groups.all()[0].name    
+    dependencia = Dependencia.objects.get(id = pk)
+    form = TitularForm()
+        
+    if request.method == 'POST':
+        form = TitularForm(request.POST)            
+        if form.is_valid():
+            titular = form.save()
+            titular.save()
+            dependencia.titular = titular
+            dependencia.save()
+            if not dependencia.domicilio:
+                return redirect('alta_domicilio_dep', dependencia.id)                                                            
+            else:
+                return redirect('ver_dependencia', dependencia.id)   
+    
+    context = {'group': group, 'dependencia': dependencia, 'form': form, 'title': 'Alta Titular de la Organización o Empresa'}
+    return render(request, 'Admin/alta_titular.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def alta_domicilio_dep(request, pk):
+    group = request.user.groups.all()[0].name    
+    dependencia = Dependencia.objects.get(id = pk)
+    form = DomicilioForm()
+        
+    if request.method == 'POST':
+        form = DomicilioForm(request.POST)            
+        if form.is_valid():
+            domicilio = form.save()
+            domicilio.save()
+            dependencia.domicilio = domicilio
+            dependencia.save()
+            if not dependencia.titular:
+                return redirect('alta_titular_dep', dependencia.id)                                                            
+            else:
+                return redirect('ver_dependencia', dependencia.id)   
+    
+    context = {'group': group, 'dependencia': dependencia, 'form': form, 'title': 'Alta Domicilio de la Organización o Empresa'}
+    return render(request, 'Admin/alta_domicilio_dep.html', context)
+
 @admin_only
 def asignarRevisor(request, pkR, pkD):
     residencia = Residencia.objects.get(id = pkR)
@@ -935,6 +1126,22 @@ def eliminarDocente(request, pk):
     docente = Docente.objects.get(id = pk)
     docente.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminarMateria(request, pk):
+    materia = Materia.objects.get(id = pk)
+    materia.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def eliminar_dependencia(request, pk):
+    dependencia = Dependencia.objects.get(id = pk)
+    # Verificar el titular y el domicilio de la dependencia si se eliminan
+    #titular = dependencia.titular
+    #domicilio = dependencia.domicilio
+    dependencia.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
 
 @admin_only
 def eliminarDocExpediente(request, pk, file_name):    
@@ -1225,3 +1432,79 @@ def buscar_docente(docentes, text, opc):
         all_docentes = all_docentes.filter(rfc__icontains=text)            
         
     return all_docentes
+
+def ordenar_materias(materias, orderB):
+    all_materias = materias
+    if orderB == 1:
+        all_materias = all_materias.order_by('nombre')    
+    elif orderB == 2:
+        all_materias = all_materias.order_by('-nombre')    
+    elif orderB == 3:
+        all_materias = all_materias.order_by('semestre')        
+    elif orderB == 4:
+        all_materias = all_materias.order_by('-semestre')        
+    return all_materias
+
+def buscar_materia(materias, text, opc):    
+    all_materias = materias
+    if opc == 1:                
+        all_materias = all_materias.filter(clave__icontains=text)            
+    elif opc == 2:                
+        all_materias = all_materias.filter(nombre__icontains=text)
+    elif opc == 3:
+        all_materias = all_materias.filter(semestre__icontains=text)                        
+    return all_materias
+
+def filtrar_materias(materias, filter):    
+    all_materias = materias        
+    
+    if filter == 1:
+        all_materias = all_materias.filter(semestre = 1)
+    elif filter == 2:
+        all_materias = all_materias.filter(semestre = 2)
+    elif filter == 3:
+        all_materias = all_materias.filter(semestre = 3)        
+    elif filter == 4:
+        all_materias = all_materias.filter(semestre = 4)        
+    elif filter == 5:
+        all_materias = all_materias.filter(semestre = 5)        
+    elif filter == 6:
+        all_materias = all_materias.filter(semestre = 6)        
+    elif filter == 7:
+        all_materias = all_materias.filter(semestre = 7)        
+    elif filter == 8:
+        all_materias = all_materias.filter(semestre = 8)        
+    elif filter == 9:
+        all_materias = all_materias.filter(semestre = 9)        
+            
+    return all_materias
+
+def ordenar_dependencias(dependencias, orderB):
+    all_dependencias = dependencias
+    if orderB == 1:
+        all_dependencias = all_dependencias.order_by('d_nombre')    
+    elif orderB == 2:
+        all_dependencias = all_dependencias.order_by('-d_nombre')        
+    return all_dependencias
+
+def buscar_dependencia(dependencias, text, opc):    
+    all_dependencias = dependencias
+    if opc == 1:                
+        all_dependencias = all_dependencias.filter(d_nombre__icontains=text)            
+    elif opc == 2:                
+        all_dependencias = all_dependencias.filter(rfc__icontains=text)    
+    return all_dependencias
+
+def filtrar_dependencias(dependencias, filter):    
+    all_dependencias = dependencias       
+    
+    if filter == 1:
+        all_dependencias = all_dependencias.filter(giro = 'INDUSTRIAL')
+    elif filter == 2:
+        all_dependencias = all_dependencias.filter(giro = 'SERVICIOS')
+    elif filter == 3:
+        all_dependencias = all_dependencias.filter(giro = 'PUBLICO')        
+    elif filter == 4:
+        all_dependencias = all_dependencias.filter(giro = 'PRIVADO')            
+            
+    return all_dependencias
