@@ -12,12 +12,12 @@
             <div class="relative">
                 {% if group == 'admin' %}
                 <a href="{% url 'residencias' 1 0 0 %}">
-                {% elif group == 'teacher' %}
-                <a href="{% url 'residenciasTeacher' %}">
-                {% endif %}
-                    <button
-                        class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
-                </a>
+                    {% elif group == 'teacher' %}
+                    <a href="{% url 'residenciasTeacher' %}">
+                        {% endif %}
+                        <button
+                            class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
+                    </a>
             </div>
         </div>
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
@@ -44,6 +44,11 @@
                         {{residencia.estatus}}
                     </span>
                     {% elif residencia.estatus == 'RECHAZADA' %}
+                    <span
+                        class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                        {{residencia.estatus}}
+                    </span>
+                    {% elif residencia.estatus == 'CANCELADA' %}
                     <span
                         class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                         {{residencia.estatus}}
@@ -113,13 +118,15 @@
                             <th class="px-4 py-3">Estudiante</th>
                             <th class="px-4 py-3">Número de control</th>
                             <th class="px-4 py-3">E-mail</th>
-                            <th class="px-4 py-3">Número teléfonico</th>                            
+                            <th class="px-4 py-3">Número teléfonico</th>
+                            <th class="px-4 py-3 text-center">Estado</th>
                             {% if group == 'admin' %}
                             <th class="px-4 py-3 text-center">Ver</th>
                             <th class="px-4 py-3 text-center">Eliminar</th>
+                            <th class="px-4 py-3 text-center">Cancelar residencia</th>
                             {% elif group == 'teacher' %}
                             <th class="px-4 py-3 text-center">Semestre</th>
-                            <th class="px-4 py-3 text-center">Reportes</th>
+                            <th class="px-4 py-3 text-center">Ver Reportes</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -142,6 +149,19 @@
                             <td class="px-4 py-3 text-md">{{student.numControl}}</td>
                             <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
                             <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+                            <td class="px-4 py-3 text-md text-center">
+                                {% if student.residencia_estatus == 'ACTIVO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{student.residencia_estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{student.residencia_estatus}}
+                                </span>
+                                {% endif %}
+                            </td>
                             {% if group == 'admin'%}
                             <td class="px-4 py-3 text-md">
                                 <div class="flex items-center justify-center">
@@ -170,6 +190,22 @@
                                             d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                     </svg>
                                 </a>
+                            </td>
+                            <td class="px-4 py-3 text-md">
+                                <div class="flex items-center justify-center btnDelete2">
+                                    <a href="{% url 'cancelar_residencia' student.id %}">
+                                        <button type="button"
+                                            class="flex items-center justify-between px-2 py-2 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500"
+                                            aria-label="Like">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                            </svg>
+
+                                        </button>
+                                    </a>
+                                </div>
                             </td>
                             {% elif group == 'teacher'%}
                             <td class="px-4 py-3 text-md text-center">{{student.semestre}}</td>

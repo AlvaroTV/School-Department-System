@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', loginPage, name='login'),
     path('logout/', logoutUser, name='logout'),
     path('404/', errorPage, name='404'),    
+    path('email_verification/<uuid:pk>', email_verification, name='email_verification'),    
     path('', home, name='home'),   
     path('changePassword', changePassword, name='changePassword'), 
     path('student/', studentPage, name='student'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='Global/password_reset/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="Global/password_reset/password_reset_confirm.html"), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='Global/password_reset/password_reset_complete.html'), name='password_reset_complete'),             
+    path('activate_user/<uidb64>/<token>/', activate_user, name='activate_user'),    
     
     # Estudiante                
     path('profile/', estudianteViewProfile, name='studentProfile'),
@@ -97,6 +99,8 @@ urlpatterns = [
     path('eliminarResidencia/<uuid:pk>', eliminarResidencia, name='eliminarResidencia'),        
     path('editarResidenciaAdmin/<uuid:pk>', editarResidenciaAdmin, name='editarResidenciaAdmin'),    
     
+    path('historial_estudiante/<uuid:pk>', historial_estudiante, name='historial_estudiante'),    
+    
     path('eliminarEstudiante/<uuid:pk>', eliminarEstudiante, name='eliminarEstudiante'),       
     path('eliminarDocente/<uuid:pk>', eliminarDocente, name='eliminarDocente'),
     path('eliminarMateria/<uuid:pk>', eliminarMateria, name='eliminarMateria'),
@@ -109,6 +113,14 @@ urlpatterns = [
     path('avisos/', avisos, name='avisos'), 
     path('crear_aviso/', crear_aviso, name='crear_aviso'), 
     path('eliminar_aviso/<uuid:pk>', eliminar_aviso, name='eliminar_aviso'), 
+        
+    path('cancelar_anteproyecto/<uuid:pk>', cancelar_anteproyecto, name='cancelar_anteproyecto'),         
+    path('cancelar_residencia/<uuid:pk>', cancelar_residencia, name='cancelar_residencia'),         
+    
+    path('generar_reportes/', generar_reportes, name='generar_reportes'), 
+    path('generar_reporte_estudiante/', generar_reporte_estudiantes, name='generar_reporte_estudiante'), 
+    path('generar_reporte_anteproyectos/', generar_reporte_anteproyectos, name='generar_reporte_anteproyectos'), 
+    path('generar_reporte_residencias/', generar_reporte_residencias, name='generar_reporte_residencias'), 
     
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      

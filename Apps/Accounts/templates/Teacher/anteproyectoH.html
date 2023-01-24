@@ -52,6 +52,11 @@
                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                     {{anteproyecto.estatus}}
                 </span>
+                {% elif anteproyecto.estatus == 'CANCELADO' %}
+                <span
+                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                    {{anteproyecto.estatus}}
+                </span>
                 {% elif anteproyecto.estatus == 'REVISADO' %}
                 <span
                     class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
@@ -339,9 +344,11 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                         <th class="px-4 py-3">Estudiante</th>
+                        <th class="px-4 py-3 text-center">Semestre</th>
                         <th class="px-4 py-3">Número de control</th>
                         <th class="px-4 py-3">E-mail</th>
                         <th class="px-4 py-3">Número teléfonico</th>
+                        <th class="px-4 py-3 text-center">Estado</th>
                         <th class="px-4 py-3 text-center">Ver</th>
                     </tr>
                 </thead>
@@ -360,9 +367,23 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="px-4 py-3 text-md text-center">{{student.semestre}}</td>
                         <td class="px-4 py-3 text-md">{{student.numControl}}</td>
                         <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
                         <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+                        <td class="px-4 py-3 text-md text-center">
+                            {% if student.anteproyecto_estatus == 'ACTIVO' %}
+                            <span
+                                class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                {{student.anteproyecto_estatus}}
+                            </span>
+                            {% else %}
+                            <span
+                                class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                {{student.anteproyecto_estatus}}
+                            </span>
+                            {% endif %}
+                        </td>
                         <td class="px-4 py-3 text-md">
                             <div class="flex items-center justify-center">
                                 <a href="{% url 'verEstudiante' student.id %}">

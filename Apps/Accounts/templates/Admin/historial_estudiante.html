@@ -1,0 +1,282 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+<div class="container grid px-6 mx-auto">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Historial del estudiante
+    </h2>    
+
+    <div class="mt-8 container px-6 mx-auto grid">
+        <div class="mb-4 w-full overflow-x-auto">
+            <table class="w-full whitespace-no-wrap">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">Numero de Control</th>
+                        <th class="px-4 py-3">Estudiante</th>
+                        <th class="px-4 py-3">Semestre</th>
+                    </tr>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            {{estudiante.numControl}}
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center text-sm">
+                                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                    <img class="object-cover w-full h-full rounded-full"
+                                        src="{{estudiante.fotoUsuario.url}}" alt="" loading="lazy" />
+                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">{{estudiante}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {{estudiante.semestre}}
+                        </td>
+                    </tr>
+                </tbody>
+                </thead>
+            </table>
+        </div>
+
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 mr-30 font-semibold text-gray-600 dark:text-gray-300">
+                Anteproyectos
+            </h4>
+
+            <div class="w-full overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Nombre Anteproyecto</th>
+                            <th class="px-4 py-3 text-center">Tipo de proyecto</th>
+                            <th class="px-4 py-3">Dependencia</th>
+                            <th class="px-4 py-3">Estatus Estudiante</th>
+                            <th class="px-4 py-3">Estatus Anteproyecto</th>
+                            <th class="px-4 py-3 text-center">Fecha Entrega</th>
+                            <th class="px-4 py-3 text-center"># Integrantes</th>
+                            <th class="px-4 py-3 text-center">Ver Anteproyecto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for anteproyecto in anteproyectos %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                {{anteproyecto.anteproyecto.a_nombre}}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{anteproyecto.anteproyecto.tipoProyecto}}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                {{anteproyecto.anteproyecto.dependencia}}
+                            </td>
+                            <td class="px-4 py-3 text-md">
+                                {% if anteproyecto.estado == 'ACTIVO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.estado}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estado}}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-xs whitespace-no-wrap">
+                                {% if anteproyecto.anteproyecto.estatus == 'ACEPTADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.anteproyecto.estatus == 'ENVIADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.anteproyecto.estatus == 'EN REVISION' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-teal-700 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.anteproyecto.estatus == 'RECHAZADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.anteproyecto.estatus == 'CANCELADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.anteproyecto.estatus == 'REVISADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{anteproyecto.anteproyecto.estatus}}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-center">
+                                {{anteproyecto.anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                {{anteproyecto.anteproyecto.numIntegrantes}}
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'verAnteproyecto' anteproyecto.anteproyecto.id %}">
+                                        <button
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Like">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 container px-6 mx-auto grid">
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+            <h4 class="mb-4 mr-30 font-semibold text-gray-600 dark:text-gray-300">
+                Residencias
+            </h4>
+
+            <div class="w-full overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Nombre Proyecto</th>
+                            <th class="px-4 py-3">Tipo de proyecto</th>
+                            <th class="px-4 py-3">Dependencia</th>
+                            <th class="px-4 py-3">Estatus Estudiante</th>
+                            <th class="px-4 py-3">Estatus Residencia</th>
+                            <th class="px-4 py-3 text-center">Periodo Inicio</th>
+                            <th class="px-4 py-3 text-center">Periodo Fin</th>
+                            <th class="px-4 py-3 text-center"># Integrantes</th>
+                            <th class="px-4 py-3 text-center">Ver proyecto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for proyecto in residencias %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                {{proyecto.residencia.nombre}}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{proyecto.residencia.tipoProyecto}}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                {{proyecto.residencia.dependencia}}
+                            </td>
+                            <td class="px-4 py-3 text-md">
+                                {% if proyecto.estado == 'ACTIVO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{proyecto.estado}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{proyecto.estado}}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-xs whitespace-no-wrap">
+                                {% if proyecto.residencia.estatus == 'INICIADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% elif proyecto.residencia.estatus == 'FINALIZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% elif proyecto.residencia.estatus == 'EN PROCESO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% elif proyecto.residencia.estatus == 'RECHAZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% elif proyecto.residencia.estatus == 'CANCELADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% elif proyecto.residencia.estatus == 'PROROGA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{proyecto.residencia.estatus}}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                {{proyecto.residencia.periodoInicio|date:"d/M/Y"}}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                {{proyecto.residencia.periodoFin|date:"d/M/Y"}}
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                {{proyecto.residencia.numIntegrantes}}
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'verResidencia' proyecto.residencia.id %}">
+                                        <button
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Like">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

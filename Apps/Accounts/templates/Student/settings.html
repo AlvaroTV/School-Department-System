@@ -89,7 +89,8 @@
             </label>
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400">Correo institucional:</span>
-              {{formE.correoElectronico}}
+              {{formU.email}}
+              <p id="messages" class="text-red-600">{{ formU.email.errors }}</p>
             </label>
             <label class="block mt-3 text-sm">
               <span class="text-gray-700 dark:text-gray-400">
@@ -123,6 +124,7 @@
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400">Número de control</span>
               {{formE.numControl}}
+              <p id="messages" class="text-red-600">{{ formE.numControl.errors }}</p>
             </label>
             <br>
             <label class="block text-sm">

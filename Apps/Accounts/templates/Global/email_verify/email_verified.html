@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cuenta verificada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/tailwind.output.css' %}" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script src="{% static 'js/init-alpine.js' %}"></script>
+</head>
+
+<body>
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen}">
+        <div class="flex flex-col flex-1">
+            <main class="h-full pb-16 overflow-y-auto">
+                <div class="my-8 container flex flex-col items-center px-6 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="w-12 h-12 mt-8 text-purple-200">
+                        <path fill-rule="evenodd"
+                            d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <h1 class="text-6xl font-semibold text-gray-700 dark:text-gray-200">
+                        Su cuenta ha sido verificada!
+                    </h1>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Ahora ya puede iniciar sesión con su número de control y su contraseña.
+                    </p>
+                    <p class="text-gray-700 text-center dark:text-gray-300">
+                        <a class="text-purple-600 hover:underline dark:text-purple-300" href="{% url 'login' %}">
+                            Iniciar sesion.
+                        </a>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

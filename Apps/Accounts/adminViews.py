@@ -5,12 +5,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 #from django.db.models import Count
+from django.core.mail import EmailMessage, BadHeaderError, send_mail
 from datetime import date, timedelta, datetime
 import math
 from .models import *
 from .forms import *
 from .adminForms import *
 from .decorators import *
+from .utils import enviar_email
 from .views import generarCodigo, obtenerCodigo, buscarCodigo
 # Create your views here.
 
@@ -175,8 +177,10 @@ def eliminarExpediente(request, pk):
 def estudiantes(request, page, orderB):
     group = request.user.groups.all()[0].name    
     all_estudiantes = Estudiante.objects.all()  
+    all_e_anteproyectos = Estudiante_Anteproyecto.objects.filter(estado = 'ACTIVO')           
+    all_e_residencias = Estudiante_Residencia.objects.filter(estado = 'ACTIVO')       
     start = (page-1)*10    
-    end = page*10
+    end = page*10            
     
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -194,6 +198,25 @@ def estudiantes(request, page, orderB):
                 
     all_estudiantes = ordenar_estudiantes(all_estudiantes, orderB)
     estudiantes = all_estudiantes[start:end]
+    
+    for i in estudiantes:
+        anteproyecto_e = all_e_anteproyectos.filter(estudiante = i)
+        residencia_e = all_e_residencias.filter(estudiante = i)        
+        
+        if anteproyecto_e:
+            estado_anteproyecto = anteproyecto_e[0].anteproyecto.estatus
+        else:
+            estado_anteproyecto = None
+            
+        if residencia_e:
+            estado_residencia = residencia_e[0].residencia.estatus
+        else:
+            estado_residencia = None
+                    
+        setattr(i, 'anteproyecto_estatus', estado_anteproyecto)  
+        setattr(i, 'residencia_estatus', estado_residencia)          
+        
+    
     if end != estudiantes.count():
         end = end-10+estudiantes.count()
     totalE = all_estudiantes.count()
@@ -258,7 +281,25 @@ def docentes(request, page, orderB):
 def verAnteproyecto(request, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)    
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    all_anteproyectos = Estudiante_Anteproyecto.objects.all()            
+    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    historial_estudiantes = []                
+    lista_correos = []
+    
+    for i in estudiantes:
+        lista_correos.append(i.correoElectronico)
+        anteproyecto_e = all_estudiantes.filter(estudiante = i)                
+        all_anteproyectos_e = all_anteproyectos.filter(estudiante = i).count()
+        if all_anteproyectos_e > 1: historial_estudiantes.append(i)                
+        
+        if anteproyecto_e:
+            estado_anteproyecto = anteproyecto_e[0].estado
+        else:
+            estado_anteproyecto = None                    
+                    
+        setattr(i, 'anteproyecto_estatus', estado_anteproyecto)                  
+    
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
     revisor1 = anteproyecto.revisor1 
     revisor2 = anteproyecto.revisor2                
@@ -302,31 +343,38 @@ def verAnteproyecto(request, pk):
         formEstado = AnteproyectoEstadoForm(request.POST, instance = anteproyecto)        
         if formEstado.is_valid():            
             estadoFinal = formEstado['estatus'].value()        
-            if estadoInicial in lista and estadoFinal == 'ACEPTADO':
-                residencia = Residencia(
-                    dependencia = dependencia,
-                    asesorExterno = anteproyecto.asesorExterno,                    
-                    nombre = anteproyecto.a_nombre,
-                    tipoProyecto = anteproyecto.tipoProyecto,
-                    numIntegrantes = anteproyecto.numIntegrantes                    
-                )        
-                residencia.save()                                                        
-
-                for e in estudiantes:        
-                    e.residencia = residencia
+            estudiantes = [i.estudiante for i in all_estudiantes if i.estado == 'ACTIVO' ]                   
+            if estadoInicial in lista and estadoFinal == 'ACEPTADO':                
+                estudiante_resi = Estudiante_Residencia.objects.filter(estudiante = estudiantes[0], estado='ACTIVO')
+                print(estudiante_resi)
+                if not estudiante_resi:     
+                    residencia = Residencia(
+                        dependencia = dependencia,
+                        asesorExterno = anteproyecto.asesorExterno,                    
+                        nombre = anteproyecto.a_nombre,
+                        tipoProyecto = anteproyecto.tipoProyecto,
+                        numIntegrantes = anteproyecto.numIntegrantes                    
+                    )        
+                    residencia.save()                                                        
+                
+                    for e in estudiantes:      
+                        estudiante_residencia = Estudiante_Residencia(
+                            estudiante = e,
+                            residencia = residencia
+                            )                      
+                        estudiante_residencia.save()                                
+            elif estadoFinal == 'CANCELADO':                                
+                for e in all_estudiantes:      
+                    e.estado = 'INACTIVO'              
                     e.save()
-                
-                print('RESIDENCIA CREADA')
-                
-            elif estadoInicial == 'ACEPTADO' and estadoFinal in lista:
-                print('Eliminar la residencia')            
-                residencia = estudiantes[0].residencia
-                residencia.delete()
-                print('RESIDENCIA ELMINIDA')
+                                       
             formEstado.save()
+            asunto = 'El estado de su Anteproyecto se actualizo a: ' + estadoFinal
+            
+            enviar_email(asunto, '', lista_correos, 1, estadoFinal)            
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
-    context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data, 'actualizaciones': actualizaciones,'title': 'Anteproyecto'}
+    context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data, 'actualizaciones': actualizaciones, 'historial_estudiantes': historial_estudiantes, 'title': 'Anteproyecto'}
     return render(request, 'Admin/verAnteproyecto.html', context)           
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -335,7 +383,10 @@ def editarAnteproyectoAdmin(request, pk):
     group = request.user.groups.all()[0].name
     data = ['id_codigoUnion']
     anteproyecto = Anteproyecto.objects.get(id = pk)    
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()        
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]        
+    estudiantes = len(estudiantes)
+    #estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()        
     dependencia = anteproyecto.dependencia
     asesorExterno = anteproyecto.asesorExterno
     titular = dependencia.titular
@@ -388,12 +439,18 @@ def editarAnteproyectoAdmin(request, pk):
 @admin_only
 def eliminarAnteproyecto(request, pk):    
     anteproyecto = Anteproyecto.objects.get(id = pk)
+    all_estudiante_anteproyecto = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)
+    for i in all_estudiante_anteproyecto:
+        i.delete()
     anteproyecto.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 @admin_only
 def eliminarResidencia(request, pk):    
     residencia = Residencia.objects.get(id = pk)
+    all_estudiante_residencia = Estudiante_Residencia.objects.filter(residencia = residencia)
+    for i in all_estudiante_residencia:
+        i.delete()
     residencia.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
@@ -407,10 +464,11 @@ def editarObservaciones(request, pk):
     fechaObservacion = None
     observaciones = None
     dias = 0
-    fechaObservacion = None
     fechaCorte = None
-    fechaActual = date.today
-    fechaObservacion = None
+    fechaActual = date.today    
+    
+    estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto, estado = 'ACTIVO')    
+    lista_correos = [i.estudiante.correoElectronico for i in estudiantes]
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
@@ -443,7 +501,9 @@ def editarObservaciones(request, pk):
                     observacion = observacion,
                     observacionD = rObservacion
                 )
-                nuevaObservacion.save()            
+                nuevaObservacion.save()   
+                
+                         
         else:                            
                 
             if rObservacion:            
@@ -456,11 +516,14 @@ def editarObservaciones(request, pk):
                     observacion = observacion,
                     observacionD = rObservacion
                 )
-                nuevaObservacion.save()            
+                nuevaObservacion.save()  
+                
+                asunto = 'Tiene una nueva observacion'            
+                enviar_email(asunto, '', lista_correos, 3)          
                                     
         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                    
     
-    context = {'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'group': group, 'observaciones': observaciones, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Editar Observaciones'}    
+    context = {'anteproyecto': anteproyecto, 'group': group, 'observaciones': observaciones, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Editar Observaciones'}    
     return render(request, 'Admin/editObservaciones.html', context)        
 
 @admin_only
@@ -475,11 +538,26 @@ def verEstudiante(request, pk):
     group = request.user.groups.all()[0].name
     estudiante = Estudiante.objects.get(id = pk)
     domicilio = estudiante.domicilio    
-    anteproyecto = estudiante.anteproyecto
-    residencia = estudiante.residencia
+    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
+    
+    all_anteproyectos_c = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'INACTIVO').count()    
+    all_residencias_c = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'INACTIVO').count()        
+    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
+    if all_residencias:        
+        residencia = all_residencias[0].residencia    
+    else:
+        residencia = None      
+                
     expediente = estudiante.expediente
     
-    context = {'group': group, 'estudiante': estudiante, 'domicilio': domicilio, 'anteproyecto': anteproyecto, 'residencia': residencia, 'expediente': expediente, 'title': 'Estudiante'}    
+    context = {'group': group, 'estudiante': estudiante, 'domicilio': domicilio, 'anteproyecto': anteproyecto, 'residencia': residencia, 'expediente': expediente, 'all_anteproyectos_c': all_anteproyectos_c, 'all_residencias_c': all_residencias_c, 'title': 'Estudiante'}    
     return render(request, 'Admin/verEstudiante.html', context)        
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -487,7 +565,12 @@ def verEstudiante(request, pk):
 def editarEstudiante(request, pk):
     group = request.user.groups.all()[0].name
     estudiante = Estudiante.objects.get(id = pk)
-    anteproyecto = estudiante.anteproyecto
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
     domicilio = estudiante.domicilio
     
     formE = EstudianteForm(instance=estudiante)
@@ -557,9 +640,30 @@ def asignarRevisor1I(request, pkA, pkD):
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor1 = docente
     revisor2 = anteproyecto.revisor2
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
+    estudiantes_str = "\n".join(str(x) for x in estudiantes)
+    
     if revisor2 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
-    anteproyecto.save()    
+        asunto = 'El estado de su Anteproyecto se actualizo a: EN REVISION'
+        mensaje = ('Feliciades, ya le han sido asignado ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+                   + '*' + '\n'
+                   + 'Revisor 1: ' + str(docente) + '\n'
+                   + 'Correo Electronico: ' + docente.correoElectronico + '\n'
+                   + '*' + '\n'
+                   + 'Revisor 2: ' + str(revisor2) + '\n'
+                   + 'Correo Electronico: ' + revisor2.correoElectronico) 
+        enviar_email(asunto, mensaje, lista_correos,)            
+    anteproyecto.save()   
+     
+    mensaje = ('Se le informa que usted ha sido asignado como Revisor 1 del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
+               + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
+               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])
         
     return redirect('verAnteproyecto', anteproyecto.id)
 
@@ -612,9 +716,29 @@ def asignarRevisor2I(request, pkA, pkD):
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor2 = docente
     revisor1 = anteproyecto.revisor1
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
+    estudiantes_str = "\n".join(str(x) for x in estudiantes)
+    
     if revisor1 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
-    anteproyecto.save()        
+        asunto = 'El estado de su Anteproyecto se actualizo a: EN REVISION'
+        mensaje = ('Feliciades, ya le han sido asignado ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+                   + '*' + '\n'
+                   + 'Revisor 1: ' + str(revisor1) + '\n'
+                   + 'Correo Electronico: ' + revisor1.correoElectronico + '\n'
+                   + '*' + '\n'
+                   + 'Revisor 2: ' + str(docente) + '\n'
+                   + 'Correo Electronico: ' + docente.correoElectronico)
+        enviar_email(asunto, mensaje, lista_correos,)          
+    anteproyecto.save()     
+    mensaje = ('Se le informa que usted ha sido asignado como Revisor 2 del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
+               + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
+               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])   
     return redirect('verAnteproyecto', anteproyecto.id)
 
 @admin_only
@@ -698,11 +822,11 @@ def altaDocente(request):
     group = request.user.groups.all()[0].name
     data = ['id_fotoUsuario', 'id_correoElectronico']
     formD = DocenteForm()
-    formU = CreateUserForm()
+    formU = CreateUserFormDocente()
     
     if request.method == 'POST':
         formD = DocenteForm(request.POST)
-        formU = CreateUserForm(request.POST)
+        formU = CreateUserFormDocente(request.POST)
         
         if formD.is_valid() and formU.is_valid():
             teacher = formD.save()
@@ -723,8 +847,22 @@ def altaDocente(request):
 def verResidencia(request, pk):
     group = request.user.groups.all()[0].name
     data = ['id_mision']        
-    residencia = Residencia.objects.get(id = pk)
-    estudiantes = Estudiante.objects.filter(residencia = residencia)                
+    residencia = Residencia.objects.get(id = pk)    
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]     
+    lista_correos = []   
+    
+    for i in estudiantes:
+        lista_correos.append(i.correoElectronico)
+        residencia_e = all_estudiantes.filter(estudiante = i)        
+        
+        if residencia_e:
+            estado_residencia = residencia_e[0].estado
+        else:
+            estado_residencia = None                    
+                    
+        setattr(i, 'residencia_estatus', estado_residencia)          
+    
     asesorI = residencia.r_asesorInterno
     revisor = residencia.r_revisor
     dependencia = residencia.dependencia
@@ -735,6 +873,25 @@ def verResidencia(request, pk):
     if request.method == 'POST':
         formER = ResidenciaEstadoForm(request.POST, instance = residencia)        
         if formER.is_valid():  
+            estadoFinal = formER['estatus'].value()  
+            if estadoFinal == 'CANCELADA':                
+                anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiantes[0], estado = 'ACTIVO')  
+                
+                if anteproyecto:
+                    anteproyecto = anteproyecto[0].anteproyecto
+                    all_estudiantes_ant = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto, estado = 'ACTIVO')                      
+                    anteproyecto.estatus = 'CANCELADO'
+                    anteproyecto.save()
+                    for i in all_estudiantes_ant:
+                        i.estado = 'INACTIVO'
+                        i.save()                    
+                
+                for i in all_estudiantes:
+                    i.estado = 'INACTIVO'
+                    i.save()
+            asunto = 'El estado de su Residencia se actualizo a: ' + estadoFinal
+            
+            enviar_email(asunto, '', lista_correos, 2, estadoFinal)
             formER.save()      
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
@@ -746,7 +903,10 @@ def verResidencia(request, pk):
 def editarResidenciaAdmin(request, pk):
     group = request.user.groups.all()[0].name
     residencia = Residencia.objects.get(id = pk)    
-    estudiantes = Estudiante.objects.filter(residencia = residencia).count()        
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]        
+    estudiantes = len(estudiantes)
+    #estudiantes = Estudiante.objects.filter(residencia = residencia).count()        
     dependencia = residencia.dependencia
     asesorExterno = residencia.asesorExterno
     titular = dependencia.titular
@@ -798,8 +958,8 @@ def asignarAsesorIL(request, page, pk):
     all_docentes = Docente.objects.all()        
     start = (page-1)*10    
     end = page*10
-    estudiante = Estudiante.objects.filter(residencia = residencia)[0]
-    anteproyecto = estudiante.anteproyecto
+    estudiante = Estudiante_Residencia.objects.filter(residencia = residencia, estado = 'ACTIVO')[0].estudiante    
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto
     revisores = [anteproyecto.revisor1, anteproyecto.revisor2]
         
     if request.method == 'POST':
@@ -832,11 +992,32 @@ def asignarAsesorIL(request, page, pk):
 def asignarAsesorI(request, pkR, pkD):
     residencia = Residencia.objects.get(id = pkR)
     docente = Docente.objects.get(id = pkD)
-    residencia.r_asesorInterno = docente
-    residencia.save()
-    if residencia.r_revisor and residencia.estatus == 'INICIADA':        
+    residencia.r_asesorInterno = docente   
+    revisor = residencia.r_revisor 
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
+    estudiantes_str = "\n".join(str(x) for x in estudiantes)
+    
+    if revisor and residencia.estatus == 'INICIADA':        
         residencia.estatus = 'EN PROCESO'
-        residencia.save()
+        asunto = 'El estado de su Residencia se actualizo a: EN PROCESO'
+        mensaje = ('Feliciades, ya le han sido asignado un asesor interno y a un revisor a su Residencia. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+                   + '*' + '\n'
+                   + 'Asesor Interno: ' + str(docente) + '\n'
+                   + 'Correo Electronico: ' + docente.correoElectronico + '\n'
+                   + '*' + '\n'
+                   + 'Revisor: ' + str(revisor) + '\n'
+                   + 'Correo Electronico: ' + revisor.correoElectronico) 
+        enviar_email(asunto, mensaje, lista_correos,)    
+    
+    mensaje = ('Se le informa que usted ha sido asignado como Asesor Interno del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del proyecto: ' + residencia.nombre + "\n"
+               + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
+               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])            
+    residencia.save()
     return redirect('verResidencia', residencia.id)
 
 @admin_only
@@ -854,8 +1035,10 @@ def asignarRevisorL(request, page, pk):
     all_docentes = Docente.objects.all()        
     start = (page-1)*10    
     end = page*10           
-    estudiante = Estudiante.objects.filter(residencia = residencia)[0]
-    anteproyecto = estudiante.anteproyecto
+    estudiante = Estudiante_Residencia.objects.filter(residencia = residencia, estado = 'ACTIVO')[0].estudiante    
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto
+    #estudiante = Estudiante.objects.filter(residencia = residencia)[0]
+    #anteproyecto = estudiante.anteproyecto
     revisores = [anteproyecto.revisor1, anteproyecto.revisor2]                 
     
     if request.method == 'POST':
@@ -1010,7 +1193,8 @@ def dependencias_a(request, page, orderB, filter):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def ver_dependencia(request, pk):
-    group = request.user.groups.all()[0].name    
+    group = request.user.groups.all()[0].name   
+    data = ['id_mision'] 
     dependencia = Dependencia.objects.get(id = pk)
     domicilio = dependencia.domicilio
     titular = dependencia.titular
@@ -1019,7 +1203,7 @@ def ver_dependencia(request, pk):
     formDom = DomicilioViewForm(instance = domicilio)
     formT = TitularViewForm(instance = titular)
     
-    context = {'group': group, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'title': 'Editar Materia'}
+    context = {'group': group, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'data': data, 'title': 'Editar Materia'}
     return render(request, 'Admin/ver_dependencia.html', context)  
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -1097,15 +1281,47 @@ def alta_domicilio_dep(request, pk):
     context = {'group': group, 'dependencia': dependencia, 'form': form, 'title': 'Alta Domicilio de la Organización o Empresa'}
     return render(request, 'Admin/alta_domicilio_dep.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def historial_estudiante(request, pk):
+    group = request.user.groups.all()[0].name    
+    estudiante = Estudiante.objects.get(id = pk)                
+    
+    anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante)        
+    residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante)        
+    
+    context = {'group': group, 'estudiante': estudiante, 'anteproyectos': anteproyectos, 'residencias': residencias, 'title': 'Historial Estudiante'}
+    return render(request, 'Admin/historial_estudiante.html', context)
+
 @admin_only
 def asignarRevisor(request, pkR, pkD):
     residencia = Residencia.objects.get(id = pkR)
     docente = Docente.objects.get(id = pkD)
     residencia.r_revisor = docente
-    residencia.save()
-    if residencia.r_asesorInterno and residencia.estatus == 'INICIADA':        
+    asesor_interno = residencia.r_asesorInterno
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
+    estudiantes_str = "\n".join(str(x) for x in estudiantes)    
+       
+    if asesor_interno and residencia.estatus == 'INICIADA':        
         residencia.estatus = 'EN PROCESO'
-        residencia.save()
+        asunto = 'El estado de su Residencia se actualizo a: EN PROCESO'
+        mensaje = ('Feliciades, ya le han sido asignado un asesor interno y a un revisor a su Residencia. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+                   + '*' + '\n'
+                   + 'Asesor Interno: ' + str(asesor_interno) + '\n'
+                   + 'Correo Electronico: ' + asesor_interno.correoElectronico + '\n'
+                   + '*' + '\n'
+                   + 'Revisor: ' + str(docente) + '\n'
+                   + 'Correo Electronico: ' + docente.correoElectronico) 
+        enviar_email(asunto, mensaje, lista_correos,)        
+    residencia.save()
+    mensaje = ('Se le informa que usted ha sido asignado como Revisor del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del proyecto: ' + residencia.nombre + "\n"
+               + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
+               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])            
     return redirect('verResidencia', residencia.id)
 
 @admin_only
@@ -1118,12 +1334,16 @@ def removeRevisor(request, pk):
 @admin_only
 def eliminarEstudiante(request, pk):
     estudiante = Estudiante.objects.get(id = pk)
+    usuario = estudiante.user
+    usuario.delete()
     estudiante.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 @admin_only
 def eliminarDocente(request, pk):
     docente = Docente.objects.get(id = pk)
+    usuario = docente.user
+    usuario.delete()
     docente.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
@@ -1141,7 +1361,6 @@ def eliminar_dependencia(request, pk):
     #domicilio = dependencia.domicilio
     dependencia.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-
 
 @admin_only
 def eliminarDocExpediente(request, pk, file_name):    
@@ -1196,6 +1415,41 @@ def eliminar_aviso(request, pk):
     aviso.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@admin_only
+def cancelar_anteproyecto(request, pk):
+    estudiante = Estudiante.objects.get(id=pk)
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0]    
+    anteproyecto.estado = 'INACTIVO'
+    anteproyecto.save()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def cancelar_residencia(request, pk):
+    estudiante = Estudiante.objects.get(id=pk)
+    residencia = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0]    
+    residencia.estado = 'INACTIVO'
+    residencia.save()
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0]    
+    anteproyecto.estado = 'INACTIVO'
+    anteproyecto.save()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+@admin_only
+def generar_reportes(request):
+    pass
+
+@admin_only
+def generar_reporte_estudiantes(request):
+    pass
+
+@admin_only
+def generar_reporte_anteproyectos(request):
+    pass
+
+@admin_only
+def generar_reporte_residencias(request):
+    pass
+
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos
     if filter == 1:
@@ -1209,6 +1463,8 @@ def filtrar_anteproyectos(anteproyectos, filter):
     elif filter == 5:
         all_anteproyectos = anteproyectos.filter(estatus = 'REVISADO')
     elif filter == 6:
+        all_anteproyectos = anteproyectos.filter(estatus = 'CANCELADO')
+    elif filter == 7:
         all_anteproyectos = anteproyectos.filter(estatus = 'RECHAZADO')
     return all_anteproyectos
 
@@ -1273,8 +1529,10 @@ def filtrar_residencias(residencias, filter):
     elif filter == 3:
         all_residencias = all_residencias.filter(estatus = 'EN PROCESO')
     elif filter == 4:
-        all_residencias = all_residencias.filter(estatus = 'RECHAZADA')
+        all_residencias = all_residencias.filter(estatus = 'CANCELADA')
     elif filter == 5:
+        all_residencias = all_residencias.filter(estatus = 'RECHAZADA')
+    elif filter == 6:
         all_residencias = all_residencias.filter(estatus = 'PROROGA')    
     return all_residencias
 
@@ -1396,7 +1654,9 @@ def buscar_estudiante(estudiantes ,text, opc):
             all_estudiantes = all_estudiantes.filter(apellidoP__icontains=text)
         elif opc == 4:
             all_estudiantes = all_estudiantes.filter(apellidoM__icontains=text)
-        elif opc == 5: 
+        elif opc == 5:
+            all_estudiantes = all_estudiantes.filter(correoElectronico__icontains=text)
+        elif opc == 6: 
             try:               
                 all_estudiantes = all_estudiantes.filter(semestre=text)
             except: 

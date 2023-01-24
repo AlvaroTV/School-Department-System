@@ -103,32 +103,32 @@
                                 {{estudiante.semestre}}
                             </div>
                         </td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3">                            
                             <div class="flex items-center justify-center">
-                                {% if estudiante.anteproyecto.estatus == 'ACEPTADO' %}
+                                {% if estudiante.anteproyecto_estatus == 'ACEPTADO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                                    {{estudiante.anteproyecto.estatus}}
+                                    {{estudiante.anteproyecto_estatus}}
                                 </span>
-                                {% elif estudiante.anteproyecto.estatus == 'ENVIADO' %}
+                                {% elif estudiante.anteproyecto_estatus == 'ENVIADO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
-                                    {{estudiante.anteproyecto.estatus}}
+                                    {{estudiante.anteproyecto_estatus}}
                                 </span>
-                                {% elif estudiante.anteproyecto.estatus == 'EN REVISION' %}
+                                {% elif estudiante.anteproyecto_estatus == 'EN REVISION' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
-                                    {{estudiante.anteproyecto.estatus}}
+                                    {{estudiante.anteproyecto_estatus}}
                                 </span>
-                                {% elif estudiante.anteproyecto.estatus == 'REVISADO' %}
+                                {% elif estudiante.anteproyecto_estatus == 'REVISADO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-y-700 bg-y-100 rounded-full dark:text-white dark:bg-y-700">
-                                    {{estudiante.anteproyecto.estatus}}
+                                    {{estudiante.anteproyecto_estatus}}
                                 </span>
-                                {% elif estudiante.anteproyecto.estatus == 'RECHAZADO' %}
+                                {% elif estudiante.anteproyecto_estatus == 'RECHAZADO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                                    {{estudiante.anteproyecto.estatus}}
+                                    {{estudiante.anteproyecto_estatus}}
                                 </span>
                                 {% else %}
                                 <span
@@ -140,30 +140,30 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-center">
-                                {% if estudiante.residencia.estatus == 'INICIADA' %}
+                                {% if estudiante.residencia_estatus == 'INICIADA' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                                    {{estudiante.residencia.estatus}}
+                                    {{estudiante.residencia_estatus}}
                                 </span>
-                                {% elif estudiante.residencia.estatus == 'FINALIZADA' %}
+                                {% elif estudiante.residencia_estatus == 'FINALIZADA' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
-                                    {{estudiante.residencia.estatus}}
+                                    {{estudiante.residencia_estatus}}
                                 </span>
-                                {% elif estudiante.residencia.estatus == 'EN PROCESO' %}
+                                {% elif estudiante.residencia_estatus == 'EN PROCESO' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
-                                    {{estudiante.residencia.estatus}}
+                                    {{estudiante.residencia_estatus}}
                                 </span>
-                                {% elif estudiante.residencia.estatus == 'PROROGA' %}
+                                {% elif estudiante.residencia_estatus == 'PROROGA' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
-                                    {{estudiante.residencia.estatus}}
+                                    {{estudiante.residencia_estatus}}
                                 </span>
-                                {% elif estudiante.residencia.estatus == 'NO FINALIZADA' %}
+                                {% elif estudiante.residencia_estatus == 'NO FINALIZADA' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                                    {{estudiante.residencia.estatus}}
+                                    {{estudiante.residencia_estatus}}
                                 </span>
                                 {% else %}
                                 <span
@@ -326,7 +326,8 @@
                                     <option value="2">Nombre Estudiante</option>
                                     <option value="3">Apellido Paterno</option>
                                     <option value="4">Apellido Materno</option>
-                                    <option value="5">Semestre</option>                                    
+                                    <option value="5">Correo Electronico</option>
+                                    <option value="6">Semestre</option>                                    
                                 </select>
                             </div>
                             <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">

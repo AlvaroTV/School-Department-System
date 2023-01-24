@@ -3,9 +3,9 @@
 
 {% block content %}
 
-<main class="h-full pb-16 overflow-y-auto">    
+<main class="h-full pb-16 overflow-y-auto">
     {% if not anteproyecto %}
-    
+
     <!-- Remove everything INSIDE this div to a really blank page -->
     <div class="container px-6 mx-auto grid ">
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -25,70 +25,14 @@
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% for field in formA %}
-                    {% if not field.id_for_label in data %}
+                    {% for field in formA %}                    
                     <label class="block mt-4 text-sm">
                         <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
                         {{ field }}
                     </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                    {% endif %}
+                    <p id="messages" class="text-red-600">{{ field.errors }}</p>                    
                     {% endfor %}
-
-                    <br>
-                    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                        Dependencia
-                    </h2>
-
-                    {% for field in formD %}
-                    {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                    {% endif %}
-                    {% endfor %}
-
-                    <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        Domicilio de la dependencia
-                    </h4>
-                    {% for field in formDom %}
-                    {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                    {% endif %}
-                    {% endfor %}
-
-                    <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        Titular de la dependencia
-                    </h4>
-                    {% for field in formT %}
-                    {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                    {% endif %}
-                    {% endfor %}
-
-                    <h4 class="my-6 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        Asesor Externo
-                    </h4>
-                    {% for field in formAE %}
-                    {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                    {% endif %}
-                    {% endfor %}
-
+                          
                     <br>
                     <div class="relative">
                         <input type="submit"
@@ -99,7 +43,6 @@
             </div>
         </div>
         <br>
-
     </div>
     <!-- Modal backdrop. This what you want to place close to the closing body tag -->
     <div x-show="isModalOpen" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
@@ -158,13 +101,13 @@
         </div>
     </div>
     <!-- End of modal backdrop -->
-    
+
     {% else %}
-    
+
     {% include 'Student/verAnteproyecto.html' %}
-    
+
     {% endif %}
-    
+
 </main>
 
 {% endblock %}

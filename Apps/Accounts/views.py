@@ -1,15 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
-from django.contrib.auth.forms import PasswordChangeForm
 
-from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.db.models.query_utils import Q
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail, BadHeaderError
+from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
+
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth import get_user_model
+from django.utils.encoding import force_bytes, force_str
+
+from django.core.mail import EmailMessage
 
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.cache import cache_control
@@ -27,6 +32,7 @@ import math
 from .models import *
 from .forms import *
 from .decorators import *
+from .utils import enviar_email
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -39,6 +45,11 @@ def home(request):
     all_residencias = Residencia.objects.all()
     docentes = Docente.objects.all().count()
     totalAlumnos = all_estudiantes.count()    
+        
+    #all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')    
+    all_e_anteproyectos = Estudiante_Anteproyecto.objects.filter(estado = 'ACTIVO')       
+    #all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')        
+    all_e_residencias = Estudiante_Residencia.objects.filter(estado = 'ACTIVO')       
     
     anteproyectosT = all_anteproyectos.count()
     residenciasT = all_residencias.count()
@@ -63,25 +74,29 @@ def home(request):
     cantidad_anteproyectos = []        
     cantidad_residencias = []    
     cantidadT_anteproyectos = []
-    prueba1 = []
-    prueba2 = []
+    #prueba1 = []
+    #prueba2 = []
     cantidadT_residencias = []   
     anteproyectos_months = []
         
     for g in generaciones:         
         list_generaciones.append(g['generacion'])        
-        cantidad_generaciones.append(all_estudiantes.filter(numControl__startswith=g['generacion']).count())        
-        cantidad_anteproyectos.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None).count())            
-        cantidad_residencias.append((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None).count())) 
-        prueba1.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)) 
-        prueba2.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
-        cantidadT_anteproyectos.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
-        cantidadT_residencias.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None)).values('residencia').annotate(dcount=Count('residencia'))).count()) 
+        cantidad_generaciones.append(all_estudiantes.filter(numControl__startswith=g['generacion']).count())                
+        estudiantes_gen = all_estudiantes.filter(numControl__startswith=g['generacion'])        
+        #cantidad_anteproyectos.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None).count())            
+        cantidad_anteproyectos.append(all_e_anteproyectos.filter(estudiante__in=estudiantes_gen).count())                   
+        #cantidad_residencias.append((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None).count())) 
+        cantidad_residencias.append(all_e_residencias.filter(estudiante__in=estudiantes_gen).count())                    
+        #prueba1.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)) 
+        #prueba2.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
+        #cantidadT_anteproyectos.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
+        cantidadT_anteproyectos.append(all_e_anteproyectos.filter(estudiante__in=estudiantes_gen).distinct('anteproyecto').count()) 
+        #cantidadT_residencias.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None)).values('residencia').annotate(dcount=Count('residencia'))).count()) 
+        cantidadT_anteproyectos.append(all_e_residencias.filter(estudiante__in=estudiantes_gen).distinct('residencia').count()) 
+        #cantidadT_residencias.append(1) 
                     
     
-    for i in range(1,13): anteproyectos_months.append(all_anteproyectos.filter(fechaEntrega__month=i).count())
-    
-    print(anteproyectos_months)
+    for i in range(1,13): anteproyectos_months.append(all_anteproyectos.filter(fechaEntrega__month=i).count())        
     
     dataPie1 = [list_generaciones, cantidad_generaciones, cantidad_anteproyectos, cantidad_residencias, cantidadT_anteproyectos, cantidadT_residencias]     
         
@@ -94,29 +109,30 @@ def home(request):
 def studentPage(request):    
     group = request.user.groups.all()[0].name
     student = request.user.estudiante
-    anteproyecto = student.anteproyecto
-    proyecto = student.residencia
-    expediente = student.expediente  
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')    
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')                
     
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
+    if all_residencias:        
+        proyecto = all_residencias[0].residencia    
+    else:
+        proyecto = None      
+            
+    expediente = student.expediente      
     
     all_avisos = Avisos.objects.all().order_by('-fechaCreacion')  
     if all_avisos:
         for aviso in all_avisos:
             fin_aviso = aviso.fechaCreacion + timedelta(days=aviso.tiempoVida)
-            fecha_actual = timezone.now()            
-            print(f'Fecha de Creacion: {aviso.fechaCreacion}')
-            print(f'Fecha eliminacion: {fin_aviso}')
-            print(f'Fehca Actual: {fecha_actual}')
-            print('Fechas con el cambio:')
+            fecha_actual = timezone.now()                        
             fin_aviso = convert_to_localtime(fin_aviso)
-            fecha_actual = convert_to_localtime(fecha_actual)
-            print('Fecha de Creacion: ', convert_to_localtime(aviso.fechaCreacion))            
-            print('Fecha eliminacion: ', fin_aviso)            
-            print('Fecha Actual: ', fecha_actual)            
-            if fecha_actual > fin_aviso:
-                print('Eliminar este aviso')
-                aviso.delete()
-            print('\n================================')
+            fecha_actual = convert_to_localtime(fecha_actual)            
+            if fecha_actual > fin_aviso:            
+                aviso.delete()            
             
     avisosP = all_avisos.filter(estudiante = student)
     avisosT = all_avisos.filter(entidad = 'TODOS')
@@ -206,18 +222,24 @@ def loginPage(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+                                
+        if user and user.is_active:
             login(request, user)
             return redirect('home')
         else:
-            messages.info(request, 'Username or Password is incorrect')
+            messages.info(request, 'Número de control o contraseña incorrecta')
 
     context = {}
     return render(request, 'Global/login.html', context)
 
 def errorPage(request):
     return render(request, 'Global/404.html')
+
+@unauthenticated_user
+def email_verification(request, pk):    
+    estudiante = Estudiante.objects.get(id = pk)
+    email = estudiante.correoElectronico
+    return render(request, 'Global/email_verify/email_verification.html', {'email': email})
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
@@ -254,10 +276,10 @@ def changePassword(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  
-            messages.success(request, 'Your password was successfully updated!')
+            messages.success(request, 'Su contraseña fue actualizada con éxito!')
             return render(request, 'Global/password-change-done.html', {'group': group})
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, 'Corrija el error a continuación.')
             
     context = {'group': group, 'form': form, 'title': 'Cambiar Contraseña'}
     return render(request, 'Global/change-password.html', context)
@@ -273,16 +295,38 @@ def createStudent(request):
         formU = CreateUserForm(request.POST)        
         if formE.is_valid() and formU.is_valid():
             student = formE.save()
-            user = formU.save()
-            username = formU.cleaned_data.get('username')
+            user = formU.save()            
             group = Group.objects.get(name='student')
+            user.username = student.numControl
             user.groups.add(group)
+            user.is_active = False
+            user.save()            
             student.correoElectronico = formU.cleaned_data.get('email')
-            student.user = user
-            student.numControl = username
-            student.save()
-            messages.success(request, f'Cuenta creada exitosamente!... {username}')
-            return redirect('login')
+            student.user = user            
+            student.save()  
+                        
+            user_name = student.nombre
+            current_site = get_current_site(request)
+            subject = "Activa tu cuenta."
+            email_template_name = 'Global/email_verify/email_verify_template.txt'
+            c = {
+            "user_name": user_name,    
+			"email":user.email,
+			'domain':current_site.domain,
+			'site_name': 'ITO Sistemas',
+			"uid": urlsafe_base64_encode(force_bytes(user.pk)),			
+			"user": user,
+			'token': default_token_generator.make_token(user),
+			'protocol': 'http',
+			}                        
+            
+            email = render_to_string(email_template_name, c)
+            try:
+                send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+
+            return redirect('email_verification', student.id)
 
     context = {'formE': formE, 'formU': formU, 'data': data}
     return render(request, 'Student/create-account.html', context)
@@ -301,39 +345,53 @@ def estudianteViewProfile(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def estudianteSettings(request):
+    # Falta Wachar que rollo con el correo 
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
     domicilio = estudiante.domicilio
-    formE = EstudianteForm(instance=estudiante)
-
+    formE = EstudianteForm(instance = estudiante)
+    formU = CreateUserFormEmail(instance = user)    
+    
     if domicilio is None:
         formD = DomicilioForm()
         if request.method == 'POST':
             formD = DomicilioForm(request.POST)
             formE = EstudianteForm(
                 request.POST, request.FILES, instance=estudiante)
-            if formE.is_valid():
+            formU = CreateUserFormEmail(request.POST, instance = user)               
+            if formE.is_valid() and formU.is_valid():
                 formE.save()
+                formU.save()
+                correo = formU.cleaned_data['email']
+                estudiante.correoElectronico = correo                
                 if formD.is_valid():
                     dom = formD.save()
-                    estudiante.domicilio = dom
-                    estudiante.save()
+                    estudiante.domicilio = dom                    
+                estudiante.save()
                 return redirect('studentProfile')
-
     else:
-        formD = DomicilioForm(instance=domicilio)
+        formD = DomicilioForm(instance=domicilio)        
         if request.method == 'POST':
             formD = DomicilioForm(request.POST, instance=domicilio)
             formE = EstudianteForm(
                 request.POST, request.FILES, instance=estudiante)            
-            if formE.is_valid():
+            formU = CreateUserFormEmail(request.POST, instance = user)  
+            print(formE.is_valid())          
+            print(formU.is_valid())   
+            print(formU.errors)       
+            if formE.is_valid() and formU.is_valid():
+                print(':v')
                 formE.save()
+                formU.save()
+                correo = formU.cleaned_data['email']
+                estudiante.correoElectronico = correo                
+                estudiante.save()
                 if formD.is_valid():
-                    formD.save()
+                    formD.save()                    
                 return redirect('studentProfile')
 
-    context = {'formD': formD, 'formE': formE, 'estudiante': estudiante, 'domicilio': domicilio, 'group': group, 'title': 'Configuracion'}
+    context = {'formD': formD, 'formE': formE, 'formU': formU, 'estudiante': estudiante, 'domicilio': domicilio, 'group': group, 'title': 'Configuracion'}
     return render(request, 'Student/settings.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -347,8 +405,20 @@ def expediente(request):
     estudiante = user.estudiante
     semestre = estudiante.semestre
     expediente = estudiante.expediente 
-    anteproyecto = estudiante.anteproyecto
-    residencia = estudiante.residencia    
+    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
+    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
+    if all_residencias:        
+        residencia = all_residencias[0].residencia    
+    else:
+        residencia = None      
+        
     r1 = None    
     r2 = None
     rF = None
@@ -378,8 +448,14 @@ def expediente(request):
             expediente_completo = not None in all_reportes
             
             if expediente_completo:
-                expediente.estatus = 'COMPLETO'
-                expediente.save()                                                        
+                expediente.estatus = 'COMPLETO'                
+                expediente.save()  
+                #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                
+                mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
+                + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
+                + 'Semestre: ' + str(estudiante.semestre) + '\n' 
+                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
+                enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])
         
     try:
         estatus = anteproyecto.estatus                       
@@ -399,7 +475,7 @@ def expediente(request):
                     expediente = formE.save()                
                     expediente.save() 
                     estudiante.expediente = expediente                                                    
-                    estudiante.save()                                                                        
+                    estudiante.save()                          
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:            
             formE = ExpedienteViewForm()
@@ -413,8 +489,7 @@ def expediente(request):
             formE = ExpedienteForm(request.POST, request.FILES, instance=expediente)                                                         
                              
             if formE.is_valid():                
-                formE.save()                              
-            
+                formE.save()                                          
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
     context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'data2': data2, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
@@ -427,8 +502,20 @@ def reportes(request):
     group = user.groups.all()[0].name
     estudiante = user.estudiante
     expediente = estudiante.expediente
-    anteproyecto = estudiante.anteproyecto   
-    residencia = estudiante.residencia 
+    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
+    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
+    if all_residencias:        
+        residencia = all_residencias[0].residencia    
+    else:
+        residencia = None      
+    
     r1 = None    
     r2 = None
     rF = None
@@ -532,9 +619,16 @@ def anteproyecto(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante                    
-    anteproyectos = Anteproyecto.objects.all()                          
-    anteproyecto = estudiante.anteproyecto                                                   
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    anteproyectos = Anteproyecto.objects.all()    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto
+        all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+        estudiantes = [i.estudiante for i in all_estudiantes ]        
+    else:
+        anteproyecto = None            
+        estudiantes = None        
+        
     fechaObservacion = None
     fechaCorte = None
     fechaActual = None
@@ -570,14 +664,13 @@ def anteproyecto(request):
                                                 
             if codigoU:                
                 for i in enviados:                    
-                    if i.codigoUnion == codigoU:                        
-                        numIntegrantes = Estudiante.objects.filter(anteproyecto=i).count()                                                
-                        if numIntegrantes < i.numIntegrantes:
-                            estudiante.anteproyecto = i
-                            estudiante.save()
+                    if i.codigoUnion == codigoU:                                                
+                        numIntegrantes = Estudiante_Anteproyecto.objects.filter(anteproyecto=i).count()                                                
+                        if numIntegrantes < i.numIntegrantes:                            
+                            Estudiante_Anteproyecto.objects.create(estudiante=estudiante, anteproyecto=i)                            
                             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
                         else:
-                            mensaje = 'El anteproyecto esta lleno'                            
+                            mensaje = 'El anteproyecto al que intenta unirse ya cuenta con todos sus integrantes.'                            
                                                         
                 if not mensaje: mensaje = 'Codigo invalido'                                                        
             else:                                              
@@ -588,13 +681,11 @@ def anteproyecto(request):
                         codigo = obtenerCodigo()                                                                                                                                    
                     anteproyecto.codigoUnion=codigo
                     anteproyecto.save()
-                    estudiante.anteproyecto=anteproyecto
-                    estudiante.save()                                                    
+                    Estudiante_Anteproyecto.objects.create(estudiante=estudiante, anteproyecto=anteproyecto)                                                                                 
                     return redirect('materias')                                        
                     
     else:
-        anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)
-        print(anteproyecto_materia)
+        anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)        
         if anteproyecto_materia:
             data.clear()
             data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision'])                 
@@ -625,14 +716,24 @@ def anteproyecto(request):
                     formDoc.save()
                     actualizacion = Actualizacion_anteproyecto(anteproyecto = anteproyecto, descripcion = 'Se actualizó el documento del Anteproyecto')
                     actualizacion.save()
+                    email_list = []
+                    if revisor1:
+                        email_list.append(revisor1.correoElectronico)
+                    if revisor2:
+                        email_list.append(revisor2.correoElectronico)
+                    
+                    mensaje_email = ('Nombre del anteproyecto: ' + anteproyecto.a_nombre + '\n'
+                                     + 'Se han realizado las correcciones necesarias en el documento del anteproyecto. Revisar las correcciones lo' 
+                                     + 'mas pronto posible.')
+                    enviar_email('Actualizacion Documento Anteproyecto', mensaje_email, email_list)
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
             context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia}    
-            return render(request, 'Student/anteproyecto2.html', context)
+            return render(request, 'Student/anteproyecto.html', context)
         else:
             return redirect('materias')                                        
             
     context = {'formA': formA, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto'}    
-    return render(request, 'Student/anteproyecto2.html', context)
+    return render(request, 'Student/anteproyecto.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
@@ -640,7 +741,8 @@ def dependencias(request, page, orderB):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante  
-    anteproyecto = estudiante.anteproyecto   
+    #anteproyecto = estudiante.anteproyecto   
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     dependencia = anteproyecto.dependencia
     all_dependencias = Dependencia.objects.all()               
     start = (page-1)*10    
@@ -676,7 +778,8 @@ def dependencias(request, page, orderB):
 @login_required(login_url='login')
 def asignar_dependencia(request, pk):    
     estudiante = request.user.estudiante                    
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     dependencia = Dependencia.objects.get(id = pk)
     anteproyecto.dependencia = dependencia
     anteproyecto.save()    
@@ -688,7 +791,8 @@ def alta_dependencia(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante                    
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     dependencia = anteproyecto.dependencia
     dependencias = Dependencia.objects.all()
     formD = DependenciaForm()    
@@ -711,7 +815,8 @@ def alta_titular_d(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante                    
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     dependencia = anteproyecto.dependencia
     formT = TitularForm()
     
@@ -736,7 +841,8 @@ def alta_domicilio_d(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante                    
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     dependencia = anteproyecto.dependencia
     formDom = DomicilioForm()
     
@@ -761,7 +867,8 @@ def asesoresE(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     asesorE = None    
     dependencia = None
     all_asesores = None
@@ -778,7 +885,8 @@ def asignar_asesorE(request, pk):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     asesorE = AsesorExterno.objects.get(id = pk)
     anteproyecto.asesorExterno = asesorE
     anteproyecto.save()
@@ -790,7 +898,8 @@ def alta_asesorE(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     asesorE = None
     dependencia = None
     form = AsesorEForm()
@@ -810,132 +919,14 @@ def alta_asesorE(request):
     context = {'group': group, 'asesorE': asesorE, 'dependencia':dependencia, 'form': form, 'title': 'Alta Asesor Externo'}
     return render(request, 'Student/altaAsesorE.html', context)            
 
-def anteproyecto2(request):
-    data = ['id_codigoUnion', 'id_estatus', 'id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_periodoInicio_month', 'id_periodoFin_month']
-    user = request.user
-    group = user.groups.all()[0].name
-    estudiante = user.estudiante                    
-    anteproyectos = Anteproyecto.objects.all()                          
-    anteproyecto = estudiante.anteproyecto                                                   
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
-    fechaObservacion = None
-    fechaCorte = None
-    fechaActual = None
-    dependencia = None
-    revisor1 = None
-    revisor2 = None
-    observaciones = None                                 
-    enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')                    
-    codigo = '0000000000'     
-    mensaje = ''       
-    
-    try:        
-        observacion = anteproyecto.observacion
-        fechaObservacion = observacion.fechaCreacion    
-        observaciones = ObservacionDocente.objects.filter(observacion = observacion)                                
-        dias = 5 + observacion.incrementarDias
-        fechaObservacion = fechaObservacion + timedelta(days=dias)           
-        fechaCorte = fechaObservacion + timedelta(days=1)             
-        fechaActual = date.today
-        fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                   
-    except:
-        pass
-    
-    if anteproyecto is None:             
-        formA = AnteproyectoEstForm()
-        formD = DependenciaForm()  
-        formT = TitularForm()
-        formDom = DomicilioForm()
-        formDoc = AnteproyectoDocForm()
-        formAE = AsesorEForm()         
-                
-        if request.method == 'POST':          
-            try:
-                codigoU = request.POST['codigoAnteproyecto']
-            except:
-                codigoU = None
-                                                
-            if codigoU:                
-                for i in enviados:                    
-                    if i.codigoUnion == codigoU:                        
-                        numIntegrantes = Estudiante.objects.filter(anteproyecto=i).count()                                                
-                        if numIntegrantes < i.numIntegrantes:
-                            estudiante.anteproyecto = i
-                            estudiante.save()
-                            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-                        else:
-                            mensaje = 'El anteproyecto esta lleno'                            
-                                                        
-                if not mensaje: mensaje = 'Codigo invalido'                                                        
-            else:                
-                              
-                formA = AnteproyectoEstForm(request.POST)
-                formD = DependenciaForm(request.POST)
-                formT = TitularForm(request.POST)
-                formDom = DomicilioForm(request.POST)
-                formAE = AsesorEForm(request.POST)                        
-                                        
-                if formA.is_valid() and formD.is_valid() and formT.is_valid() and formAE.is_valid() and formDom.is_valid():                                
-                    fecha_inicio = formA.cleaned_data.get('periodoInicio')
-                    fecha_fin = formA.cleaned_data.get('periodoFin')
-                    if fecha_inicio < fecha_fin:                                            
-                        anteproyecto = formA.save()
-                        dependencia = formD.save()
-                        titular = formT.save()
-                        domicilio = formDom.save()
-                        asesorE = formAE.save()                        
-                        dependencia.domicilio = domicilio
-                        dependencia.titular = titular
-                        dependencia.save()                        
-                        asesorE.dependencia = dependencia
-                        asesorE.save()
-                        anteproyecto.dependencia = dependencia
-                        anteproyecto.asesorExterno = asesorE
-                        if int(request.POST['numIntegrantes']) > 1:  
-                            codigo = obtenerCodigo()                                                                                                                                    
-                        anteproyecto.codigoUnion=codigo
-                        anteproyecto.save()
-                        estudiante.anteproyecto=anteproyecto
-                        estudiante.save()                                
-                        #return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-                        return redirect('materias')
-                    
-                    mensaje = 'Fecha de fin del Anteproyecto erronea'
-                    
-    else:
-        data.clear()
-        data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular'])         
-        if anteproyecto.numIntegrantes == 1:
-            data.append('id_codigoUnion')  
-        
-        revisor1 = anteproyecto.revisor1
-        revisor2 = anteproyecto.revisor2         
-        print(revisor1)       
-        print(revisor2)       
-        dependencia = anteproyecto.dependencia                  
-        formA = AnteproyectoViewForm(instance = anteproyecto)                                        
-        formD = DependenciaViewForm(instance = dependencia)
-        formT = TitularViewForm(instance = dependencia.titular)
-        formDom = DomicilioViewForm(instance = dependencia.domicilio)
-        formDoc = AnteproyectoDocForm(instance = anteproyecto)
-        formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
-        
-        if request.method == 'POST':        
-            formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)
-            if formDoc.is_valid():                
-                formDoc.save()
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-            
-    context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto'}    
-    return render(request, 'Student/anteproyecto2.html', context)
-    
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')    
 def editarAnteproyecto(request):    
     data = ['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_estatus', 'id_codigoUnion', 'id_domicilio', 'id_titular']
     group = request.user.groups.all()[0].name
     estudiante = request.user.estudiante         
-    anteproyecto = estudiante.anteproyecto
+    #anteproyecto = estudiante.anteproyecto
+    anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
     estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()                    
     
     codigo = anteproyecto.codigoUnion
@@ -974,16 +965,30 @@ def proyectoResidencia(request):
     data = ['id_codigoUnion']
     user = request.user
     group = user.groups.all()[0].name
-    estudiante = user.estudiante                                    
-    anteproyecto = estudiante.anteproyecto   
-    residencia = estudiante.residencia        
+    estudiante = user.estudiante        
+    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
+    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
+    
+    if all_residencias:        
+        residencia = all_residencias[0].residencia    
+    else:
+        residencia = None      
+                                        
     mensaje = ''
         
     if residencia:                                                
         dependencia = residencia.dependencia                   
         asesorI = residencia.r_asesorInterno
         revisor = residencia.r_revisor
-        estudiantes = Estudiante.objects.filter(residencia = residencia)                
+        #estudiantes = Estudiante.objects.filter(residencia = residencia)                
+        all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+        estudiantes = [i.estudiante for i in all_estudiantes ]                    
         formR = ResidenciaViewForm(instance = residencia)   
         formRDate = ResidenciaDateForm(instance = residencia)                                
         formD = DependenciaViewForm(instance = dependencia)
@@ -1022,7 +1027,11 @@ def logoutUser(request):
 def compatibilidadA(request, materiaPK):
     group = request.user.groups.all()[0].name
     estudiante = request.user.estudiante
-    anteproyecto = estudiante.anteproyecto    
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+    if all_anteproyectos:        
+        anteproyecto = all_anteproyectos[0].anteproyecto    
+    else:
+        anteproyecto = None      
     materia = Materia.objects.get(id = materiaPK)
       
     if request.method == 'POST':        
@@ -1094,3 +1103,23 @@ def convert_to_localtime(utctime):
     utc = utctime.replace(tzinfo=pytz.UTC)
     localtz = utc.astimezone(timezone.get_current_timezone())
     return localtz.strftime(fmt)
+
+def activate_user(request, uidb64, token):
+    User = get_user_model()
+    
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+                
+    if user and default_token_generator.check_token(user, token):
+        
+        if user.is_active:
+            return redirect('404')
+        
+        user.is_active = True        
+        user.save()
+        return render(request, 'Global/email_verify/email_verified.html')
+    else:
+        return HttpResponse('Activation link is invalid!')

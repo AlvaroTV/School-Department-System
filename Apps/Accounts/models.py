@@ -5,14 +5,9 @@ from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.core.exceptions import ValidationError
+from .validators import *
 import os
 import uuid
-
-# Validator
-def validate_nonzero(value):
-    if value == 0:
-        raise ValidationError("El tiempo debe ser mayor a 0")
 
 # Create your models here.
 class Materia(models.Model):    
@@ -160,7 +155,7 @@ class AsesorExterno(models.Model):
 
 class Residencia(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PRORROGA', 'PRORROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'))
+    ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PRORROGA', 'PRORROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'), ('CANCELADA', 'CANCELADA'))
     
     # Llaves foraneas
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
@@ -178,7 +173,7 @@ class Residencia(models.Model):
 
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
-    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
+    ESTADOS = (('ENVIADO', 'ENVIADO'), ('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('REVISADO', 'REVISADO'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'), ('CANCELADO', 'CANCELADO'))
     ESTADOSR = (('PENDIENTE', 'PENDIENTE'), ('EN REVISION', 'EN REVISION'), ('ACEPTADO', 'ACEPTADO'), ('RECHAZADO', 'RECHAZADO'))
     N_INTEGRANTES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
     
@@ -234,8 +229,8 @@ class Estudiante(models.Model):
     # Llaves Foraneas
     domicilio = models.OneToOneField(Domicilio, on_delete=models.SET_NULL, null=True, blank=True)    
     expediente = models.OneToOneField(Expediente, on_delete=models.SET_NULL, null=True, blank=True)
-    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
-    residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)
+    #anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
+    #residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Atributos
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
@@ -243,10 +238,10 @@ class Estudiante(models.Model):
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)
     numCelular = models.CharField(max_length=20)
-    correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
-    numControl = models.CharField(max_length=8, unique=True, blank=True, error_messages = {"unique":"Existe otro alumno con este numero de control."})
+    correoElectronico = models.EmailField(max_length=70, blank=True, null=True, unique=True, error_messages = {"unique":"Existe otro estudiante con este correo electrónico."})    
+    numControl = models.CharField(max_length=10, unique=True, blank=True, validators=[validate_len_num_control], error_messages = {"unique":"Existe otro estudiante con este número de control. "})
     carrera = models.CharField(max_length=200, choices=CARRERA, default=SISTEMAS)
-    semestre = models.IntegerField(choices=SEMESTRES) 
+    semestre = models.IntegerField(choices=SEMESTRES, default = 8) 
     curp = models.CharField(max_length=18, null=True, blank=True)
     institutoSeguridadSocial = models.CharField(max_length=200, blank=True)                    
     numSeguridadSocial = models.CharField(max_length=70, null=True, blank=True)        
@@ -255,6 +250,26 @@ class Estudiante(models.Model):
     
     def __str__(self):
         return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
+
+class Estudiante_Anteproyecto(models.Model):
+    ESTADOS = (('ACTIVO', 'ACTIVO'), ('INACTIVO', 'INACTIVO'))
+    
+    # Llaves foraneas
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)    
+    
+    # Atributos
+    estado = models.CharField(max_length=15, choices=ESTADOS, default='ACTIVO')
+    
+class Estudiante_Residencia(models.Model):
+    ESTADOS = (('ACTIVO', 'ACTIVO'), ('INACTIVO', 'INACTIVO'))
+    
+    # Llaves foraneas
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)
+    residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)    
+    
+    # Atributos
+    estado = models.CharField(max_length=15, choices=ESTADOS, default='ACTIVO')
     
 class Avisos(models.Model):
     ENTIDADES = (('ESTUDIANTES', 'ESTUDIANTES'), ('DOCENTES', 'DOCENTES'), ('TODOS', 'TODOS'), ('PRIVADO', 'PRIVADO'))

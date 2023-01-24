@@ -14,7 +14,7 @@ class EstudianteForm(ModelForm):
     class Meta:
         model = Estudiante
         fields = '__all__'
-        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'numControl', 'id']
+        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'id']
         labels = {
             'nombre': 'Nombre(s)',
             'apellidoP': 'Apellido Paterno',
@@ -22,7 +22,7 @@ class EstudianteForm(ModelForm):
             'numCelular': 'Numero de celular',
             'numControl': 'Numero de control',                  
         }
-
+    
     def __init__(self, *args, **kwargs):
         super(EstudianteForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
@@ -31,11 +31,38 @@ class EstudianteForm(ModelForm):
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
-        labels = {
-            'username': 'Numero de control',
+        fields = ['email', 'password1', 'password2']
+        labels = {            
             'email': 'Correo institucional',
             'password1': 'Password'            
+        }
+        
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if data:
+            domain = data.split('@')[1]
+            domain_list = ["itoaxaca.edu.mx", "oaxaca.tecnm.mx",]
+            if domain not in domain_list:
+                raise forms.ValidationError("Solo se acepta el correo institucional")
+            elif User.objects.filter(email=data).exists():
+                raise forms.ValidationError("Existe otro estudiante con este correo electrónico.")
+        else:
+            raise forms.ValidationError("El correo institucional no puede estar vacio")
+                    
+            
+        return data
+        
+    def __init__(self, *args, **kwargs):
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+
+class CreateUserFormEmail(ModelForm):
+    class Meta:
+        model = User
+        fields = ['email']
+        labels = {            
+            'email': 'Correo institucional',            
         }
         
     def clean_email(self):
@@ -50,7 +77,32 @@ class CreateUserForm(UserCreationForm):
         return data
         
     def __init__(self, *args, **kwargs):
-        super(CreateUserForm, self).__init__(*args, **kwargs)
+        super(CreateUserFormEmail, self).__init__(*args, **kwargs)
+        for myField in self.fields:
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+
+class CreateUserFormDocente(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+        labels = {            
+            'email': 'Correo institucional',            
+        }
+        
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if data:
+            domain = data.split('@')[1]
+            domain_list = ["itoaxaca.edu.mx", "oaxaca.tecnm.mx",]
+            if domain not in domain_list:
+                raise forms.ValidationError("Solo se acepta el correo institucional")
+        else:
+            data = None
+        return data
+        
+    def __init__(self, *args, **kwargs):
+        super(CreateUserFormDocente, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
 
@@ -196,7 +248,7 @@ class DocenteForm(ModelForm):
     class Meta:
         model = Docente
         fields = '__all__'
-        exclude = ['user', 'perfilAcademico', 'id']
+        exclude = ['user', 'perfilAcademico', 'id', 'estatus']
         labels = {
             'curp': 'CURP',
             'rfc': 'RFC',

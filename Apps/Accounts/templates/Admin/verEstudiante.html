@@ -49,6 +49,11 @@
                 class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                 {{anteproyecto.estatus}}
               </span>
+              {% elif anteproyecto.estatus == 'CANCELADO' %}
+              <span
+                class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                {{anteproyecto.estatus}}
+              </span>
               {% elif anteproyecto.estatus == 'REVISADO' %}
               <span
                 class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
@@ -57,7 +62,7 @@
               {% else %}
               <span
                 class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-                {{anteproyecto.estatus}}
+                SIN ENVIO
               </span>
               {% endif %}
             </div>
@@ -100,6 +105,11 @@
                 {{residencia.estatus}}
               </span>
               {% elif residencia.estatus == 'RECHAZADA' %}
+              <span
+                class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                {{residencia.estatus}}
+              </span>
+              {% elif residencia.estatus == 'CANCELADA' %}
               <span
                 class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                 {{residencia.estatus}}
@@ -179,6 +189,60 @@
           </button>
         </div>
       </div>
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="p-3 mr-4 text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd"
+              d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            Aneproyectos cancelados
+          </p>
+          <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+            {{all_anteproyectos_c}}
+          </p>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="p-3 mr-4 text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd"
+              d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            Residencias canceladas
+          </p>
+          <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+            {{all_residencias_c}}
+          </p>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <a href="{% url 'historial_estudiante' estudiante.id%}">
+          <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+              <path fill-rule="evenodd"
+                d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+        </a>
+        <div>
+          <p class="text-lg text-center font-semibold text-gray-700 dark:text-gray-200">
+            Hitorial del estudiante
+          </p>
+        </div>
+      </div>
       {% endif %}
     </div>
 
@@ -198,7 +262,7 @@
         </a>
       </div>
       {% elif group == 'jefe_carrera_sistemas' %}
-      
+
       {% else %}
       <div class="relative">
         <div class="absolute inset-y-0 right-0">

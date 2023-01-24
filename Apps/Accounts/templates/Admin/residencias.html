@@ -54,9 +54,10 @@
                         <option value="{% url 'residencias' page orderB 1 %}">INICIADA </option>
                         <option value="{% url 'residencias' page orderB 2 %}">FINALIZADA </option>
                         <option value="{% url 'residencias' page orderB 3 %}">EN PROCESO</option>
-                        <option value="{% url 'residencias' page orderB 4 %}">RECHAZADA</option>
-                        <option value="{% url 'residencias' page orderB 5 %}">PRORROGA</option>                        
-                        <option value="{% url 'residencias' page orderB 6 %}">TODOS</option>                        
+                        <option value="{% url 'residencias' page orderB 4 %}">CANCELADA</option>
+                        <option value="{% url 'residencias' page orderB 5 %}">RECHAZADA</option>
+                        <option value="{% url 'residencias' page orderB 6 %}">PRORROGA</option>                        
+                        <option value="{% url 'residencias' page orderB 7 %}">TODOS</option>                        
                     </select>
                 </div>
             </div>
@@ -126,6 +127,11 @@
                                     {{proyecto.estatus}}
                                 </span>
                                 {% elif proyecto.estatus == 'RECHAZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{proyecto.estatus}}
+                                </span>
+                                {% elif proyecto.estatus == 'CANCELADA' %}
                                 <span
                                     class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                                     {{proyecto.estatus}}

@@ -12,7 +12,7 @@ from .forms import *
 from .adminForms import *
 from .decorators import *
 #from .views import generarCodigo, obtenerCodigo, buscarCodigo
-from .adminViews import filtrar_anteproyectos, ordenar_anteproyectos, filtrar_residencias, ordenar_residencias
+from .adminViews import filtrar_anteproyectos, ordenar_anteproyectos, filtrar_residencias, ordenar_residencias, enviar_email
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -45,7 +45,7 @@ def teacherSettings(request):
     formD = DocenteForm(instance=docente)
     
     if request.method == 'POST':
-        formD = DocenteForm(request.POST, request.FILES ,instance=docente)
+        formD = DocenteForm(request.POST, request.FILES ,instance=docente)    
         if formD.is_valid():
             formD.save()
             return redirect('teacherProfile')
@@ -58,7 +58,7 @@ def teacherSettings(request):
 def anteproyectosTeacher(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['ACEPTADO', 'RECHAZADO']
+    estados = ['ACEPTADO', 'RECHAZADO', 'CANCELADO']
     all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados).order_by('fechaEntrega')
     all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados).order_by('fechaEntrega')            
     
@@ -70,7 +70,7 @@ def anteproyectosTeacher(request):
 def anteproyectosH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['ACEPTADO', 'RECHAZADO']
+    estados = ['ACEPTADO', 'RECHAZADO', 'CANCELADO']
     all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente, estatus__in=estados)
     all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente, estatus__in=estados)
     
@@ -111,7 +111,7 @@ def anteproyectosH(request, page1, page2, orderB1, orderB2, filter1, filter2):
 def residenciasTeacher(request):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA']
+    estados = ['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA', 'CANCELADA']
     all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente).exclude(estatus__in=estados)
     all_residenciasR = Residencia.objects.filter(r_revisor=docente).exclude(estatus__in=estados)            
     
@@ -123,7 +123,7 @@ def residenciasTeacher(request):
 def residenciasH(request, page1, page2, orderB1, orderB2, filter1, filter2):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    estados = ['RECHAZADA', 'NO FINALIZADA', 'FINALIZADA']
+    estados = ['RECHAZADA', 'NO FINALIZADA', 'FINALIZADA', 'CANCELADA']
     
     all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente, estatus__in=estados)
     all_residenciasR = Residencia.objects.filter(r_revisor=docente, estatus__in=estados)        
@@ -179,7 +179,12 @@ def materias(request):
             
     elif group == 'student':
         estudiante = request.user.estudiante
-        anteproyecto = estudiante.anteproyecto
+        all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
+        if all_anteproyectos:        
+            anteproyecto = all_anteproyectos[0].anteproyecto    
+        else:
+            anteproyecto = None      
+    
         if anteproyecto:
             estado = anteproyecto.estatus    
             if estado == 'ACEPTADO' or estado == 'RECHAZADO':
@@ -324,7 +329,8 @@ def anteproyectoA(request, pk):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     anteproyecto = Anteproyecto.objects.get(id = pk)
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]        
     revisor1 = anteproyecto.revisor1
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
@@ -343,6 +349,16 @@ def anteproyectoA(request, pk):
     estadoR1 = anteproyecto.estatusR1    
     estadoR2 = anteproyecto.estatusR2        
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
+    
+    for i in estudiantes:
+        anteproyecto_e = all_estudiantes.filter(estudiante = i)        
+        
+        if anteproyecto_e:
+            estado_anteproyecto = anteproyecto_e[0].estado
+        else:
+            estado_anteproyecto = None                    
+                    
+        setattr(i, 'anteproyecto_estatus', estado_anteproyecto)          
     
     if observacion:
         fechaObservacion = observacion.fechaCreacion    
@@ -363,10 +379,14 @@ def anteproyectoA(request, pk):
     
     formA = AnteproyectoViewForm(instance = anteproyecto)                                        
     formD = DependenciaViewForm(instance = dependencia)
-    formT = TitularViewForm(instance = dependencia.titular)
-    formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    if dependencia:
+        formT = TitularViewForm(instance = dependencia.titular)
+        formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    else:
+        formT = TitularViewForm(instance = None)
+        formDom = DomicilioViewForm(instance = None)
     formDoc = AnteproyectoDocForm(instance = anteproyecto)
-    formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)             
+    formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)                     
     
     if request.method == 'POST':        
         if editar:
@@ -398,6 +418,9 @@ def agregarComentario(request, pk):
     observacion = anteproyecto.observacion    
     form = ObservacionDocenteForm()
     
+    estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto, estado = 'ACTIVO')    
+    lista_correos = [i.estudiante.correoElectronico for i in estudiantes]
+    
     if request.method == 'POST':                       
         form = ObservacionDocenteForm(request.POST)        
         if form.is_valid():
@@ -410,7 +433,9 @@ def agregarComentario(request, pk):
             comentario = form.save()
             comentario.docente = docente
             comentario.observacion = observacion
-            comentario.save()                        
+            comentario.save()    
+            asunto = 'Tiene una nueva observacion'            
+            enviar_email(asunto, '', lista_correos, 3)                             
             return redirect('anteproyectoA', anteproyecto.id)            
             
         return redirect('anteproyectoA', anteproyecto.id)
@@ -424,13 +449,24 @@ def anteproyectoH(request, pk):
     group = request.user.groups.all()[0].name
     docente = request.user.docente
     anteproyecto = Anteproyecto.objects.get(id = pk)
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto)        
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]        
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
     revisor1 = anteproyecto.revisor1
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
     observacion = anteproyecto.observacion
     data = ['id_mision', 'id_codigoUnion']     
+    
+    for i in estudiantes:
+        anteproyecto_e = all_estudiantes.filter(estudiante = i)        
+        
+        if anteproyecto_e:
+            estado_anteproyecto = anteproyecto_e[0].estado
+        else:
+            estado_anteproyecto = None                    
+                    
+        setattr(i, 'anteproyecto_estatus', estado_anteproyecto)          
     
     fechaObservacion = None
     observaciones = None
@@ -481,7 +517,7 @@ def verReporte(request, pk):
     estudiante = Estudiante.objects.get(id = pk)    
     group = request.user.groups.all()[0].name
     docente = request.user.docente
-    anteproyecto = estudiante.anteproyecto    
+    #anteproyecto = estudiante.anteproyecto    
     expediente = estudiante.expediente
     r1 = None    
     r2 = None

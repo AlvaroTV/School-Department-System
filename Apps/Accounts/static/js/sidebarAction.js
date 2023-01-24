@@ -53,7 +53,7 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'estudiantes' | pathName == 'verEstudiante') {
     estudiantes.hidden = false
     a_estudiantes.classList.add("dark:text-gray-100");
-} else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente') {
+} else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente' | pathName == 'altaDocente') {
     docentes.hidden = false
     a_docentes.classList.add("dark:text-gray-100");
 } else if (pathName == '' | pathName == 'teacher' | pathName == 'profile' | pathName == 'settings' | pathName == 'tProfile' | pathName == 'tSettings' | pathName == 'student' | pathName == 'faqs' | pathName == 'changePassword' | pathName == 'faqs' | pathName == 'faqs_s' | pathName == 'faqs_t'){

@@ -1,0 +1,15 @@
+{% autoescape off %}
+
+Hola {{user_name}},
+
+Estamos felices de que estés aquí. Verifiquemos su dirección de correo electrónico:
+
+{{ protocol }}://{{ domain }}{% url 'activate_user' uidb64=uid token=token %}
+
+Si no realizó esta solicitud, simplemente puede ignorar este correo electrónico.
+
+Atentamente,
+
+The Development Team.
+
+{% endautoescape %}

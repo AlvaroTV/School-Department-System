@@ -273,23 +273,41 @@
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     {% for observacion in observaciones %}
                     <tr class="text-gray-700 dark:text-gray-400">
+                        {% if observacion.docente %}
                         <td class="px-4 py-3">
                             <div class="flex items-center text-sm">
                                 <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
                                     <img class="object-cover w-full h-full rounded-full"
                                         src="{{observacion.docente.fotoUsuario.url}}" alt="" loading="lazy" />
-                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                    </div>
                                 </div>
                                 <div>
                                     <p class="font-semibold whitespace-no-wrap">{{observacion.docente}}</p>
                                 </div>
                             </div>
                         </td>
+                        {% else %}
+                        <td class="px-4 py-3">
+                            <div class="flex items-center text-sm">
+                                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                    <img class="object-cover w-full h-full rounded-full"
+                                        src="{% static 'images/profilesPic/admin/admin1.jpg' %}" alt=""
+                                        loading="lazy" />
+                                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="font-semibold whitespace-no-wrap">Administrador</p>
+                                </div>
+                            </div>
+                        </td>
+                        {% endif %}
                         <td class="px-4 py-3 text-md">{{observacion.fechaElaboracion|date:"d/M/Y"}}</td>
                         <td class="px-4 py-3">
-                            
+
                             {{observacion.observacionD|safe}}
-                            
+
                         </td>
                     </tr>
                     {% endfor %}
@@ -376,9 +394,11 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                         <th class="px-4 py-3">Estudiante</th>
+                        <th class="px-4 py-3 text-center">Semestre</th>
                         <th class="px-4 py-3">Número de control</th>
                         <th class="px-4 py-3">E-mail</th>
                         <th class="px-4 py-3">Número teléfonico</th>
+                        <th class="px-4 py-3 text-center">Estado</th>
                         <th class="px-4 py-3 text-center">Ver</th>
                     </tr>
                 </thead>
@@ -397,9 +417,23 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="px-4 py-3 text-md text-center">{{student.semestre}}</td>
                         <td class="px-4 py-3 text-md">{{student.numControl}}</td>
                         <td class="px-4 py-3 text-md">{{student.correoElectronico}}</td>
                         <td class="px-4 py-3 text-md">{{student.numCelular}}</td>
+                        <td class="px-4 py-3 text-md text-center">
+                            {% if student.anteproyecto_estatus == 'ACTIVO' %}
+                            <span
+                                class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                {{student.anteproyecto_estatus}}
+                            </span>
+                            {% else %}
+                            <span
+                                class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                {{student.anteproyecto_estatus}}
+                            </span>
+                            {% endif %}
+                        </td>
                         <td class="px-4 py-3 text-md">
                             <div class="flex items-center justify-center">
                                 <a href="{% url 'verEstudiante' student.id %}">

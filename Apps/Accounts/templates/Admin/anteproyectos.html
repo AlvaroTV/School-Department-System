@@ -50,8 +50,9 @@
                         <option value="{% url 'anteproyectos' page orderB 3 %}">PENDIENTE</option>
                         <option value="{% url 'anteproyectos' page orderB 4 %}">EN REVISION</option>
                         <option value="{% url 'anteproyectos' page orderB 5 %}">REVISADO</option>
-                        <option value="{% url 'anteproyectos' page orderB 6 %}">RECHAZADO</option>
-                        <option value="{% url 'anteproyectos' page orderB 7 %}">TODOS</option>
+                        <option value="{% url 'anteproyectos' page orderB 6 %}">CANCELADO</option>
+                        <option value="{% url 'anteproyectos' page orderB 7 %}">RECHAZADO</option>
+                        <option value="{% url 'anteproyectos' page orderB 8 %}">TODOS</option>
                     </select>
                 </div>
             </div>
@@ -120,6 +121,11 @@
                                     {{anteproyecto.estatus}}
                                 </span>
                                 {% elif anteproyecto.estatus == 'RECHAZADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'CANCELADO' %}
                                 <span
                                     class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
                                     {{anteproyecto.estatus}}
