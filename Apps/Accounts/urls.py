@@ -118,9 +118,12 @@ urlpatterns = [
     path('cancelar_residencia/<uuid:pk>', cancelar_residencia, name='cancelar_residencia'),         
     
     path('generar_reportes/', generar_reportes, name='generar_reportes'), 
-    path('generar_reporte_estudiante/', generar_reporte_estudiantes, name='generar_reporte_estudiante'), 
-    path('generar_reporte_anteproyectos/', generar_reporte_anteproyectos, name='generar_reporte_anteproyectos'), 
-    path('generar_reporte_residencias/', generar_reporte_residencias, name='generar_reporte_residencias'), 
+    path('generar_reporte_estudiante/<int:filter1>/<filter2>/<int:filter3>/<int:filter4>', generar_reporte_estudiantes, name='generar_reporte_estudiante'), 
+    path('generar_reporte_anteproyectos_a/', generar_reporte_anteproyectos_a, name='generar_reporte_anteproyectos_a'), 
+    path('generar_reporte_anteproyectos_h/', generar_reporte_anteproyectos_h, name='generar_reporte_anteproyectos_h'), 
+    path('generar_reporte_residencias_a/', generar_reporte_residencias_a, name='generar_reporte_residencias_a'), 
+    path('generar_reporte_residencias_h/', generar_reporte_residencias_h, name='generar_reporte_residencias_h'),     
+    path('export_excel/<int:tipo>/<str:name>', export_excel, name='export_excel'), 
     
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      

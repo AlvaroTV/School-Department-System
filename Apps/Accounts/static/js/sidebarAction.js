@@ -28,6 +28,8 @@ const materias_admin = document.getElementById('id_materias_ad')
 const a_materias_admin = document.getElementById('a_materias_ad')
 const dependencias_admin = document.getElementById('id_dependencias_ad')
 const a_dependencias_admin = document.getElementById('a_dependencias_ad')
+const gen_reportes = document.getElementById('id_gen_reportes')
+const a_gen_reportes = document.getElementById('a_gen_reportes')
 
 console.log('c:')
 console.log(url.pathname)
@@ -74,6 +76,9 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'dependencias_a' | pathName == 'alta_dependencia' | pathName == 'editar_dependencia' | pathName == 'ver_dependencia' | pathName == 'altaDependencia_a' | pathName == 'alta_titular_dep' | pathName == 'alta_domicilio_dep'){
     dependencias_admin.hidden = false
     a_dependencias_admin.classList.add("dark:text-gray-100");
+} else if (pathName == 'generar_reportes' | pathName == 'generar_reporte_estudiante' | pathName == 'generar_reporte_anteproyectos_a' | pathName == 'generar_reporte_anteproyectos_h' | pathName == 'generar_reporte_residencias_a' | pathName == 'generar_reporte_residencias_h'){
+    gen_reportes.hidden = false
+    a_gen_reportes.classList.add("dark:text-gray-100");
 }
 
 

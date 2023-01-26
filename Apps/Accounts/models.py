@@ -284,3 +284,23 @@ class Avisos(models.Model):
     entidad = models.CharField(max_length=20, choices=ENTIDADES, default='TODOS')
     tiempoVida = models.PositiveIntegerField(default=1, validators =[validate_nonzero]) 
     descripcion = RichTextUploadingField(blank=True, null=True)    
+    
+class MyViewModel(models.Model):    
+    
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)    
+    nombre = models.CharField(max_length=100)
+    a_nombre = models.CharField(max_length=300)    
+    #estado = models.CharField(max_length=15, blank=True)
+    numControl = models.CharField(max_length=10, unique=True, blank=True)
+    apellidoP = models.CharField(max_length=70)
+    apellidoM = models.CharField(max_length=70)
+    correoElectronico = models.EmailField(max_length=70, blank=True, null=True)    
+    semestre = models.IntegerField(default = 8)     
+    anteproyecto_estatus = models.CharField(max_length=15, default='ENVIADO', blank=True)
+    residencia_estatus = models.CharField(max_length=15, default='INICIADA', blank=True)        
+    estado_anteproyecto = models.CharField(max_length=15, blank=True)
+    estado_residencia = models.CharField(max_length=15, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'testview' # your view name

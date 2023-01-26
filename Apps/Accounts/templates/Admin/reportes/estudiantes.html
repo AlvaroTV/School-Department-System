@@ -1,0 +1,214 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">    
+    
+    <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Reporte estudiantes
+        </h2>
+        <div class="relative ">  
+            <br>          
+            <form action="{% url 'export_excel' tipo=1 name=file_name %}" method="GET">
+                <input hidden="hidden" type="text" name="my_list" value="{{filtros}}">
+                <input type="submit" value="Descargar Excel"
+                    class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            </form>
+        </div>
+    </div>
+    <div class="grid gap-6 mb-4 md:grid-cols-2 xl:grid-cols-4">
+        <select id="s1"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por semestre</option>
+
+            <option value="{% url 'generar_reporte_estudiante' 1 filter2 filter3 filter4 %}">1</option>
+            <option value="{% url 'generar_reporte_estudiante' 2 filter2 filter3 filter4 %}">2</option>
+            <option value="{% url 'generar_reporte_estudiante' 3 filter2 filter3 filter4 %}">3</option>
+            <option value="{% url 'generar_reporte_estudiante' 4 filter2 filter3 filter4 %}">4</option>
+            <option value="{% url 'generar_reporte_estudiante' 5 filter2 filter3 filter4 %}">5</option>
+            <option value="{% url 'generar_reporte_estudiante' 6 filter2 filter3 filter4 %}">6</option>
+            <option value="{% url 'generar_reporte_estudiante' 7 filter2 filter3 filter4 %}">7</option>
+            <option value="{% url 'generar_reporte_estudiante' 8 filter2 filter3 filter4 %}">8</option>
+            <option value="{% url 'generar_reporte_estudiante' 9 filter2 filter3 filter4 %}">9</option>
+            <option value="{% url 'generar_reporte_estudiante' 10 filter2 filter3 filter4 %}">10</option>
+            <option value="{% url 'generar_reporte_estudiante' 11 filter2 filter3 filter4 %}">11</option>
+            <option value="{% url 'generar_reporte_estudiante' 12 filter2 filter3 filter4 %}">12</option>
+            <option value="{% url 'generar_reporte_estudiante' 13 filter2 filter3 filter4 %}">13</option>
+            <option value="{% url 'generar_reporte_estudiante' 14 filter2 filter3 filter4 %}">14</option>
+            <option value="{% url 'generar_reporte_estudiante' 0 filter2 filter3 filter4 %}">TODOS</option>
+        </select>
+        <select id="s2"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por numero de control</option>
+
+            {% for generacion in generaciones %}
+            <option value="{% url 'generar_reporte_estudiante' filter1 generacion filter3 filter4 %}">{{generacion}}
+            </option>
+            {% endfor %}
+            <option value="{% url 'generar_reporte_estudiante' filter1 0 filter3 filter4 %}">TODOS</option>
+        </select>
+        <select id="s3"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estatus del anteproyecto</option>
+
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 1 filter4 %}">ENVIADO </option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 2 filter4 %}">PENDIENTE </option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 3 filter4 %}">EN REVISION</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 4 filter4 %}">REVISADO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 5 filter4 %}">ACEPTADO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 6 filter4 %}">RECHAZADO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 7 filter4 %}">CANCELADO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 8 filter4 %}">SIN ENVIO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 0 filter4 %}">TODOS</option>
+        </select>
+        <select id="s4"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estatus de la residencia</option>
+
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 1 %}">INICIADA </option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 2 %}">EN PROCESO </option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 3 %}">PRORROGA</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 4 %}">NO FINALIZADA</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 5 %}">RECHAZADA</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 6 %}">FINALIZADA</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 7 %}">CANCELADA</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 8 %}">SIN ENVIO</option>
+            <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 0 %}">TODOS</option>
+        </select>
+    </div>
+    {% if filtros_str %}
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Filtros activos
+    </h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+        {{filtros_str}}
+    </p>
+    {% endif %}
+    <div class="w-full mt-8 mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">Numero de Control</th>
+                        <th class="px-4 py-3">Estudiante</th>
+                        <th class="px-4 py-3">Correo Electronico</th>
+                        <th class="px-4 py-3 text-center">Semestre</th>
+                        <th class="px-4 py-3 text-center">Anteproyecto</th>
+                        <th class="px-4 py-3 text-center">Residencia</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for estudiante in estudiantes %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{estudiante.numControl}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 font-semibold">
+                            {{estudiante.apellidoP}} {{estudiante.apellidoM}} {{estudiante.nombre}}
+                        </td>
+                        <td class="px-4 py-3">
+                            {{estudiante.correoElectronico}}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <div class="flex items-center justify-center">
+                                {{estudiante.semestre}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {% if estudiante.anteproyecto_estatus == 'ACEPTADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% elif estudiante.anteproyecto_estatus == 'ENVIADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% elif estudiante.anteproyecto_estatus == 'EN REVISION' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% elif estudiante.anteproyecto_estatus == 'PENDIENTE' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% elif estudiante.anteproyecto_estatus == 'REVISADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-y-700 bg-y-100 rounded-full dark:text-white dark:bg-y-700">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% elif estudiante.anteproyecto_estatus == 'RECHAZADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{estudiante.anteproyecto_estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    SIN ENVIO
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {% if estudiante.residencia_estatus == 'INICIADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{estudiante.residencia_estatus}}
+                                </span>
+                                {% elif estudiante.residencia_estatus == 'FINALIZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{estudiante.residencia_estatus}}
+                                </span>
+                                {% elif estudiante.residencia_estatus == 'EN PROCESO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{estudiante.residencia_estatus}}
+                                </span>
+                                {% elif estudiante.residencia_estatus == 'PROROGA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{estudiante.residencia_estatus}}
+                                </span>
+                                {% elif estudiante.residencia_estatus == 'NO FINALIZADA' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{estudiante.residencia_estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    SIN ENVIO
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <span hidden="hidden" id="my_list2" name="my_list2" value="{{estudiantes}}">{{estudiantes}}</span>
+</div>
+
+{% endblock %}

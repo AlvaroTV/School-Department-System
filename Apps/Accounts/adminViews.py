@@ -4,9 +4,16 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
+from django.http import FileResponse, HttpResponse
+import io
+import json
+import xlwt
+import ast
+
 #from django.db.models import Count
 from django.core.mail import EmailMessage, BadHeaderError, send_mail
 from datetime import date, timedelta, datetime
+from django.db.models.functions import Substr
 import math
 from .models import *
 from .forms import *
@@ -1436,19 +1443,99 @@ def cancelar_residencia(request, pk):
 
 @admin_only
 def generar_reportes(request):
-    pass
+    group = request.user.groups.all()[0].name        
+    context = {'group': group, 'title': 'Generar Reportes'}
+    return render(request, 'Admin/reportes/menu.html', context)
 
 @admin_only
-def generar_reporte_estudiantes(request):
-    pass
+def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
+    group = request.user.groups.all()[0].name    
+    estudiantes = Estudiante.objects.all()  
+    generaciones = estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()
+    generaciones = [i['generacion'] for i in generaciones]        
+    filtros = [filter1, filter2, filter3, filter4]                        
+    estudiantes = MyViewModel.objects.all().order_by('numControl')                                    
+    estudiantes, filtros_list = filtrar_estudiantes_rep(estudiantes, filtros)            
+    filtros_str = ' --> '.join(filtros_list)                            
+    file_name = 'reporte_estudiantes'    
+    
+    context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_str': filtros_str, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
+    return render(request, 'Admin/reportes/estudiantes.html', context)
 
 @admin_only
-def generar_reporte_anteproyectos(request):
-    pass
+def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
+    group = request.user.groups.all()[0].name    
+    estudiantes = Estudiante.objects.all()  
+    generaciones = estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()
+    generaciones = [i['generacion'] for i in generaciones]        
+    filtros = [filter1, filter2, filter3, filter4]                        
+    estudiantes = MyViewModel.objects.all().order_by('numControl')                                    
+    estudiantes, filtros_list = filtrar_estudiantes_rep(estudiantes, filtros)            
+    filtros_str = ' --> '.join(filtros_list)                            
+    file_name = 'reporte_estudiantes'    
+    
+    context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_str': filtros_str, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
+    return render(request, 'Admin/reportes/estudiantes.html', context)
 
 @admin_only
-def generar_reporte_residencias(request):
-    pass
+def export_excel(request, tipo, name):
+    response = HttpResponse(content_type = 'applications/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename={}.xlsx'.format(name)
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Expenses')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    filtros = request.GET.getlist('my_list')[0]
+    filtros = ast.literal_eval(filtros)        
+    columns = []
+    rows = []
+    
+    if tipo == 1:                    
+        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Correo Electronico', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
+        all_estudiantes = MyViewModel.objects.all().order_by('numControl')
+        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)            
+        rows = estudiantes.values_list('numControl', 'nombre', 'apellidoP', 'apellidoM', 'correoElectronico', 'semestre', 'a_nombre', 'anteproyecto_estatus', 'residencia_estatus', 'estado_anteproyecto', 'estado_residencia')    
+    elif tipo == 2:
+        pass
+    
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+        
+    font_style = xlwt.XFStyle()                            
+            
+    for row in rows:        
+        row_num += 1        
+        for col_num in range(len(row)):            
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+    
+    wb.save(response)
+    
+    return response    
+
+@admin_only
+def generar_reporte_anteproyectos_a(request):
+    group = request.user.groups.all()[0].name    
+    context = {'group': group, 'title': 'Reporte Anteproyectos Activos'}
+    return render(request, 'Admin/reportes/menu.html', context)
+
+@admin_only
+def generar_reporte_anteproyectos_h(request):
+    group = request.user.groups.all()[0].name    
+    context = {'group': group, 'title': 'Reporte Anteproyectos Historicos'}
+    return render(request, 'Admin/reportes/menu.html', context)
+
+@admin_only
+def generar_reporte_residencias_a(request):
+    group = request.user.groups.all()[0].name    
+    context = {'group': group, 'title': 'Residencias Activas'}
+    return render(request, 'Admin/reportes/menu.html', context)
+
+@admin_only
+def generar_reporte_residencias_h(request):
+    group = request.user.groups.all()[0].name    
+    context = {'group': group, 'title': 'Residencias Historicas'}
+    return render(request, 'Admin/reportes/menu.html', context)
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos
@@ -1768,3 +1855,114 @@ def filtrar_dependencias(dependencias, filter):
         all_dependencias = all_dependencias.filter(giro = 'PRIVADO')            
             
     return all_dependencias
+
+def filtrar_estudiantes_rep(all_estudiantes, filtros):
+    estudiantes = all_estudiantes
+    filtros_list = []
+            
+    filtro1 = filtros[0]
+    filtro2 = filtros[1]
+    filtro3 = filtros[2]
+    filtro4 = filtros[3]
+    
+    if filtro1 == 1:
+        estudiantes = estudiantes.filter(semestre = 1)
+        filtros_list.append('Semestre 1')
+    elif filtro1 == 2:
+        estudiantes = estudiantes.filter(semestre = 2)
+        filtros_list.append('Semestre 2')
+    elif filtro1 == 3:
+        estudiantes = estudiantes.filter(semestre = 3)
+        filtros_list.append('Semestre 3')
+    elif filtro1 == 4:
+        estudiantes = estudiantes.filter(semestre = 4)
+        filtros_list.append('Semestre 4')
+    elif filtro1 == 5:
+        estudiantes = estudiantes.filter(semestre = 5)
+        filtros_list.append('Semestre 5')
+    elif filtro1 == 6:
+        estudiantes = estudiantes.filter(semestre = 6)
+        filtros_list.append('Semestre 6')
+    elif filtro1 == 7:
+        estudiantes = estudiantes.filter(semestre = 7)
+        filtros_list.append('Semestre 7')
+    elif filtro1 == 8:
+        estudiantes = estudiantes.filter(semestre = 8)
+        filtros_list.append('Semestre 8')
+    elif filtro1 == 9:
+        estudiantes = estudiantes.filter(semestre = 9)
+        filtros_list.append('Semestre 9')
+    elif filtro1 == 10:
+        estudiantes = estudiantes.filter(semestre = 10)
+        filtros_list.append('Semestre 10')
+    elif filtro1 == 11:
+        estudiantes = estudiantes.filter(semestre = 11)
+        filtros_list.append('Semestre 11')
+    elif filtro1 == 12:
+        estudiantes = estudiantes.filter(semestre = 12)
+        filtros_list.append('Semestre 12')
+    elif filtro1 == 13:
+        estudiantes = estudiantes.filter(semestre = 13)
+        filtros_list.append('Semestre 13')
+    elif filtro1 == 14:
+        estudiantes = estudiantes.filter(semestre = 14)
+        filtros_list.append('Semestre 14')
+        
+    if filtro2 != '0':        
+        filtros_list.append(f'Numero de control: {filtro2}')
+        estudiantes = estudiantes.filter(numControl__startswith = filtro2)
+    
+    if filtro3 == 1:  
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'ENVIADO')              
+        filtros_list.append('Anteproyecto ENVIADO')
+    elif filtro3 == 2:        
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'PENDIENTE')                      
+        filtros_list.append('Anteproyecto PENDIENTE')
+    elif filtro3 == 3:   
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'EN REVISION')                           
+        filtros_list.append('Anteproyecto EN REVISION')
+    elif filtro3 == 4:  
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'REVISADO')                                    
+        filtros_list.append('Anteproyecto REVISADO')
+    elif filtro3 == 5:     
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'ACEPTADO')                         
+        filtros_list.append('Anteproyecto ACEPTADO')
+    elif filtro3 == 6:    
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'RECHAZADO')                          
+        filtros_list.append('Anteproyecto RECHAZADO')
+    elif filtro3 == 7:  
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'CANCELADO')                            
+        filtros_list.append('Anteproyecto CANCELADO')
+    elif filtro3 == 8:
+        estudiantes = estudiantes.filter(anteproyecto_estatus = 'SIN ENVIO')                              
+        filtros_list.append('Anteproyecto SIN ENVIO')
+        
+    if filtro4 == 1:   
+        estudiantes = estudiantes.filter(residencia_estatus = 'INICIADA')                           
+        filtros_list.append('Residencia INICIADA')
+    elif filtro4 == 2:   
+        estudiantes = estudiantes.filter(residencia_estatus = 'EN PROCESO')                                
+        filtros_list.append('Residencia EN PROCESO')
+    elif filtro4 == 3:   
+        estudiantes = estudiantes.filter(residencia_estatus = 'PRORROGA')                                
+        filtros_list.append('Residencia PRORROGA')
+    elif filtro4 == 4:      
+        estudiantes = estudiantes.filter(residencia_estatus = 'NO FINALIZADA')                             
+        filtros_list.append('Residencia NO FINALIZADA')
+    elif filtro4 == 5:        
+        estudiantes = estudiantes.filter(residencia_estatus = 'RECHAZADA')                           
+        filtros_list.append('Residencia RECHAZADA')
+    elif filtro4 == 6:      
+        estudiantes = estudiantes.filter(residencia_estatus = 'FINALIZADA')                             
+        filtros_list.append('Residencia FINALIZADA')
+    elif filtro4 == 7:      
+        estudiantes = estudiantes.filter(residencia_estatus = 'CANCELADA')                             
+        filtros_list.append('Residencia CANCELADA')
+    elif filtro4 == 8:        
+        estudiantes = estudiantes.filter(residencia_estatus = 'SIN ENVIO')                           
+        filtros_list.append('Residencia SIN ENVIO')
+    
+    return estudiantes, filtros_list
+
+
+    
