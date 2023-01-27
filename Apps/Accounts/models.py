@@ -167,7 +167,7 @@ class Residencia(models.Model):
     nombre = models.CharField(max_length=300)
     tipoProyecto = models.CharField(max_length=25, choices=TIPOS)         
     numIntegrantes = models.IntegerField(default=1)
-    estatus = models.CharField(max_length=15, choices=ESTADOS, default='INICIADA', blank=True)    
+    estatus = models.CharField(max_length=15, choices=ESTADOS, default='INICIADA')    
     periodoInicio = models.DateField(null=True)
     periodoFin = models.DateField(null=True)    
 

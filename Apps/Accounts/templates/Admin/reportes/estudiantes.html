@@ -24,14 +24,7 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
             <option selected="">Filtrar por semestre</option>
-
-            <option value="{% url 'generar_reporte_estudiante' 1 filter2 filter3 filter4 %}">1</option>
-            <option value="{% url 'generar_reporte_estudiante' 2 filter2 filter3 filter4 %}">2</option>
-            <option value="{% url 'generar_reporte_estudiante' 3 filter2 filter3 filter4 %}">3</option>
-            <option value="{% url 'generar_reporte_estudiante' 4 filter2 filter3 filter4 %}">4</option>
-            <option value="{% url 'generar_reporte_estudiante' 5 filter2 filter3 filter4 %}">5</option>
-            <option value="{% url 'generar_reporte_estudiante' 6 filter2 filter3 filter4 %}">6</option>
-            <option value="{% url 'generar_reporte_estudiante' 7 filter2 filter3 filter4 %}">7</option>
+            
             <option value="{% url 'generar_reporte_estudiante' 8 filter2 filter3 filter4 %}">8</option>
             <option value="{% url 'generar_reporte_estudiante' 9 filter2 filter3 filter4 %}">9</option>
             <option value="{% url 'generar_reporte_estudiante' 10 filter2 filter3 filter4 %}">10</option>
@@ -86,13 +79,13 @@
             <option value="{% url 'generar_reporte_estudiante' filter1 filter2 filter3 0 %}">TODOS</option>
         </select>
     </div>
-    {% if filtros_str %}
+    {% if filtros_list %}
     <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
         Filtros activos
     </h4>
-    <p class="text-sm text-gray-600 dark:text-gray-400">
-        {{filtros_str}}
-    </p>
+    {% for i in filtros_list %}    
+    <p class="text-sm text-gray-600 dark:text-gray-400">* {{i}}</p>
+    {% endfor %}
     {% endif %}
     <div class="w-full mt-8 mb-8 overflow-hidden rounded-lg shadow-xs">
         <div class="w-full overflow-x-auto">
@@ -207,8 +200,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <span hidden="hidden" id="my_list2" name="my_list2" value="{{estudiantes}}">{{estudiantes}}</span>
+    </div>    
 </div>
 
 {% endblock %}

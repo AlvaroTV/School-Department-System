@@ -76,7 +76,7 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
 } else if (pathName == 'dependencias_a' | pathName == 'alta_dependencia' | pathName == 'editar_dependencia' | pathName == 'ver_dependencia' | pathName == 'altaDependencia_a' | pathName == 'alta_titular_dep' | pathName == 'alta_domicilio_dep'){
     dependencias_admin.hidden = false
     a_dependencias_admin.classList.add("dark:text-gray-100");
-} else if (pathName == 'generar_reportes' | pathName == 'generar_reporte_estudiante' | pathName == 'generar_reporte_anteproyectos_a' | pathName == 'generar_reporte_anteproyectos_h' | pathName == 'generar_reporte_residencias_a' | pathName == 'generar_reporte_residencias_h'){
+} else if (pathName == 'generar_reportes' | pathName == 'generar_reporte_estudiante' | pathName == 'generar_reporte_anteproyectos' | pathName == 'generar_reporte_residencias'){
     gen_reportes.hidden = false
     a_gen_reportes.classList.add("dark:text-gray-100");
 }

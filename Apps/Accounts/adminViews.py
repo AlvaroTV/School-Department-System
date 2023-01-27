@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.http import FileResponse, HttpResponse
+from django.db.models import Value, F
+from django.db.models.functions import Concat
 import io
 import json
 import xlwt
@@ -1450,32 +1452,38 @@ def generar_reportes(request):
 @admin_only
 def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
     group = request.user.groups.all()[0].name    
-    estudiantes = Estudiante.objects.all()  
+    estudiantes = Estudiante.objects.all()      
     generaciones = estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()
     generaciones = [i['generacion'] for i in generaciones]        
     filtros = [filter1, filter2, filter3, filter4]                        
     estudiantes = MyViewModel.objects.all().order_by('numControl')                                    
-    estudiantes, filtros_list = filtrar_estudiantes_rep(estudiantes, filtros)            
-    filtros_str = ' --> '.join(filtros_list)                            
+    estudiantes, filtros_list = filtrar_estudiantes_rep(estudiantes, filtros)                
     file_name = 'reporte_estudiantes'    
     
-    context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_str': filtros_str, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
+    context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_list': filtros_list, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
     return render(request, 'Admin/reportes/estudiantes.html', context)
 
 @admin_only
-def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
+def generar_reporte_anteproyectos(request, filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8):
+    group = request.user.groups.all()[0].name        
+    all_anteproyectos = Anteproyecto.objects.all().order_by('-fechaEntrega')
+    dependencias = Dependencia.objects.all()   
+    filtros = [filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8]                        
+    anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)            
+    file_name = 'reporte_anteproyectos'    
+    context = {'group': group, 'anteproyectos': anteproyectos, 'filtros': filtros, 'file_name': file_name, 'dependencias': dependencias, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filter5': filter5, 'filter6': filter6, 'filter7': filter7, 'filter8': filter8, 'filtros_list': filtros_list, 'title': 'Reporte Anteproyectos'}
+    return render(request, 'Admin/reportes/anteproyectos.html', context)
+
+@admin_only
+def generar_reporte_residencias(request, filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8):
     group = request.user.groups.all()[0].name    
-    estudiantes = Estudiante.objects.all()  
-    generaciones = estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()
-    generaciones = [i['generacion'] for i in generaciones]        
-    filtros = [filter1, filter2, filter3, filter4]                        
-    estudiantes = MyViewModel.objects.all().order_by('numControl')                                    
-    estudiantes, filtros_list = filtrar_estudiantes_rep(estudiantes, filtros)            
-    filtros_str = ' --> '.join(filtros_list)                            
-    file_name = 'reporte_estudiantes'    
-    
-    context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_str': filtros_str, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
-    return render(request, 'Admin/reportes/estudiantes.html', context)
+    all_residencias = Residencia.objects.all()
+    dependencias = Dependencia.objects.all()   
+    filtros = [filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8]                            
+    residencias, filtros_list = filtrar_residencias_rep(all_residencias, filtros)            
+    file_name = 'reporte_residencias'        
+    context = {'group': group, 'residencias': residencias, 'filtros': filtros, 'file_name': file_name, 'dependencias': dependencias, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filter5': filter5, 'filter6': filter6, 'filter7': filter7, 'filter8': filter8, 'filtros_list': filtros_list, 'title': 'Reporte Residencias'}
+    return render(request, 'Admin/reportes/residencias.html', context)
 
 @admin_only
 def export_excel(request, tipo, name):
@@ -1497,7 +1505,15 @@ def export_excel(request, tipo, name):
         estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)            
         rows = estudiantes.values_list('numControl', 'nombre', 'apellidoP', 'apellidoM', 'correoElectronico', 'semestre', 'a_nombre', 'anteproyecto_estatus', 'residencia_estatus', 'estado_anteproyecto', 'estado_residencia')    
     elif tipo == 2:
-        pass
+        columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
+        all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
+        anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)            
+        rows = anteproyectos.values_list('a_nombre', 'tipoProyecto', 'numIntegrantes', 'fechaEntrega', 'estatus', 'estatusR1', 'estatusR2', 'nombre_r1', 'nombre_r2', 'dependencia__d_nombre')    
+    elif tipo == 3:
+        columns = ['Nombre del proyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Periodo inicio', 'Periodo fin', 'Estatus del proyecto', 'Revisor', 'Asesor interno', 'Asesor externo', 'Organizacion o empresa']    
+        all_residencias = Residencia.objects.annotate(nombre_r=Concat(F('r_revisor__apellidoP'), Value(" "), F("r_revisor__apellidoM"), Value(" "), F('r_revisor__nombre')), nombre_asesor_i=Concat(F('r_asesorInterno__apellidoP'), Value(" "), F("r_asesorInterno__apellidoM"), Value(" "), F('r_asesorInterno__nombre')), nombre_asesor_e=Concat(F('asesorExterno__apellidoP'), Value(" "), F("asesorExterno__apellidoM"), Value(" "), F('asesorExterno__nombre')))
+        residencias, filtros_list = filtrar_residencias_rep(all_residencias, filtros)            
+        rows = residencias.values_list('nombre', 'tipoProyecto', 'numIntegrantes', 'periodoInicio', 'periodoFin', 'estatus', 'nombre_r', 'nombre_asesor_i', 'nombre_asesor_e', 'dependencia__d_nombre')    
     
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -1512,30 +1528,6 @@ def export_excel(request, tipo, name):
     wb.save(response)
     
     return response    
-
-@admin_only
-def generar_reporte_anteproyectos_a(request):
-    group = request.user.groups.all()[0].name    
-    context = {'group': group, 'title': 'Reporte Anteproyectos Activos'}
-    return render(request, 'Admin/reportes/menu.html', context)
-
-@admin_only
-def generar_reporte_anteproyectos_h(request):
-    group = request.user.groups.all()[0].name    
-    context = {'group': group, 'title': 'Reporte Anteproyectos Historicos'}
-    return render(request, 'Admin/reportes/menu.html', context)
-
-@admin_only
-def generar_reporte_residencias_a(request):
-    group = request.user.groups.all()[0].name    
-    context = {'group': group, 'title': 'Residencias Activas'}
-    return render(request, 'Admin/reportes/menu.html', context)
-
-@admin_only
-def generar_reporte_residencias_h(request):
-    group = request.user.groups.all()[0].name    
-    context = {'group': group, 'title': 'Residencias Historicas'}
-    return render(request, 'Admin/reportes/menu.html', context)
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos
@@ -1864,29 +1856,8 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
     filtro2 = filtros[1]
     filtro3 = filtros[2]
     filtro4 = filtros[3]
-    
-    if filtro1 == 1:
-        estudiantes = estudiantes.filter(semestre = 1)
-        filtros_list.append('Semestre 1')
-    elif filtro1 == 2:
-        estudiantes = estudiantes.filter(semestre = 2)
-        filtros_list.append('Semestre 2')
-    elif filtro1 == 3:
-        estudiantes = estudiantes.filter(semestre = 3)
-        filtros_list.append('Semestre 3')
-    elif filtro1 == 4:
-        estudiantes = estudiantes.filter(semestre = 4)
-        filtros_list.append('Semestre 4')
-    elif filtro1 == 5:
-        estudiantes = estudiantes.filter(semestre = 5)
-        filtros_list.append('Semestre 5')
-    elif filtro1 == 6:
-        estudiantes = estudiantes.filter(semestre = 6)
-        filtros_list.append('Semestre 6')
-    elif filtro1 == 7:
-        estudiantes = estudiantes.filter(semestre = 7)
-        filtros_list.append('Semestre 7')
-    elif filtro1 == 8:
+        
+    if filtro1 == 8:
         estudiantes = estudiantes.filter(semestre = 8)
         filtros_list.append('Semestre 8')
     elif filtro1 == 9:
@@ -1964,5 +1935,264 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
     
     return estudiantes, filtros_list
 
+def filtrar_anteproyectos_rep(all_anteproyectos, filtros):
+    anteproyectos = all_anteproyectos
+    filtros_list = []
+            
+    filtro1 = filtros[0]
+    filtro2 = filtros[1]
+    filtro3 = filtros[2]
+    filtro4 = filtros[3]
+    filtro5 = filtros[4]
+    filtro6 = filtros[5]
+    filtro7 = filtros[6]
+    filtro8 = filtros[7]
+    
+    fecha_de = filtro3
+    fecha_hasta = filtro4       
+    
+    try:        
+        fecha_de_obj = datetime.strptime(fecha_de, '%Y-%m-%d').date()    
+    except:
+        fecha_de_obj = None
+        
+    try:        
+        fecha_hasta_obj = datetime.strptime(fecha_hasta, '%Y-%m-%d').date()    
+    except:
+        fecha_hasta_obj = None
+            
+    if filtro1 == 1:
+        anteproyectos = anteproyectos.exclude(estatus__in = ['ACEPTADO', 'RECHAZADO', 'CANCELADO'])
+        filtros_list.append('Anteproyectos ACTIVOS')
+    elif filtro1 == 2:
+        anteproyectos = anteproyectos.filter(estatus__in = ['ACEPTADO', 'RECHAZADO', 'CANCELADO'])
+        filtros_list.append('Anteproyectos HISTORICOS')                
+    
+    if filtro2 == 1:
+        anteproyectos = anteproyectos.filter(tipoProyecto = 'PROPUESTA PROPIA')
+        filtros_list.append('Tipo proyecto PROPUESTA PROPIA')
+    elif filtro2 == 2:
+        anteproyectos = anteproyectos.filter(tipoProyecto = 'BANCO DE PROYECTOS')
+        filtros_list.append('Tipo proyecto BANCO DE PROYECTOS')
+    elif filtro2 == 3:
+        anteproyectos = anteproyectos.filter(tipoProyecto = 'TRABAJADOR')
+        filtros_list.append('Tipo proyecto TRABAJADOR')
+        
+    if fecha_de_obj:                
+        if fecha_hasta_obj:             
+            anteproyectos = anteproyectos.filter(fechaEntrega__range=(fecha_de_obj, fecha_hasta_obj))                        
+            date_time_str1 = fecha_de_obj.strftime("%d - %b - %Y")
+            date_time_str2 = fecha_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Anteproyectos entregados a partir de {date_time_str1} hasta {date_time_str2}')
+        else:
+            anteproyectos = anteproyectos.filter(fechaEntrega__gte=fecha_de_obj)        
+            date_time_str = fecha_de_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Anteproyectos entregados a partir de: {date_time_str}')
+            
+    if fecha_hasta_obj:        
+        if not fecha_de_obj:                         
+            anteproyectos = anteproyectos.filter(fechaEntrega__lte=fecha_hasta_obj)
+            date_time_str = fecha_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Anteproyectos entregados hasta: {date_time_str}')                            
+    
+    if filtro5 == 1:
+        anteproyectos = anteproyectos.filter(estatus = 'ENVIADO')
+        filtros_list.append('Anteproyecto ENVIADO')
+    elif filtro5 == 2:
+        anteproyectos = anteproyectos.filter(estatus = 'PENDIENTE')
+        filtros_list.append('Anteproyecto PENDIENTE')
+    elif filtro5 == 3:
+        anteproyectos = anteproyectos.filter(estatus = 'EN REVISION')
+        filtros_list.append('Anteproyecto EN REVISION')
+    elif filtro5 == 4:
+        anteproyectos = anteproyectos.filter(estatus = 'REVISADO')
+        filtros_list.append('Anteproyecto REVISADO')
+    elif filtro5 == 5:
+        anteproyectos = anteproyectos.filter(estatus = 'ACEPTADO')
+        filtros_list.append('Anteproyecto ACEPTADO')
+    elif filtro5 == 6:
+        anteproyectos = anteproyectos.filter(estatus = 'RECHAZADO')
+        filtros_list.append('Anteproyecto RECHAZADO')
+    elif filtro5 == 7:
+        anteproyectos = anteproyectos.filter(estatus = 'CANCELADO')
+        filtros_list.append('Anteproyecto CANCELADO')
+    
+    if filtro6 == 1:
+        anteproyectos = anteproyectos.filter(estatusR1 = 'PENDIENTE')
+        filtros_list.append('Revisor 1 PENDIENTE')
+    elif filtro6 == 2:
+        anteproyectos = anteproyectos.filter(estatusR1 = 'EN REVISION')
+        filtros_list.append('Revisor 1 EN REVISION')
+    elif filtro6 == 3:
+        anteproyectos = anteproyectos.filter(estatusR1 = 'ACEPTADO')
+        filtros_list.append('Revisor 1 ACEPTADO')
+    elif filtro6 == 4:
+        anteproyectos = anteproyectos.filter(estatusR1 = 'RECHAZADO')
+        filtros_list.append('Revisor 1 RECHAZADO')    
+        
+    if filtro7 == 1:
+        anteproyectos = anteproyectos.filter(estatusR2 = 'PENDIENTE')
+        filtros_list.append('Revisor 2 PENDIENTE')
+    elif filtro7 == 2:
+        anteproyectos = anteproyectos.filter(estatusR2 = 'EN REVISION')
+        filtros_list.append('Revisor 2 EN REVISION')
+    elif filtro7 == 3:
+        anteproyectos = anteproyectos.filter(estatusR2 = 'ACEPTADO')
+        filtros_list.append('Revisor 2 ACEPTADO')
+    elif filtro7 == 4:
+        anteproyectos = anteproyectos.filter(estatusR2 = 'RECHAZADO')
+        filtros_list.append('Revisor 2 RECHAZADO')    
+    
+    if filtro8 == '1':        
+        anteproyectos = anteproyectos.filter(dependencia__isnull = True)
+        filtros_list.append('Sin organizacion o empresa')    
+    elif filtro8 == '2':        
+        anteproyectos = anteproyectos.filter(dependencia__isnull = False)
+        filtros_list.append('Con organizacion o empresa')    
+    elif filtro8 != '0':
+        dependencia = Dependencia.objects.get(id = filtro8)
+        anteproyectos = anteproyectos.filter(dependencia = dependencia)
+        filtros_list.append(f'Organizacion o empresa: {dependencia.d_nombre}')    
+    
+    return anteproyectos, filtros_list
+
+def filtrar_residencias_rep(all_residencias, filtros):
+    residencias = all_residencias
+    filtros_list = []
+    filtro1 = filtros[0]
+    filtro2 = filtros[1]
+    filtro3 = filtros[2]
+    filtro4 = filtros[3]
+    filtro5 = filtros[4]
+    filtro6 = filtros[5]
+    filtro7 = filtros[6]
+    filtro8 = filtros[7]
+    
+    periodo_inicio_de = filtro5
+    periodo_inicio_hasta = filtro6       
+    
+    periodo_fin_de = filtro7
+    periodo_fin_hasta = filtro8       
+    
+    try:        
+        periodo_inicio_de_obj = datetime.strptime(periodo_inicio_de, '%Y-%m-%d').date()    
+    except:
+        periodo_inicio_de_obj = None
+        
+    try:        
+        periodo_inicio_hasta_obj = datetime.strptime(periodo_inicio_hasta, '%Y-%m-%d').date()    
+    except:
+        periodo_inicio_hasta_obj = None
+        
+    try:        
+        periodo_fin_de_obj = datetime.strptime(periodo_fin_de, '%Y-%m-%d').date()    
+    except:
+        periodo_fin_de_obj = None
+        
+    try:        
+        periodo_fin_hasta_obj = datetime.strptime(periodo_fin_hasta, '%Y-%m-%d').date()    
+    except:
+        periodo_fin_hasta_obj = None
+    
+    if filtro1 == 1:
+        residencias = residencias.exclude(estatus__in = ['NO FINALIZADA', 'RECHAZADA', 'FINALIZADA', 'CANCELADA'])
+        filtros_list.append('Residencias ACTIVAS')
+    elif filtro1 == 2:
+        residencias = residencias.filter(estatus__in = ['NO FINALIZADA', 'RECHAZADA', 'FINALIZADA', 'CANCELADA'])
+        filtros_list.append('Residencias HISTORICAS')
+    
+    if filtro2 == 1:
+        residencias = residencias.filter(tipoProyecto = 'PROPUESTA PROPIA')
+        filtros_list.append('Tipo Proyecto PROPUESTA PROPIA')
+    elif filtro2 == 2:
+        residencias = residencias.filter(tipoProyecto = 'BANCO DE PROYECTOS')
+        filtros_list.append('Tipo Proyecto BANCO DE PROYECTOS')
+    elif filtro2 == 3:
+        residencias = residencias.filter(tipoProyecto = 'TRABAJADOR')
+        filtros_list.append('Tipo Proyecto TRABAJADOR')
+        
+    if filtro3 == 1:
+        residencias = residencias.filter(estatus = 'INICIADA')
+        filtros_list.append('Residencias INICIADA')
+    elif filtro3 == 2:
+        residencias = residencias.filter(estatus = 'EN PROCESO')
+        filtros_list.append('Residencias EN PROCESO')
+    elif filtro3 == 3:
+        residencias = residencias.filter(estatus = 'PRORROGA')
+        filtros_list.append('Residencias PRORROGA')
+    elif filtro3 == 4:
+        residencias = residencias.filter(estatus = 'NO FINALIZADA')
+        filtros_list.append('Residencias NO FINALIZADA')
+    elif filtro3 == 5:
+        residencias = residencias.filter(estatus = 'RECHAZADA')
+        filtros_list.append('Residencias RECHAZADA')
+    elif filtro3 == 6:
+        residencias = residencias.filter(estatus = 'FINALIZADA')
+        filtros_list.append('Residencias FINALIZADA')
+    elif filtro3 == 7:
+        residencias = residencias.filter(estatus = 'CANCELADA')
+        filtros_list.append('Residencias CANCELADA')
+    
+    if filtro4 == '1':        
+        residencias = residencias.filter(dependencia__isnull = True)
+        filtros_list.append('Sin organizacion o empresa')    
+    elif filtro4 == '2':        
+        residencias = residencias.filter(dependencia__isnull = False)
+        filtros_list.append('Con organizacion o empresa')    
+    elif filtro4 != '0':
+        dependencia = Dependencia.objects.get(id = filtro4)
+        residencias = residencias.filter(dependencia = dependencia)
+        filtros_list.append(f'Organizacion o empresa: {dependencia.d_nombre}') 
+        
+    if periodo_inicio_de_obj:
+        if periodo_inicio_hasta_obj:
+            residencias = residencias.filter(periodoInicio__range=(periodo_inicio_de_obj, periodo_inicio_hasta_obj))                        
+            date_time_str1 = periodo_inicio_de_obj.strftime("%d - %b - %Y")
+            date_time_str2 = periodo_inicio_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo inicio a partir de: {date_time_str1} hasta {date_time_str2}')            
+        else:
+            residencias = residencias.filter(periodoInicio__gte=periodo_inicio_de_obj)        
+            date_time_str = periodo_inicio_de_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo inicio a partir de: {date_time_str}')        
+    
+    if filtro5 == '1' and filtro6 == '1':
+        filtros_list.append('Sin periodo de inicio')  
+        residencias = residencias.filter(periodoInicio__isnull = True)      
+    elif filtro5 == '2' and filtro6 == '2':
+        residencias = residencias.filter(periodoInicio__isnull = False)      
+        filtros_list.append('Con periodo de inicio')        
+        
+    if periodo_inicio_hasta_obj:
+        if not periodo_inicio_de_obj:
+            residencias = residencias.filter(periodoInicio__lte=periodo_inicio_hasta_obj)
+            date_time_str = periodo_inicio_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo inicio hasta: {date_time_str}')        
+                    
+    if periodo_fin_de_obj:
+        if periodo_fin_hasta_obj:
+            residencias = residencias.filter(periodoFin__range=(periodo_fin_de_obj, periodo_fin_hasta_obj))                        
+            date_time_str1 = periodo_fin_de_obj.strftime("%d - %b - %Y")
+            date_time_str2 = periodo_fin_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo fin a partir de: {date_time_str1} hasta {date_time_str2}')            
+        else:
+            residencias = residencias.filter(periodoFin__gte=periodo_fin_de_obj)        
+            date_time_str = periodo_fin_de_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo fin a partir de: {date_time_str}')        
+    
+    if filtro7 == '1' and filtro8 == '1':
+        filtros_list.append('Sin periodo de fin')        
+        residencias = residencias.filter(periodoFin__isnull = True)      
+    elif filtro7 == '2' and filtro8 == '2':
+        filtros_list.append('Con periodo de fin')        
+        residencias = residencias.filter(periodoFin__isnull = False)      
+        
+    if periodo_fin_hasta_obj:
+        if not periodo_fin_de_obj:
+            residencias = residencias.filter(periodoFin__lte=periodo_fin_hasta_obj)
+            date_time_str = periodo_fin_hasta_obj.strftime("%d - %b - %Y")
+            filtros_list.append(f'Periodo fin hasta: {date_time_str}')        
+            
+        
+    return residencias, filtros_list
 
     

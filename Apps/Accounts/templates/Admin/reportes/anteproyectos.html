@@ -1,0 +1,332 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block header %}
+<link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">
+
+    <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Reporte anteproyectos
+        </h2>
+        <div class="relative ">
+            <br>
+            <form action="{% url 'export_excel' tipo=2 name=file_name %}" method="GET">
+                <input hidden="hidden" type="text" name="my_list" value="{{filtros}}">
+                <input type="submit" value="Descargar Excel"
+                    class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            </form>
+        </div>
+    </div>
+    <div class="grid gap-6 mb-4 md:grid-cols-2 xl:grid-cols-4">
+        <select id="s1"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estado</option>
+            <option value="{% url 'generar_reporte_anteproyectos' 1 filter2 filter3 filter4 filter5 filter6 filter7 filter8 %}">ACTIVOS</option>
+            <option value="{% url 'generar_reporte_anteproyectos' 2 filter2 filter3 filter4 filter5 filter6 filter7 filter8 %}">HISTORICOS</option>            
+            <option value="{% url 'generar_reporte_anteproyectos' 0 filter2 filter3 filter4 filter5 filter6 filter7 filter8 %}">TODOS</option>
+        </select>
+        <select id="s2"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por tipo proyecto</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 1 filter3 filter4 filter5 filter6 filter7 filter8 %}">PROPUESTA PROPIA</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 2 filter3 filter4 filter5 filter6 filter7 filter8 %}">BANCO DE PROYECTOS</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 3 filter3 filter4 filter5 filter6 filter7 filter8 %}">TRABAJADOR</option>            
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 0 filter3 filter4 filter5 filter6 filter7 filter8 %}">TODOS</option>
+        </select>
+
+        <input type="text" id="id_periodoI" placeholder="Filtrar por fecha - Desde" data-role="calendarpicker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        onchange="navigateToUrl()" filter1="{{filter1}}" filter2="{{filter2}}" filter4="{{filter4}}" filter5="{{filter5}}" filter6="{{filter6}}" filter7="{{filter7}}" filter8="{{filter8}}">
+        <script>
+            function navigateToUrl() {     
+                let dateValue = document.getElementById("id_periodoI").value;  
+                let date = new Date(dateValue);
+                let formattedDate = date.toISOString().slice(0, 10);
+                let filter1 = document.getElementById("id_periodoI").getAttribute("filter1");
+                let filter2 = document.getElementById("id_periodoI").getAttribute("filter2");
+                let filter4 = document.getElementById("id_periodoI").getAttribute("filter4");                
+                let filter5 = document.getElementById("id_periodoI").getAttribute("filter5");
+                let filter6 = document.getElementById("id_periodoI").getAttribute("filter6");
+                let filter7 = document.getElementById("id_periodoI").getAttribute("filter7");
+                let filter8 = document.getElementById("id_periodoI").getAttribute("filter8");
+                let url = '/generar_reporte_anteproyectos/' + filter1 + '/' + filter2 + '/' + formattedDate + '/' + filter4 + '/' + filter5 + '/' + filter6 + '/' + filter7 + '/' + filter8 ;
+                window.location.href = url;
+            }
+        </script>
+
+        <select id="s3"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">                    
+
+            <option selected="">Filtrar por fecha - Desde</option>            
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 0 filter4 filter5 filter6 filter7 filter8 %}">TODAS</option>
+        </select>
+        
+        <input type="text" id="id_periodoF" placeholder="Filtrar por fecha - Hasta" data-role="calendarpicker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        onchange="navigateToUrl2()" filter1="{{filter1}}" filter2="{{filter2}}" filter3="{{filter3}}" filter5="{{filter5}}" filter6="{{filter6}}" filter7="{{filter7}}" filter8="{{filter8}}">
+        <script>
+            function navigateToUrl2() {     
+                let dateValue = document.getElementById("id_periodoF").value;  
+                let date = new Date(dateValue);
+                let formattedDate = date.toISOString().slice(0, 10);
+                let filter1 = document.getElementById("id_periodoF").getAttribute("filter1");
+                let filter2 = document.getElementById("id_periodoF").getAttribute("filter2");
+                let filter3 = document.getElementById("id_periodoF").getAttribute("filter3");                                                
+                let filter5 = document.getElementById("id_periodoF").getAttribute("filter5");
+                let filter6 = document.getElementById("id_periodoF").getAttribute("filter6");
+                let filter7 = document.getElementById("id_periodoF").getAttribute("filter7");
+                let filter8 = document.getElementById("id_periodoF").getAttribute("filter8");
+                let url = '/generar_reporte_anteproyectos/' + filter1 + '/' + filter2 + '/' + filter3 + '/' + formattedDate + '/' + filter5 + '/' + filter6 + '/' + filter7 + '/' + filter8 ;
+                window.location.href = url;
+            }
+        </script>
+        
+        <select id="s4"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por fecha - Hasta</option>                        
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 0 filter5 filter6 filter7 filter8 %}">TODAS</option>
+        </select>
+        <select id="s5"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estatus del anteproyecto</option>
+
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 1 filter6 filter7 filter8 %}">ENVIADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 2 filter6 filter7 filter8 %}">PENDIENTE</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 3 filter6 filter7 filter8 %}">EN REVISION</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 4 filter6 filter7 filter8 %}">REVISADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 5 filter6 filter7 filter8 %}">ACEPTADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 6 filter6 filter7 filter8 %}">RECHAZADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 7 filter6 filter7 filter8 %}">CANCELADO</option>                        
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 0 filter6 filter7 filter8 %}">TODOS</option>
+        </select>
+        <select id="s6"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estatus revisor 1</option>
+            
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 1 filter7 filter8 %}">PENDIENTE</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 2 filter7 filter8 %}">EN REVISION</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 3 filter7 filter8 %}">ACEPTADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 4 filter7 filter8 %}">RECHAZADO</option>                        
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 0 filter7 filter8 %}">TODOS</option>
+        </select>
+        <select id="s7"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estatus revisor 2</option>
+
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 1 filter8 %}">PENDIENTE</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 2 filter8 %}">EN REVISION</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 3 filter8 %}">ACEPTADO</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 4 filter8 %}">RECHAZADO</option>                        
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 0 filter8 %}">TODOS</option>
+        </select>
+        <select id="s8"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por organizacion o empresa</option>
+            
+            {% for dependencia in dependencias %}            
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 filter7 dependencia.id %}">{{dependencia.d_nombre}}</option>
+            {% endfor %}
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 filter7 1 %}">SIN ORGANIZACION O EMPRESA</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 filter7 2 %}">CON ORGANIZACION O EMPRESA</option>
+            <option value="{% url 'generar_reporte_anteproyectos' filter1 filter2 filter3 filter4 filter5 filter6 filter7 0 %}">TODOS</option>
+        </select>
+    </div>
+    {% if filtros_list %}
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Filtros activos
+    </h4>
+    {% for i in filtros_list %}    
+    <p class="text-sm text-gray-600 dark:text-gray-400">* {{i}}</p>
+    {% endfor %}
+    {% endif %}
+    <div class="w-full mt-8 mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">Nombre</th>
+                        <th class="px-4 py-3">Tipo Proyecto</th>
+                        <th class="px-4 py-3 text-center">Numero Integrantes</th>
+                        <th class="px-4 py-3 text-center">Fecha Entrega</th>
+                        <th class="px-4 py-3 text-center">Estatus</th>
+                        <th class="px-4 py-3 text-center">Estatus Revisor 1</th>
+                        <th class="px-4 py-3 text-center">Estatus Revisor 2</th>
+                        <th class="px-4 py-3 text-center">Revisor 1</th>
+                        <th class="px-4 py-3 text-center">Revisor 2</th>
+                        <th class="px-4 py-3 text-center">organizacion o Empresa</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for anteproyecto in anteproyectos %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3">
+                            {{anteproyecto.a_nombre}}
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{anteproyecto.tipoProyecto}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{anteproyecto.numIntegrantes}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{anteproyecto.fechaEntrega|date:"d/M/Y"}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {% if anteproyecto.estatus == 'ACEPTADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'ENVIADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'EN REVISION' %}
+                                <span
+                                    class="text-sm text-center px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'PENDIENTE' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'REVISADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-y-700 bg-y-100 rounded-full dark:text-white dark:bg-y-700">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'RECHAZADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estatus}}
+                                </span>
+                                {% elif anteproyecto.estatus == 'CANCELADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estatus}}
+                                </span>                                
+                                {% else %}                                
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    SIN ESTATUS
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {% if anteproyecto.estatusR1 == 'ACEPTADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.estatusR1}}
+                                </span>                                
+                                {% elif anteproyecto.estatusR1 == 'EN REVISION' %}
+                                <span
+                                    class="text-sm text-center px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{anteproyecto.estatusR1}}
+                                </span>
+                                {% elif anteproyecto.estatusR1 == 'PENDIENTE' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{anteproyecto.estatusR1}}
+                                </span>                                
+                                {% elif anteproyecto.estatusR1 == 'RECHAZADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estatusR1}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    SIN ESTATUS
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {% if anteproyecto.estatusR2 == 'ACEPTADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.estatusR2}}
+                                </span>                                
+                                {% elif anteproyecto.estatusR2 == 'EN REVISION' %}
+                                <span
+                                    class="text-sm text-center px-2 py-1 font-semibold leading-tight text-teal-500 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{anteproyecto.estatusR2}}
+                                </span>
+                                {% elif anteproyecto.estatusR2 == 'PENDIENTE' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{anteproyecto.estatusR2}}
+                                </span>                                
+                                {% elif anteproyecto.estatusR2 == 'RECHAZADO' %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.estatusR2}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    SIN ESTATUS
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {{anteproyecto.revisor1}}
+                        </td>                 
+                        <td class="px-4 py-3">
+                            {{anteproyecto.revisor2}}
+                        </td>                 
+                        <td class="px-4 py-3">
+                            {{anteproyecto.dependencia.d_nombre}}
+                        </td>                                                
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>    
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/calendar_date_2.js' %}"></script>
+{% endblock %}

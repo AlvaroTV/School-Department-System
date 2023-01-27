@@ -1,5 +1,5 @@
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path, register_converter
 from .views import *
 from .adminViews import *
 from .teacherViews import *
@@ -119,10 +119,8 @@ urlpatterns = [
     
     path('generar_reportes/', generar_reportes, name='generar_reportes'), 
     path('generar_reporte_estudiante/<int:filter1>/<filter2>/<int:filter3>/<int:filter4>', generar_reporte_estudiantes, name='generar_reporte_estudiante'), 
-    path('generar_reporte_anteproyectos_a/', generar_reporte_anteproyectos_a, name='generar_reporte_anteproyectos_a'), 
-    path('generar_reporte_anteproyectos_h/', generar_reporte_anteproyectos_h, name='generar_reporte_anteproyectos_h'), 
-    path('generar_reporte_residencias_a/', generar_reporte_residencias_a, name='generar_reporte_residencias_a'), 
-    path('generar_reporte_residencias_h/', generar_reporte_residencias_h, name='generar_reporte_residencias_h'),     
+    path('generar_reporte_anteproyectos/<int:filter1>/<int:filter2>/<str:filter3>/<str:filter4>/<int:filter5>/<int:filter6>/<int:filter7>/<filter8>', generar_reporte_anteproyectos, name='generar_reporte_anteproyectos'), 
+    path('generar_reporte_residencias/<int:filter1>/<int:filter2>/<int:filter3>/<filter4>/<str:filter5>/<str:filter6>/<str:filter7>/<str:filter8>', generar_reporte_residencias, name='generar_reporte_residencias'),     
     path('export_excel/<int:tipo>/<str:name>', export_excel, name='export_excel'), 
     
     # Teacher 
