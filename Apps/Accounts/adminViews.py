@@ -12,6 +12,9 @@ import json
 import xlwt
 import ast
 
+# Import model
+from .recommend_doc import recomendaciones_docentes
+
 #from django.db.models import Count
 from django.core.mail import EmailMessage, BadHeaderError, send_mail
 from datetime import date, timedelta, datetime
@@ -197,6 +200,24 @@ def estudiantes(request, page, orderB):
         if text:
             all_estudiantes = buscar_estudiante(all_estudiantes, text, opc)            
             estudiantes = all_estudiantes
+            
+            for i in estudiantes:
+                anteproyecto_e = all_e_anteproyectos.filter(estudiante = i)
+                residencia_e = all_e_residencias.filter(estudiante = i)        
+
+                if anteproyecto_e:
+                    estado_anteproyecto = anteproyecto_e[0].anteproyecto.estatus
+                else:
+                    estado_anteproyecto = None
+
+                if residencia_e:
+                    estado_residencia = residencia_e[0].residencia.estatus
+                else:
+                    estado_residencia = None
+
+                setattr(i, 'anteproyecto_estatus', estado_anteproyecto)  
+                setattr(i, 'residencia_estatus', estado_residencia)          
+        
             start = 0
             end = estudiantes.count()
             totalE = all_estudiantes.count()            
@@ -611,11 +632,25 @@ def removeEstudiante(request, pk):
 @admin_only
 def asignarRevisor1(request, page, pk):
     group = request.user.groups.all()[0].name
-    anteproyecto = Anteproyecto.objects.get(id = pk)    
+    anteproyecto = Anteproyecto.objects.get(id = pk)        
     all_docentes = Docente.objects.all()        
     start = (page-1)*10    
     end = page*10
     
+    anteproyecto_v = Anteproyecto.objects.filter(id = pk).values()
+    anteproyecto_list = list(anteproyecto_v)    
+    anteproyecto_materia_list = list(Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto).values())
+    materia_list = list(Materia.objects.all().values())
+    docente_list = list(all_docentes.values())
+    perfil_academico_list = list(PerfilAcademico.materias.through.objects.all().values())
+    df_anteproyectos = pd.DataFrame(anteproyecto_list)
+    df_anteproyecto_materia = pd.DataFrame(anteproyecto_materia_list)
+    df_docentes = pd.DataFrame(docente_list)
+    df_perfil_academico = pd.DataFrame(perfil_academico_list)
+    df_materias = pd.DataFrame(materia_list)
+    docentes_id_list = recomendaciones_docentes(df_anteproyectos, df_anteproyecto_materia, df_docentes, df_perfil_academico, df_materias)            
+    recomendaciones = all_docentes.filter(id__in = docentes_id_list)    
+
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
         text = request.POST['search'] 
@@ -640,7 +675,7 @@ def asignarRevisor1(request, page, pk):
     prev_page = page-1            
     revisor1 = '.'
     
-    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor1': revisor1, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'recomendaciones': recomendaciones, 'title': 'Asignar Revisor'}
     return render(request, 'Admin/asignarDocente.html', context)        
 
 @admin_only
@@ -692,6 +727,20 @@ def asignarRevisor2(request, page, pk):
     start = (page-1)*10    
     end = page*10
     
+    anteproyecto_v = Anteproyecto.objects.filter(id = pk).values()
+    anteproyecto_list = list(anteproyecto_v)    
+    anteproyecto_materia_list = list(Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto).values())
+    materia_list = list(Materia.objects.all().values())
+    docente_list = list(all_docentes.values())
+    perfil_academico_list = list(PerfilAcademico.materias.through.objects.all().values())
+    df_anteproyectos = pd.DataFrame(anteproyecto_list)
+    df_anteproyecto_materia = pd.DataFrame(anteproyecto_materia_list)
+    df_docentes = pd.DataFrame(docente_list)
+    df_perfil_academico = pd.DataFrame(perfil_academico_list)
+    df_materias = pd.DataFrame(materia_list)
+    docentes_id_list = recomendaciones_docentes(df_anteproyectos, df_anteproyecto_materia, df_docentes, df_perfil_academico, df_materias)            
+    recomendaciones = all_docentes.filter(id__in = docentes_id_list)    
+    
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
         text = request.POST['search'] 
@@ -716,7 +765,7 @@ def asignarRevisor2(request, page, pk):
     prev_page = page-1            
     
     revisor2 = '.'
-    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'title': 'Asignar Revisor'}
+    context = {'group': group, 'docentes': docentes, 'anteproyecto': anteproyecto, 'revisor2': revisor2, 'totalD': totalD, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'recomendaciones': recomendaciones, 'title': 'Asignar Revisor'}
     return render(request, 'Admin/asignarDocente.html', context)        
 
 @admin_only
@@ -2195,4 +2244,3 @@ def filtrar_residencias_rep(all_residencias, filtros):
         
     return residencias, filtros_list
 
-    

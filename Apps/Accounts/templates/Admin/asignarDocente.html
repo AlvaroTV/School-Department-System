@@ -32,6 +32,7 @@
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor 1
         </h4>
+        {% if buttons %}
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
                 Docentes recomendados para este Anteproyecto
@@ -49,7 +50,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        {% for docente in recomendiciones %}
+                        {% for docente in recomendaciones %}
                         {% if docente.estatus == 'ACTIVO' %}
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
@@ -98,10 +99,12 @@
                 </table>
             </div>
         </div>
+        {% endif %}
         {% elif revisor2 %}
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Asignar Revisor 2
         </h4>
+        {% if buttons %}
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
                 Docentes recomendados para este Anteproyecto
@@ -119,7 +122,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        {% for docente in recomendiciones %}
+                        {% for docente in recomendaciones %}
                         {% if docente.estatus == 'ACTIVO' %}
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
@@ -168,10 +171,11 @@
                 </table>
             </div>
         </div>
+        {% endif %}
         {% elif asesorI %}
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Asignar Asesor Interno
-        </h2>        
+        </h2>
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
                 Revisores anteriores
@@ -320,6 +324,27 @@
                 </button>
             </div>
         </div>
+        {% if not buttons %}
+        
+        <div class="flex flex-col flex-wrap mb-4 space-y-4 md:flex-row-reverse md:items-start md:space-x-4">
+            <div>
+                {% if revisor1 %}
+                <a href="{% url 'asignarRevisor1' 1 anteproyecto.id %}">
+                    {% elif revisor2 %}
+                    <a href="{% url 'asignarRevisor2' 1 anteproyecto.id %}">
+                        {% elif asesorI %}
+                        <a href="{% url 'asignarAsesorIL' 1 residencia.id %}">
+                        {% elif revisor %}
+                        <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
+                    {% endif %}
+                    <button
+                        class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        Todos los docentes
+                    </button>
+                </a>
+            </div>
+        </div>                
+        {% endif %}
 
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
