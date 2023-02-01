@@ -8,7 +8,7 @@ def validate_nonzero(value):
 def validate_len_num_control(value):
     len_num_control = len(value)
     if len_num_control < 8:
-        raise ValidationError("Número de control no valido ")
+        raise ValidationError("Número de control no valido")
 
 # Ponerle este validator a cada FileField
 def validate_file_size(file):

@@ -1,5 +1,5 @@
 {% load static %}
-<aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
+<aside class="z-20 hidden w-64 overflow-y-auto bg-bluetec dark:bg-gray-800 md:block flex-shrink-0">
   <div class="py-4 text-gray-500 dark:text-gray-400">
     <div class="flex items-center justify-center">
       <a href="{% url 'home' %}">
@@ -14,9 +14,9 @@
     </div>
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_dashboard" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_dashboard" href="{% url 'home' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,9 +33,9 @@
     {% if group == 'student' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyecto' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,9 +47,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'residencia' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,9 +61,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_expedientes" href="{% url 'expediente' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,9 +74,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_reportes" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_reportes" href="{% url 'reportes' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +91,7 @@
 
     <div class="px-6 my-6">
       <button
-        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
         Estudiante
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
@@ -105,9 +105,9 @@
     {% elif group == 'teacher' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyectosTeacher' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,9 +119,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectosH" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectosH" href="{% url 'anteproyectosH' 1 1 0 0 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -131,9 +131,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'residenciasTeacher' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,9 +145,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residenciasH" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residenciasH" href="{% url 'residenciasH' 1 1 0 0 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,9 +158,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_materias" hidden></span>
-        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_materias" href="{% url 'materias' %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,7 +175,7 @@
 
     <div class="px-6 my-6">
       <button
-        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
         Docente
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
@@ -191,9 +191,9 @@
     {% elif group == 'admin' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_anteproyectos" href="{% url 'anteproyectos' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -205,9 +205,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_residencias" href="{% url 'residencias' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,9 +219,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_expedientes" href="{% url 'expedientes' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -231,9 +231,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_estudiantes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_estudiantes" href="{% url 'estudiantes' 1 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -244,9 +244,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_docentes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_docentes" href="{% url 'docentes' 1 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -257,9 +257,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_avisos" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_avisos" href="{% url 'avisos' %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -270,9 +270,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_materias_ad" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_materias_ad" href="{% url 'materias_a' 1 0 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -283,9 +283,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_dependencias_ad" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_dependencias_ad" href="{% url 'dependencias_a' 1 0 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -296,9 +296,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_gen_reportes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-blue-500"
           id="a_gen_reportes" href="{% url 'generar_reportes' %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -312,7 +312,7 @@
 
     <div class="px-6 my-6">
       <button
-        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
         Administrador
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
@@ -326,9 +326,9 @@
     {% elif group == 'jefe_carrera_sistemas' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyectos' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -340,9 +340,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           href="{% url 'residencias' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -354,9 +354,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'expedientes' 1 0 0 %}">
           <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
             stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -366,9 +366,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_estudiantes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_estudiantes" href="{% url 'estudiantes' 1 0 %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -379,9 +379,9 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_gen_reportes" hidden></span>
-        <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        <a class="sideb inline-flex items-center w-full text-sm text-white font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_gen_reportes" href="{% url 'generar_reportes' %}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -395,7 +395,7 @@
 
     <div class="px-6 my-6">
       <button
-        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-500 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
         Administrador
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6">
@@ -434,7 +434,7 @@
     </div>
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_dashboard" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_dashboard" href="{% url 'home' %}">
@@ -453,7 +453,7 @@
     {% if group == 'student' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyecto' %}">
@@ -467,7 +467,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'residencia' %}">
@@ -481,7 +481,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_expedientes" href="{% url 'expediente' %}">
@@ -494,7 +494,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_reportes" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_reportes" href="{% url 'reportes' %}">
@@ -525,7 +525,7 @@
     {% elif group == 'teacher' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyectosTeacher' %}">
@@ -539,7 +539,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectosH" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectosH" href="{% url 'anteproyectosH' 1 1 0 0 0 0 %}">
@@ -551,7 +551,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'residenciasTeacher' %}">
@@ -565,7 +565,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residenciasH" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residenciasH" href="{% url 'residenciasH' 1 1 0 0 0 0 %}">
@@ -578,7 +578,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_materias" hidden></span>
         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_materias" href="{% url 'materias' %}">
@@ -611,7 +611,7 @@
     {% elif group == 'admin' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyectos' 1 0 0 %}">
@@ -625,7 +625,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'residencias' 1 0 0 %}">
@@ -639,7 +639,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_expedientes" href="{% url 'expedientes' 1 0 0 %}">
@@ -651,7 +651,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_estudiantes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_estudiantes" href="{% url 'estudiantes' 1 0 %}">
@@ -664,7 +664,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_docentes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_docentes" href="{% url 'docentes' 1 0 %}">
@@ -677,7 +677,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_avisos" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_avisos" href="{% url 'avisos' %}">
@@ -690,7 +690,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_materias_ad" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_materias_ad" href="{% url 'materias_a' 1 0 0 %}">
@@ -703,7 +703,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_dependencias_ad" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_dependencias_ad" href="{% url 'dependencias_a' 1 0 0 %}">
@@ -716,7 +716,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_gen_reportes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_gen_reportes" href="{% url 'generar_reportes' %}">
@@ -746,7 +746,7 @@
     {% elif group == 'jefe_carrera_sistemas' %}
     <ul>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_anteproyectos" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_anteproyectos" href="{% url 'anteproyectos' 1 0 0 %}">
@@ -760,7 +760,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_residencias" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           href="{% url 'residencias' 1 0 0 %}">
@@ -774,7 +774,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_expedientes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_residencias" href="{% url 'expedientes' 1 0 0 %}">
@@ -786,7 +786,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_estudiantes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_estudiantes" href="{% url 'estudiantes' 1 0 %}">
@@ -799,7 +799,7 @@
         </a>
       </li>
       <li class="relative px-6 py-3">
-        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"
+        <span class="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-tr-lg rounded-br-lg" aria-hidden="true"
           id="id_gen_reportes" hidden></span>
         <a class="sideb inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           id="a_gen_reportes" href="{% url 'generar_reportes' %}">

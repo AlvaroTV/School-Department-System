@@ -162,11 +162,12 @@
         {% endif %}
       </div>
     </div>
-  </div>  
+  </div>
 
   {% if historial_estudiantes %}
   {% for estudiante in historial_estudiantes %}
-  <div class="flex items-center justify-center w-full mt-2 mb-2 px-4 py-2 text-sm font-medium leading-5 text-teal-500 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+  <div
+    class="flex items-center justify-center w-full mt-2 mb-2 px-4 py-2 text-sm font-medium leading-5 text-teal-500 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
     <p class="text-sm text-teal-500 dark:text-teal-100">
       El estudiante
       <a href="{% url 'historial_estudiante' estudiante.id %}" target="_blank">
@@ -177,8 +178,7 @@
       ha participado anteriormente en un
       anteproyecto.
     </p>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-      class="ml-4 w-6 h-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-4 w-6 h-6">
       <path fill-rule="evenodd"
         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
         clip-rule="evenodd" />
@@ -187,7 +187,7 @@
 
   {% endfor %}
   {% endif %}
-  
+
 
   <div class="grid gap-6 mb-8 md:grid-cols-1">
     <br>
@@ -471,17 +471,13 @@
             </td>
             <td class="px-4 py-3 text-md">
               <div class="flex items-center justify-center btnDelete2">
-                <a href="{% url 'cancelar_anteproyecto' student.id %}">
-                  <button type="button"
-                    class="flex items-center justify-between px-2 py-2 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500"
-                    aria-label="Like">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                    </svg>
-
-                  </button>
+                <a href="{% url 'cancelar_anteproyecto' student.id %}"
+                  class="flex items-center justify-between px-2 py-2 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
                 </a>
               </div>
             </td>

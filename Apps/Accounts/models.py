@@ -10,6 +10,11 @@ import os
 import uuid
 
 # Create your models here.
+class Estudiante_Autorizado(models.Model):
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    nombre_completo = models.CharField(max_length=150, null=True)
+    num_control = models.CharField(max_length=10, unique=True, blank=True)
+
 class Materia(models.Model):    
     SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
@@ -224,7 +229,7 @@ class Estudiante(models.Model):
         ('Ingenieria Industrial', 'Ingenieria Industrial'),
     )
     SISTEMAS = 'Ingenieria Sistemas Computacionales'
-    SEMESTRES = ((8, '8'), (9, '9'), (10, '10'), (11, '11'), (12, '12'), (13, '13'), (14, '14'))
+    SEMESTRES = ((9, '9'), (10, '10'), (11, '11'), (12, '12'), (13, '13'), (14, '14'), (15, '15'))
     
     # Llaves Foraneas
     domicilio = models.OneToOneField(Domicilio, on_delete=models.SET_NULL, null=True, blank=True)    

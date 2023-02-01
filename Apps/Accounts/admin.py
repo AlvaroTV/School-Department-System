@@ -3,6 +3,7 @@ from .models import *
 
 # Register your models here.
 
+admin.site.register(Estudiante_Autorizado)
 admin.site.register(Materia)
 admin.site.register(Domicilio)
 admin.site.register(TitularDependencia)

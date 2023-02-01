@@ -31,54 +31,66 @@ const a_dependencias_admin = document.getElementById('a_dependencias_ad')
 const gen_reportes = document.getElementById('id_gen_reportes')
 const a_gen_reportes = document.getElementById('a_gen_reportes')
 
-console.log('c:')
 console.log(url.pathname)
 console.log(pathName)
-
 
 
 if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA' | pathName == 'dependencias' | pathName == 'altaDependencia' | pathName == 'asesoresExternos'| pathName == 'altaAsesorE' | pathName == 'altaDomicilioD' | pathName == 'altaTitularD') {
     anteproyectos.hidden = false
     a_anteproyectos.classList.add("dark:text-gray-100");
+    a_anteproyectos.classList.add("text-blue-500");
 } else if (pathName == 'anteproyectosH' | pathName =='anteproyectoH') {
     anteproyectosH.hidden = false    
     a_anteproyectosH.classList.add("dark:text-gray-100");
+    a_anteproyectosH.classList.add("text-blue-500");
 } else if (pathName == 'residencias' | pathName == 'verResidencia' | pathName == 'editarResidenciaAdmin' | pathName == 'asignarAsesorIL' | pathName == 'asignarRevisorL' | pathName == 'residenciasTeacher' | pathName == 'residencia' | pathName == 'verReporte') {
     residencias.hidden = false
     a_residencias.classList.add("dark:text-gray-100");
+    a_residencias.classList.add("text-blue-500");
 } else if (pathName == 'residenciasH' ) {
     residenciasH.hidden = false    
     a_residenciasH.classList.add("dark:text-gray-100");
+    a_residenciasH.classList.add("text-blue-500");
 } else if (pathName == 'expedientes' | pathName == 'verExpediente' | pathName == 'expediente') {
     expedientes.hidden = false
     a_expedientes.classList.add("dark:text-gray-100");
+    a_expedientes.classList.add("text-blue-500");
 } else if (pathName == 'estudiantes' | pathName == 'verEstudiante') {
     estudiantes.hidden = false
     a_estudiantes.classList.add("dark:text-gray-100");
+    a_estudiantes.classList.add("text-blue-500");
 } else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente' | pathName == 'altaDocente') {
     docentes.hidden = false
     a_docentes.classList.add("dark:text-gray-100");
+    a_docentes.classList.add("text-blue-500");
 } else if (pathName == '' | pathName == 'teacher' | pathName == 'profile' | pathName == 'settings' | pathName == 'tProfile' | pathName == 'tSettings' | pathName == 'student' | pathName == 'faqs' | pathName == 'changePassword' | pathName == 'faqs' | pathName == 'faqs_s' | pathName == 'faqs_t'){
     dashboard.hidden = false
     a_dashboard.classList.add("dark:text-gray-100");
+    a_dashboard.classList.add("text-blue-500");
 } else if (pathName == 'materias' ){
     materias.hidden = false
     a_materias.classList.add("dark:text-gray-100");
+    a_materias.classList.add("text-blue-500");
 } else if (pathName == 'reportes' ){
     reportes.hidden = false
     a_reportes.classList.add("dark:text-gray-100");
+    a_reportes.classList.add("text-blue-500");
 } else if (pathName == 'avisos' | pathName == 'crear_aviso'){
     avisos.hidden = false
     a_avisos.classList.add("dark:text-gray-100");
+    a_avisos.classList.add("text-blue-500");
 } else if (pathName == 'materias_a' | pathName == 'altaMateria' | pathName == 'editarMateria'){
     materias_admin.hidden = false
     a_materias_admin.classList.add("dark:text-gray-100");
+    a_materias_admin.classList.add("text-blue-500");
 } else if (pathName == 'dependencias_a' | pathName == 'alta_dependencia' | pathName == 'editar_dependencia' | pathName == 'ver_dependencia' | pathName == 'altaDependencia_a' | pathName == 'alta_titular_dep' | pathName == 'alta_domicilio_dep'){
     dependencias_admin.hidden = false
     a_dependencias_admin.classList.add("dark:text-gray-100");
+    a_dependencias_admin.classList.add("text-blue-500");
 } else if (pathName == 'generar_reportes' | pathName == 'generar_reporte_estudiante' | pathName == 'generar_reporte_anteproyectos' | pathName == 'generar_reporte_residencias'){
     gen_reportes.hidden = false
     a_gen_reportes.classList.add("dark:text-gray-100");
+    a_gen_reportes.classList.add("text-blue-500");
 }
 
 

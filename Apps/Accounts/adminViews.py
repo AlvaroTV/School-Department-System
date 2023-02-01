@@ -314,11 +314,11 @@ def verAnteproyecto(request, pk):
     all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
     all_anteproyectos = Estudiante_Anteproyecto.objects.all()            
     estudiantes = [i.estudiante for i in all_estudiantes ]            
-    historial_estudiantes = []                
-    lista_correos = []
+    historial_estudiantes = []  
+    all_estudiantes_a = all_estudiantes.filter(estado = 'ACTIVO')              
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes_a ]
     
-    for i in estudiantes:
-        lista_correos.append(i.correoElectronico)
+    for i in estudiantes:        
         anteproyecto_e = all_estudiantes.filter(estudiante = i)                
         all_anteproyectos_e = all_anteproyectos.filter(estudiante = i).count()
         if all_anteproyectos_e > 1: historial_estudiantes.append(i)                
@@ -684,9 +684,9 @@ def asignarRevisor1I(request, pkA, pkD):
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor1 = docente
     revisor2 = anteproyecto.revisor2
-    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
-    estudiantes = [i.estudiante for i in all_estudiantes ]            
-    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto, estado = 'ACTIVO')                
+    estudiantes = [i.estudiante for i in all_estudiantes ]         
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes]            
     estudiantes_str = "\n".join(str(x) for x in estudiantes)
     
     if revisor2 and anteproyecto.estatus != 'ACEPTADO':
@@ -774,8 +774,8 @@ def asignarRevisor2I(request, pkA, pkD):
     docente = Docente.objects.get(id = pkD)
     anteproyecto.revisor2 = docente
     revisor1 = anteproyecto.revisor1
-    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
-    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto, estado = 'ACTIVO')            
+    estudiantes = [i.estudiante for i in all_estudiantes ]                
     lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
     estudiantes_str = "\n".join(str(x) for x in estudiantes)
     
@@ -908,10 +908,10 @@ def verResidencia(request, pk):
     residencia = Residencia.objects.get(id = pk)    
     all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
     estudiantes = [i.estudiante for i in all_estudiantes ]     
-    lista_correos = []   
+    all_estudiantes_a = all_estudiantes.filter(estado = 'ACTIVO')              
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes_a ]
     
-    for i in estudiantes:
-        lista_correos.append(i.correoElectronico)
+    for i in estudiantes:        
         residencia_e = all_estudiantes.filter(estudiante = i)        
         
         if residencia_e:
@@ -1052,8 +1052,8 @@ def asignarAsesorI(request, pkR, pkD):
     docente = Docente.objects.get(id = pkD)
     residencia.r_asesorInterno = docente   
     revisor = residencia.r_revisor 
-    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
-    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia, estado = 'ACTIVO')            
+    estudiantes = [i.estudiante for i in all_estudiantes ]                
     lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
     estudiantes_str = "\n".join(str(x) for x in estudiantes)
     
@@ -1357,8 +1357,8 @@ def asignarRevisor(request, pkR, pkD):
     docente = Docente.objects.get(id = pkD)
     residencia.r_revisor = docente
     asesor_interno = residencia.r_asesorInterno
-    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
-    estudiantes = [i.estudiante for i in all_estudiantes ]            
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia, estado = 'ACTIVO')            
+    estudiantes = [i.estudiante for i in all_estudiantes ]                
     lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes ]            
     estudiantes_str = "\n".join(str(x) for x in estudiantes)    
        
@@ -1537,7 +1537,7 @@ def generar_reporte_residencias(request, filter1, filter2, filter3, filter4, fil
 @admin_only
 def export_excel(request, tipo, name):
     response = HttpResponse(content_type = 'applications/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename={}.xlsx'.format(name)
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(name)
     wb = xlwt.Workbook(encoding = 'utf-8')
     ws = wb.add_sheet('Expenses')
     row_num = 0
@@ -1905,11 +1905,8 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
     filtro2 = filtros[1]
     filtro3 = filtros[2]
     filtro4 = filtros[3]
-        
-    if filtro1 == 8:
-        estudiantes = estudiantes.filter(semestre = 8)
-        filtros_list.append('Semestre 8')
-    elif filtro1 == 9:
+            
+    if filtro1 == 9:
         estudiantes = estudiantes.filter(semestre = 9)
         filtros_list.append('Semestre 9')
     elif filtro1 == 10:
@@ -1925,6 +1922,9 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
         estudiantes = estudiantes.filter(semestre = 13)
         filtros_list.append('Semestre 13')
     elif filtro1 == 14:
+        estudiantes = estudiantes.filter(semestre = 14)
+        filtros_list.append('Semestre 14')
+    elif filtro1 == 15:
         estudiantes = estudiantes.filter(semestre = 14)
         filtros_list.append('Semestre 14')
         

@@ -445,6 +445,10 @@ def expediente(request):
             reporteF = ReporteFinal.objects.filter(id = expediente.reporteFinal.id).values()[0]
             all_reportes = [reporte1['r1_hojaRevisores'], reporte1['r1_formatoEvaluacion'], reporte2['r2_hojaRevisores'], reporte2['r2_formatoEvaluacion'], reporteF['rf_hojaRevisores'], reporteF['rf_formatoEvaluacion']]                        
             
+            print('Inica parte reportes')
+            for i in all_reportes:
+                print(i)
+                print()
             expediente_completo = not None in all_reportes
             
             if expediente_completo:

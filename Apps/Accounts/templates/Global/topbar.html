@@ -1,5 +1,5 @@
 {% load static %}
-<header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
+<header class="z-10 py-4 bg-bluetec shadow-md dark:bg-gray-800">
   <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
     <!-- Mobile hamburger -->
     <button class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
@@ -21,7 +21,7 @@
     </div>
     <ul class="flex items-center flex-shrink-0 space-x-6">
       <!-- Theme toggler -->
-      <li class="flex">
+      <li class="flex text-white">
         {% if group == 'student' %}
         <span>Hola, {{request.user.estudiante.nombre}} </span>
         {% elif group == 'teacher'  %}
@@ -30,7 +30,7 @@
         <span>Hola, {{request.user.first_name}} </span>
         {% endif %}
       </li>
-      <li class="flex">
+      <li class="flex text-blue-500">
         <button class="rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleTheme"
           aria-label="Toggle color mode">
           <template x-if="!dark">
@@ -48,7 +48,7 @@
         </button>
       </li>
       <!-- Notifications menu -->
-      <li class="relative">
+      <li class="relative text-blue-500">
         <a href="{% url 'faqs' %}">
           <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple"
             @click="toggleNotificationsMenu" @keydown.escape="closeNotificationsMenu" aria-label="Notifications"
