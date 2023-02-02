@@ -10,14 +10,14 @@
         Registro de una Organización o Empresa
     </h2>
 
-    <div class="grid gap-6 mb-8 md:grid-cols-3">
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <br>
                 <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                    Información básica de la Organización o Empresa 
+                    Información básica de la Organización o Empresa
                 </h2>
+
                 {% for field in formD %}
                 <label class="block mt-4 text-sm">
                     <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
@@ -33,6 +33,10 @@
                         name="Update Information" value="Enviar Informacion">
                 </div>
             </form>
+            <div>
+                <img aria-hidden="true" class="object-cover w-full h-full mx-auto d-block " height="50" width="50"
+                    src="{% static 'images/coro.png' %}" alt="Oficina">
+            </div>
         </div>
     </div>
 </div>

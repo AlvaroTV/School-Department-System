@@ -30,6 +30,8 @@ const dependencias_admin = document.getElementById('id_dependencias_ad')
 const a_dependencias_admin = document.getElementById('a_dependencias_ad')
 const gen_reportes = document.getElementById('id_gen_reportes')
 const a_gen_reportes = document.getElementById('a_gen_reportes')
+const estudiantes_aut = document.getElementById('id_estudiantes_aut')
+const a_estudiantes_aut = document.getElementById('a_estudiantes_aut')
 
 console.log(url.pathname)
 console.log(pathName)
@@ -91,6 +93,10 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
     gen_reportes.hidden = false
     a_gen_reportes.classList.add("dark:text-gray-100");
     a_gen_reportes.classList.add("text-blue-500");
+} else if (pathName == 'estudiantes_autorizados' | pathName == 'subir_estudiantes_a' ){
+    estudiantes_aut.hidden = false
+    a_estudiantes_aut.classList.add("dark:text-gray-100");
+    a_estudiantes_aut.classList.add("text-blue-500");
 }
 
 

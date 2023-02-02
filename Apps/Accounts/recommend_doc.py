@@ -54,7 +54,7 @@ def matrix_docentes_materias(df_materias, df_docentes, df_perfil_academico):
     for k, g in df_grouped:    
         list_keys = df_grouped.get_group(k)['clave']
         list_keys = list_keys.tolist()
-        dictionary_keys = dict.fromkeys(list_keys, 100)    
+        dictionary_keys = dict.fromkeys(list_keys, 10)    
         dictionary_keys['perfilAcademico_id'] = k  
         df_dictionary = pd.DataFrame(dictionary_keys, index=[0])
         df_matrix_docentes_materias = df_matrix_docentes_materias.append(df_dictionary, ignore_index = True)

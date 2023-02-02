@@ -21,18 +21,42 @@
             <br>
         </div>
 
-        <div class="grid gap-6 mb-8 md:grid-cols-3">
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+            <div class=" ">
+                <img aria-hidden="true" class="object-cover w-full h-full mx-auto d-block " height="50" width="50"
+                    src="{% static 'images/inicio.png' %}" alt="Oficina">
+            </div>
+            <div class="min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% for field in formA %}                    
+                    
                     <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>                    
-                    {% endfor %}
-                          
+                        <span class="text-gray-700 dark:text-gray-400">Nombre del anteproyecto:</span>
+                        {{formA.a_nombre}}
+                        <p id="messages" class="text-red-600">{{ formA.a_nombre.errors }}</p>
+                    </label>                    
+
+                    <div class="grid gap-6 mb-8 md:grid-cols-2">
+
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Tipo de proyecto:</span>
+                            {{formA.tipoProyecto}}
+                            <p id="messages" class="text-red-600">{{ formA.tipoProyecto.errors }}</p>
+                        </label>                    
+                        
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Numero de intregrantes:</span>
+                            {{formA.numIntegrantes}}
+                            <p id="messages" class="text-red-600">{{ formA.numIntegrantes.errors }}</p>
+                        </label>                                            
+                    </div>
+
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Documento del anteproyecto:</span>
+                        {{formA.anteproyectoDoc}}
+                        <p id="messages" class="text-red-600">{{ formA.anteproyectoDoc.errors }}</p>
+                    </label>                          
+                    
                     <br>
                     <div class="relative">
                         <input type="submit"
@@ -41,7 +65,10 @@
                     </div>
                 </form>
             </div>
+            <div>
+            </div>
         </div>
+
         <br>
     </div>
     <!-- Modal backdrop. This what you want to place close to the closing body tag -->

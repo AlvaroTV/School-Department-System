@@ -289,46 +289,57 @@ def createStudent(request):
     data = ['id_fotoUsuario', 'id_institutoSeguridadSocial', 'id_numSeguridadSocial', 'id_expediente', 'id_correoElectronico', 'id_curp', 'id_anteproyecto']
     formE = EstudianteForm()
     formU = CreateUserForm()
-
+    mensaje = ''
     if request.method == 'POST':
         formE = EstudianteForm(request.POST)
         formU = CreateUserForm(request.POST)        
         if formE.is_valid() and formU.is_valid():
-            student = formE.save()
-            user = formU.save()            
-            group = Group.objects.get(name='student')
-            user.username = student.numControl
-            user.groups.add(group)
-            user.is_active = False
-            user.save()            
-            student.correoElectronico = formU.cleaned_data.get('email')
-            student.user = user            
-            student.save()  
-                        
-            user_name = student.nombre
-            current_site = get_current_site(request)
-            subject = "Activa tu cuenta."
-            email_template_name = 'Global/email_verify/email_verify_template.txt'
-            c = {
-            "user_name": user_name,    
-			"email":user.email,
-			'domain':current_site.domain,
-			'site_name': 'ITO Sistemas',
-			"uid": urlsafe_base64_encode(force_bytes(user.pk)),			
-			"user": user,
-			'token': default_token_generator.make_token(user),
-			'protocol': 'http',
-			}                        
-            
-            email = render_to_string(email_template_name, c)
+            pre_num_control = formE.cleaned_data.get('numControl')
             try:
-                send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
+                pre_estudiante = Estudiante_Autorizado.objects.get(num_control = pre_num_control)
+            except:
+                pre_estudiante = None
+            
+            if pre_estudiante:
+                pre_estudiante.is_registrado = True
+                pre_estudiante.save()
+                student = formE.save()
+                user = formU.save()                                
+                group = Group.objects.get(name='student')
+                user.username = student.numControl
+                user.groups.add(group)
+                user.is_active = False
+                user.save()            
+                student.correoElectronico = formU.cleaned_data.get('email')
+                student.user = user            
+                student.save()  
 
-            return redirect('email_verification', student.id)
+                user_name = student.nombre
+                current_site = get_current_site(request)
+                subject = "Activa tu cuenta."
+                email_template_name = 'Global/email_verify/email_verify_template.txt'
+                c = {
+                "user_name": user_name,    
+			    "email":user.email,
+			    'domain':current_site.domain,
+			    'site_name': 'ITO Sistemas',
+			    "uid": urlsafe_base64_encode(force_bytes(user.pk)),			
+			    "user": user,
+			    'token': default_token_generator.make_token(user),
+			    'protocol': 'http',
+			    }                        
 
-    context = {'formE': formE, 'formU': formU, 'data': data}
+                email = render_to_string(email_template_name, c)
+                try:
+                    send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+
+                return redirect('email_verification', student.id)
+            else:
+                mensaje = 'Lamentamos informarle que usted no cumple con los requisitos para realizar su residencia.'
+
+    context = {'formE': formE, 'formU': formU, 'data': data, 'mensaje': mensaje}
     return render(request, 'Student/create-account.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -405,6 +416,7 @@ def expediente(request):
     estudiante = user.estudiante
     semestre = estudiante.semestre
     expediente = estudiante.expediente 
+    estatus_lista = ['FINALIZADO', 'COMPLETO']
     
     all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
     all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
@@ -423,43 +435,7 @@ def expediente(request):
     r2 = None
     rF = None
     fecha20d = None            
-    fecha6w = None                
-    expediente_completo = True
-    
-    if expediente:
-    
-        expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]    
-        
-        if expediente.estatus != 'FINALIZADO':
-            for i in expediente_list:
-                if not expediente_list[i]:
-                    if i == 'dictamen':
-                        if semestre > 12:                            
-                            expediente_completo = False
-                    else:
-                        expediente_completo = False                                
-                        
-        if expediente_completo:            
-            reporte1 = ReporteParcial1.objects.filter(id = expediente.reporteParcial1.id).values()[0]
-            reporte2 = ReporteParcial2.objects.filter(id = expediente.reporteParcial2.id).values()[0]
-            reporteF = ReporteFinal.objects.filter(id = expediente.reporteFinal.id).values()[0]
-            all_reportes = [reporte1['r1_hojaRevisores'], reporte1['r1_formatoEvaluacion'], reporte2['r2_hojaRevisores'], reporte2['r2_formatoEvaluacion'], reporteF['rf_hojaRevisores'], reporteF['rf_formatoEvaluacion']]                        
-            
-            print('Inica parte reportes')
-            for i in all_reportes:
-                print(i)
-                print()
-            expediente_completo = not None in all_reportes
-            
-            if expediente_completo:
-                expediente.estatus = 'COMPLETO'                
-                expediente.save()  
-                #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                
-                mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
-                + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
-                + 'Semestre: ' + str(estudiante.semestre) + '\n' 
-                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
-                enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])
+    fecha6w = None                    
         
     try:
         estatus = anteproyecto.estatus                       
@@ -493,8 +469,20 @@ def expediente(request):
             formE = ExpedienteForm(request.POST, request.FILES, instance=expediente)                                                         
                              
             if formE.is_valid():                
-                formE.save()                                          
-            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
+                formE.save()    
+                expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]        
+                if not expediente.estatus in estatus_lista:                    
+                    expediente_completo = validar_expediente(expediente_list, expediente, semestre)            
+                    if expediente_completo:
+                        expediente.estatus = 'COMPLETO'                
+                        expediente.save()  
+                        #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                
+                        mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
+                        + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
+                        + 'Semestre: ' + str(estudiante.semestre) + '\n' 
+                        + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
+                        enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
     
     context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'data2': data2, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
     return render(request, 'Student/expediente.html', context)
@@ -505,7 +493,9 @@ def reportes(request):
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
+    semestre = estudiante.semestre
     expediente = estudiante.expediente
+    estatus_lista = ['FINALIZADO', 'COMPLETO']
     
     all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')    
     all_residencias = Estudiante_Residencia.objects.filter(estudiante = estudiante, estado = 'ACTIVO')        
@@ -519,7 +509,7 @@ def reportes(request):
         residencia = all_residencias[0].residencia    
     else:
         residencia = None      
-    
+            
     r1 = None    
     r2 = None
     rF = None
@@ -544,7 +534,12 @@ def reportes(request):
         r2_fechaEntrega = r2_fechaEntrega.strftime("%d/%b/%Y")        
         rF_fechaEntrega = rF_fechaEntrega.strftime("%d/%b/%Y")
         
-    if expediente is not None:                
+    if expediente is not None:     
+        mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
+                + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
+                + 'Semestre: ' + str(estudiante.semestre) + '\n' 
+                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
+        expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]               
         r1 = expediente.reporteParcial1
         r2 = expediente.reporteParcial2
         rF = expediente.reporteFinal                   
@@ -557,6 +552,14 @@ def reportes(request):
                     r1 = form1.save()
                     expediente.reporteParcial1 = r1
                     expediente.save()
+                    
+                    if not expediente.estatus in estatus_lista:                        
+                        expediente_completo = validar_expediente(expediente_list, expediente, semestre)            
+                        if expediente_completo:
+                            expediente.estatus = 'COMPLETO'                
+                            expediente.save()  
+                            #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                            enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
         else:                        
             form1 = Reporte1Form(instance = r1)                  
@@ -567,6 +570,14 @@ def reportes(request):
                         r1 = form1.save()  
                         expediente.reporteParcial1 = r1
                         expediente.save()
+                        
+                        if not expediente.estatus in estatus_lista:                            
+                            expediente_completo = validar_expediente(expediente_list, expediente, semestre)            
+                            if expediente_completo:
+                                expediente.estatus = 'COMPLETO'                
+                                expediente.save()  
+                                #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                                enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                                                                        
             
         if r2 is None:            
@@ -577,6 +588,15 @@ def reportes(request):
                     r2 = form2.save()
                     expediente.reporteParcial2 = r2
                     expediente.save()
+                    
+                    if not expediente.estatus in estatus_lista:                        
+                        expediente_completo = validar_expediente(expediente_list, expediente, semestre)
+            
+                        if expediente_completo:
+                            expediente.estatus = 'COMPLETO'                
+                            expediente.save()  
+                            #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                            enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:            
             form2 = Reporte2Form(instance = r2)                          
@@ -587,6 +607,14 @@ def reportes(request):
                         r2 = form2.save()  
                         expediente.reporteParcial2 = r2
                         expediente.save()
+                        
+                        if not expediente.estatus in estatus_lista:                            
+                            expediente_completo = validar_expediente(expediente_list, expediente, semestre)
+                            if expediente_completo:
+                                expediente.estatus = 'COMPLETO'                
+                                expediente.save()  
+                                #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                                enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
             
         if rF is None:            
@@ -597,6 +625,15 @@ def reportes(request):
                     rF = formF.save()
                     expediente.reporteFinal = rF
                     expediente.save()
+                    
+                    if not expediente.estatus in estatus_lista:                        
+                        expediente_completo = validar_expediente(expediente_list, expediente, semestre)
+            
+                        if expediente_completo:
+                            expediente.estatus = 'COMPLETO'                
+                            expediente.save()  
+                            #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                            enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         else:            
             formF = ReporteFinalForm(instance = rF)                        
@@ -607,11 +644,28 @@ def reportes(request):
                         rF = formF.save()  
                         expediente.reporteFinal = rF
                         expediente.save()
+                        
+                        if not expediente.estatus in estatus_lista:                            
+                            expediente_completo = validar_expediente(expediente_list, expediente, semestre)
+            
+                            if expediente_completo:
+                                expediente.estatus = 'COMPLETO'                
+                                expediente.save()  
+                                #! Aqui se obtiene el correo de la jefa del departamento de vinculacion                                        
+                                enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))      
-    else:
+    else:        
         form1 = Reporte1Form()                       
         form2 = Reporte2Form()                       
         formF = ReporteFinalForm()
+        if request.method == 'POST':
+            form1 = Reporte1Form(request.POST, request.FILES)                    
+            if form1.is_valid():                    
+                r1 = form1.save()
+                expediente_e = Expediente.objects.create(reporteParcial1=r1)
+                estudiante.expediente = expediente_e
+                estudiante.save()                          
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
             
     context = {'expediente': expediente, 'anteproyecto': anteproyecto, 'residencia': residencia, 'form1': form1, 'form2': form2, 'formF': formF, 'r1': r1, 'r2': r2, 'rF': rF, 'r1_fechaEntrega': r1_fechaEntrega, 'r2_fechaEntrega': r2_fechaEntrega, 'rF_fechaEntrega': rF_fechaEntrega, 'estatus': estatus, 'group': group, 'title': 'Reportes'}
     return render(request, 'Student/reportes.html', context)    
@@ -692,7 +746,7 @@ def anteproyecto(request):
         anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)        
         if anteproyecto_materia:
             data.clear()
-            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision'])                 
+            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle'])                 
             actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
             if anteproyecto.numIntegrantes == 1:            
                 data.append('id_codigoUnion')  
@@ -1127,3 +1181,27 @@ def activate_user(request, uidb64, token):
         return render(request, 'Global/email_verify/email_verified.html')
     else:
         return HttpResponse('Activation link is invalid!')
+
+def validar_expediente(expediente_list, expediente, semestre):
+    expediente_completo = True    
+    for i in expediente_list:
+        if not expediente_list[i]:            
+            if i == 'dictamen':
+                if semestre > 12:                            
+                    expediente_completo = False
+            else:
+                expediente_completo = False                                
+            
+    # Si el expediente esta completo -> Refiriendose a todos los documentos principales del expediente    
+    if expediente_completo:        
+        reporte1 = ReporteParcial1.objects.filter(id = expediente.reporteParcial1.id).values()[0]
+        reporte2 = ReporteParcial2.objects.filter(id = expediente.reporteParcial2.id).values()[0]
+        reporteF = ReporteFinal.objects.filter(id = expediente.reporteFinal.id).values()[0]
+        all_reportes = [reporte1['r1_hojaRevisores'], reporte1['r1_formatoEvaluacion'], reporte2['r2_hojaRevisores'], reporte2['r2_formatoEvaluacion'], reporteF['rf_hojaRevisores'], reporteF['rf_formatoEvaluacion']]                        
+    else:
+        all_reportes = []    
+    for i in all_reportes:
+        if not i:            
+            expediente_completo = False
+                        
+    return expediente_completo

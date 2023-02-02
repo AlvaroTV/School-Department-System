@@ -1,0 +1,173 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="container grid px-6 mx-auto">
+
+    <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Estudiantes autorizados a residencia
+        </h2>
+        <div class="relative ">
+            <a href="{% url 'subir_estudiantes_a' %}">
+                <button
+                    class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Subir archivo con estudiantes </button>
+            </a>
+            <br>
+        </div>
+    </div>
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 grid md:grid-cols-2">
+        <p class="text-sm text-gray-600 mr-4" style="background-color:rgb(218, 163, 153);">
+            * Los estudiantes en color rojo indica que aún no están dados de alta en el sistema.
+        </p>
+        <p class="text-sm text-gray-600 mr-2" style="background-color:rgb(160, 228, 177);">
+            * Los estudiantes en color verde indica que ya están dados de alta en el sistema.
+        </p>
+    </div>
+    <div class="grid gap-6 mb-4 md:grid-cols-2 xl:grid-cols-4">
+        <select id="s1"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por estado</option>
+
+            <option value="{% url 'estudiantes_autorizados' page 1 filter2 %}">Ya están dados de alta </option>
+            <option value="{% url 'estudiantes_autorizados' page 2 filter2 %}">No están dados de alta </option>
+            <option value="{% url 'estudiantes_autorizados' page 0 filter2 %}">TODOS</option>
+        </select>
+        <select id="s2"
+            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+            <option selected="">Filtrar por numero de control</option>
+
+            {% for generacion in generaciones %}
+            <option value="{% url 'estudiantes_autorizados' page filter1 generacion %}">{{generacion}}
+            </option>
+            {% endfor %}
+            <option value="{% url 'estudiantes_autorizados' page filter1 0 %}">TODOS</option>
+        </select>
+
+    </div>
+    {% if filtros_list %}
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Filtros activos
+    </h4>
+    {% for i in filtros_list %}
+    <p class="text-sm text-gray-600 dark:text-gray-400">* {{i}}</p>
+    {% endfor %}
+    {% endif %}
+    <div class="w-full mt-8 mb-8 overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3 text-center">Numero de control</th>
+                        <th class="px-4 py-3">Nombre completo</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for estudiante in estudiantes %}
+                    {% if estudiante.is_registrado %}
+                    <tr class="text-gray-700" style="background-color:rgb(160, 228, 177);">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{estudiante.num_control}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {{estudiante.nombre_completo}}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr class="text-gray-700" style="background-color:rgb(218, 163, 153);">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-center">
+                                {{estudiante.num_control}}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            {{estudiante.nombre_completo}}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div
+        class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        <span class="flex items-center col-span-3">
+            Mostrando {{start}} - {{end}} de {{totalE}}
+        </span>
+        <span class="col-span-2"></span>
+        <!-- Pagination -->
+        {% if buttons %}
+        <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+            <nav aria-label="Table navigation">
+                <ul class="inline-flex items-center">
+                    <li>
+                        {% if prev_page == 0 %}
+                        <a href="{% url 'estudiantes_autorizados' n_buttons filter1 filter2 %}">
+                            {% else %}
+                            <a href="{% url 'estudiantes_autorizados' prev_page filter1 filter2 %}">
+                                {% endif %}
+                                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                    aria-label="Previous">
+                                    <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                        <path
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" fill-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </a>
+                    </li>
+                    {% for button in buttons %}
+                    {% if button == page %}
+                    <li>
+                        <a href="{% url 'estudiantes_autorizados' button filter1 filter2 %}">
+                            <button
+                                class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                {{button}}
+                            </button>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{% url 'estudiantes_autorizados' button filter1 filter2 %}">
+                            <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                {{button}}
+                            </button>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    <li>
+                        {% if next_page > n_buttons %}
+                        <a href="{% url 'estudiantes_autorizados' 1 filter1 filter2 %}">
+                            {% else %}
+                            <a href="{% url 'estudiantes_autorizados' next_page filter1 filter2  %}">
+                                {% endif %}
+                                <button
+                                    class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                    aria-label="Next">
+                                    <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                                        <path
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd" fill-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </a>
+                    </li>
+                </ul>
+            </nav>
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

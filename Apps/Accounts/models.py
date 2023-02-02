@@ -8,12 +8,18 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from .validators import *
 import os
 import uuid
+from unidecode import unidecode
 
 # Create your models here.
 class Estudiante_Autorizado(models.Model):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre_completo = models.CharField(max_length=150, null=True)
     num_control = models.CharField(max_length=10, unique=True, blank=True)
+    is_registrado = models.BooleanField(default=False)
+    
+    def save(self, *args, **kwargs):        
+        self.nombre_completo = unidecode(self.nombre_completo.upper())        
+        super().save(*args, **kwargs)
 
 class Materia(models.Model):    
     SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
@@ -33,6 +39,12 @@ class Domicilio(models.Model):
     municipio = models.CharField(max_length=200, null=True, blank=True)
     codigoPostal = models.CharField(max_length=5, null=True, blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Oaxaca')
+    
+    def save(self, *args, **kwargs):        
+        self.calle = unidecode(self.calle.upper())        
+        self.colonia = unidecode(self.colonia.upper())        
+        self.municipio = unidecode(self.municipio.upper())        
+        super().save(*args, **kwargs)
 
 class TitularDependencia(models.Model):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
@@ -110,8 +122,14 @@ class Docente(models.Model):
     fotoUsuario = models.ImageField(default='profilepicD.jpg', upload_to='profilesPic/teachers/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)   
     
+    def save(self, *args, **kwargs):        
+        self.nombre = unidecode(self.nombre.upper())        
+        self.apellidoP = unidecode(self.apellidoP.upper())        
+        self.apellidoM = unidecode(self.apellidoM.upper())                
+        super().save(*args, **kwargs)
+        
     def __str__(self):
-        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'     
+        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'             
 
 class Observacion(models.Model):    
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
@@ -154,6 +172,12 @@ class AsesorExterno(models.Model):
     apellidoP = models.CharField(max_length=70)
     apellidoM = models.CharField(max_length=70)
     puesto = models.CharField(max_length=50)
+    
+    def save(self, *args, **kwargs):        
+        self.nombre = unidecode(self.nombre.upper())        
+        self.apellidoP = unidecode(self.apellidoP.upper())        
+        self.apellidoM = unidecode(self.apellidoM.upper())                
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
@@ -253,8 +277,14 @@ class Estudiante(models.Model):
     fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/students/',null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)    
     
+    def save(self, *args, **kwargs):        
+        self.nombre = unidecode(self.nombre.upper())        
+        self.apellidoP = unidecode(self.apellidoP.upper())        
+        self.apellidoM = unidecode(self.apellidoM.upper())                
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'
+        return f'{self.nombre} {self.apellidoP} {self.apellidoM}'        
 
 class Estudiante_Anteproyecto(models.Model):
     ESTADOS = (('ACTIVO', 'ACTIVO'), ('INACTIVO', 'INACTIVO'))

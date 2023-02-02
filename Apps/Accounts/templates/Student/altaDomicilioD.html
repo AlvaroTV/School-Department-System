@@ -11,19 +11,32 @@
     </h2>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Registro del domicilio de la Organizacion o Empresa
-    </h2>
-    <div class="grid gap-6 mb-8 md:grid-cols-3">
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+    </h2>    
+
+    <div class="min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="grid gap-6  md:grid-cols-2">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                
-                {% for field in formDom %}
                 <label class="block mt-4 text-sm">
-                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                    {{ field }}
+                    <span class="text-gray-700 dark:text-gray-400">{{formDom.calle.label_tag}}</span>
+                    {{ formDom.calle }}
                 </label>
-                <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                {% endfor %}
+                <p id="messages" class="text-red-600">{{ formDom.cale.errors }}</p>
+
+
+                <div class="grid gap-6  md:grid-cols-2">
+                    {% for field in formDom %}
+                    {% if field.id_for_label != 'id_calle' %}
+                    <div>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
 
                 <br>
                 <div class="relative">
@@ -32,7 +45,13 @@
                         name="Update Information" value="Enviar Informacion">
                 </div>
             </form>
+            <div class=" ">
+                <img aria-hidden="true" class="object-cover  mx-auto d-block " 
+                    src="{% static 'images/map.png' %}" alt="Oficina">
+
+            </div>
         </div>
+
     </div>
 </div>
 

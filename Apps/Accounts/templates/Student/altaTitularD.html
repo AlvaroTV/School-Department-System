@@ -12,28 +12,41 @@
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Registro del titular de la Organizacion o Empresa
     </h2>
-    <div class="grid gap-6 mb-8 md:grid-cols-3">
-        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+
+
+    <div class="min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
+        <div class="grid gap-6  md:grid-cols-2">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                
-                {% for field in formT %}
-                <label class="block mt-4 text-sm">
-                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                    {{ field }}
-                </label>
-                <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                {% endfor %}
+
+                <div class="grid gap-6 mb-8 md:grid-cols-2">
+                    {% for field in formT %}
+                    <div>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    </div>
+
+                    {% endfor %}
+                </div>
 
                 <br>
                 <div class="relative">
                     <input type="submit"
                         class="px-2 py-1 text-sm absolute right-0 font-medium leading-3 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                        name="Update Information" value="Enviar Informacion">
+                        name="Update Information" value="Guardar Informacion">
                 </div>
             </form>
+            <div class=" ">
+                <img aria-hidden="true" class="object-cover h-full " height="650" width="500"
+                    src="{% static 'images/asesor.png' %}" alt="AsesorExterno">
+            </div>
         </div>
     </div>
+
+
 </div>
 
 {% else %}

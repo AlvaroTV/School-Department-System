@@ -275,9 +275,7 @@ class AnteproyectoEstForm(ModelForm):
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
             'fechaEntrega': 'Fecha de entrega',
-            'numIntegrantes': 'Numero de integrantes',
-            'periodoInicio': 'Fecha inicio',            
-            'periodoFin': 'Fecha Fin',            
+            'numIntegrantes': 'Numero de integrantes',            
             'anteproyectoDoc': 'Documento del anteproyecto'
         }
         widgets = {

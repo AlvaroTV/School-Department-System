@@ -1,0 +1,50 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container px-6 mx-auto grid">
+    <div class="relative my-6 h-12">
+
+        <div class="absolute inset-y-0 left-0 ">
+            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Documento con los estudiantes
+                autorizados a residencia.</h2>
+        </div>
+
+        <div class="absolute inset-y-0 right-0 ">
+            <a href="{% url 'estudiantes_autorizados' 1 0 0 %}">
+                <button
+                    class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Cancelar </button>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="px-4 py-3 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
+        <p class="text-sm text-teal-500 dark:text-teal-100">
+            Solo se acepta un archivo csv
+        </p>
+    </div>
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            * El archivo debe contener únicamente dos columnas. La primera columna debe ser el número de control y la
+            segunda el nombre completo del estudiante.
+        </p>
+    </div>
+
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid gap-6 mb-2 md:grid-cols-1 ">
+                {{ form.as_p }}
+            </div>
+            <button type="submit"
+                class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Subir
+                archivo</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

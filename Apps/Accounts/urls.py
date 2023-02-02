@@ -123,6 +123,9 @@ urlpatterns = [
     path('generar_reporte_residencias/<int:filter1>/<int:filter2>/<int:filter3>/<filter4>/<str:filter5>/<str:filter6>/<str:filter7>/<str:filter8>', generar_reporte_residencias, name='generar_reporte_residencias'),     
     path('export_excel/<int:tipo>/<str:name>', export_excel, name='export_excel'), 
     
+    path('estudiantes_autorizados/<int:page>/<int:filter1>/<filter2>', estudiantes_autorizados, name='estudiantes_autorizados'), 
+    path('subir_estudiantes_a/', subir_estudiantes_a, name='subir_estudiantes_a'), 
+    
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      
     path('tSettings/', teacherSettings, name='teacherSettings'),

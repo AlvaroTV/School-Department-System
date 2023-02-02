@@ -29,6 +29,7 @@ from .views import generarCodigo, obtenerCodigo, buscarCodigo
 # Create your views here.
 
 import pandas as pd
+import csv
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
@@ -1351,6 +1352,7 @@ def historial_estudiante(request, pk):
     context = {'group': group, 'estudiante': estudiante, 'anteproyectos': anteproyectos, 'residencias': residencias, 'title': 'Historial Estudiante'}
     return render(request, 'Admin/historial_estudiante.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def asignarRevisor(request, pkR, pkD):
     residencia = Residencia.objects.get(id = pkR)
@@ -1492,12 +1494,14 @@ def cancelar_residencia(request, pk):
     anteproyecto.save()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def generar_reportes(request):
     group = request.user.groups.all()[0].name        
     context = {'group': group, 'title': 'Generar Reportes'}
     return render(request, 'Admin/reportes/menu.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
     group = request.user.groups.all()[0].name    
@@ -1512,6 +1516,7 @@ def generar_reporte_estudiantes(request, filter1, filter2, filter3, filter4):
     context = {'group': group, 'estudiantes': estudiantes, 'filtros': filtros, 'file_name': file_name, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filtros_list': filtros_list, 'generaciones': generaciones, 'title': 'Reporte Estudiantes'}
     return render(request, 'Admin/reportes/estudiantes.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def generar_reporte_anteproyectos(request, filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8):
     group = request.user.groups.all()[0].name        
@@ -1523,6 +1528,7 @@ def generar_reporte_anteproyectos(request, filter1, filter2, filter3, filter4, f
     context = {'group': group, 'anteproyectos': anteproyectos, 'filtros': filtros, 'file_name': file_name, 'dependencias': dependencias, 'filter1': filter1, 'filter2': filter2, 'filter3': filter3, 'filter4': filter4, 'filter5': filter5, 'filter6': filter6, 'filter7': filter7, 'filter8': filter8, 'filtros_list': filtros_list, 'title': 'Reporte Anteproyectos'}
     return render(request, 'Admin/reportes/anteproyectos.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def generar_reporte_residencias(request, filter1, filter2, filter3, filter4, filter5, filter6, filter7, filter8):
     group = request.user.groups.all()[0].name    
@@ -1577,6 +1583,52 @@ def export_excel(request, tipo, name):
     wb.save(response)
     
     return response    
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def estudiantes_autorizados(request, page, filter1, filter2):
+    group = request.user.groups.all()[0].name    
+    all_estudiantes = Estudiante_Autorizado.objects.all()
+    start = (page-1)*10    
+    end = page*10              
+    filtros = [filter1, filter2]
+    generaciones = all_estudiantes.values(generacion = Substr('num_control', 1, 4)).distinct()
+    generaciones = [i['generacion'] for i in generaciones]        
+    all_estudiantes = filtrar_estudiantes_aut(all_estudiantes, filtros)    
+    estudiantes = all_estudiantes[start:end]
+    
+    if end != estudiantes.count():
+        end = end-10+estudiantes.count()
+    totalE = all_estudiantes.count()
+    n_buttons = math.ceil(totalE/10)
+    buttons = [item for item in range(1, n_buttons+1)]
+    next_page = page+1
+    prev_page = page-1    
+    context = {'group': group, 'estudiantes': estudiantes, 'generaciones': generaciones, 'page': page, 'start': start+1, 'end': end, 'totalE': totalE, 'n_buttons': n_buttons, 'buttons': buttons, 'next_page': next_page, 'prev_page': prev_page, 'filter1': filter1, 'filter2': filter2, 'title': 'Estudiantes Autorizados'}
+    return render(request, 'Admin/estudiantes_autorizados/estudiantes.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def subir_estudiantes_a(request):    
+    group = request.user.groups.all()[0].name    
+    form = CSVUploadForm()
+    
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)        
+        if form.is_valid():
+            file = form.cleaned_data['csv_file']            
+            data = file.read().decode('utf-8')
+            lines = data.split("\n")
+            reader = csv.reader(lines)
+            for row in reader:
+                try:
+                    estudiante_a = Estudiante_Autorizado.objects.create(num_control=row[0], nombre_completo=row[1])                                        
+                except:
+                    pass                
+            return redirect('estudiantes_autorizados')
+    
+    context = {'group': group, 'form': form, 'title': 'Subir Estudiantes'}
+    return render(request, 'Admin/estudiantes_autorizados/subir_documento.html', context)
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos
@@ -2244,3 +2296,18 @@ def filtrar_residencias_rep(all_residencias, filtros):
         
     return residencias, filtros_list
 
+def filtrar_estudiantes_aut(all_estudiantes, filtros):
+    estudiantes = all_estudiantes
+    
+    filtro1 = filtros[0]
+    filtro2 = filtros[1]
+    
+    if filtro1 == 1:
+        estudiantes = estudiantes.filter(is_registrado = True)
+    elif filtro1 == 2:
+        estudiantes = estudiantes.filter(is_registrado = False)
+    
+    if filtro2 != '0':                
+        estudiantes = estudiantes.filter(num_control__startswith = filtro2)
+    
+    return estudiantes
