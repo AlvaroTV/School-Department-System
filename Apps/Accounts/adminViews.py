@@ -626,8 +626,8 @@ def editarEstudiante(request, pk):
 @admin_only
 def removeEstudiante(request, pk):    
     estudiante = Estudiante.objects.get(id = pk)
-    estudiante.anteproyecto = None
-    estudiante.save()  
+    estudiante_anteproyecto = Estudiante_Anteproyecto.objects.get(estudiante = estudiante)
+    estudiante_anteproyecto.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

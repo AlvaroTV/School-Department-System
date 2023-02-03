@@ -756,6 +756,22 @@ def anteproyecto(request):
                     
     else:
         anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)        
+        
+        #! Esta variable depende del numero de invitaciones que se han enviado y el numero de integrantes        
+        invitaciones_disp = anteproyecto.numIntegrantes - 1
+        num_invitaciones = Invitacion.objects.filter(anteproyecto = anteproyecto).count()        
+        print('INVITACIONES DISPONIBLES')
+        print(invitaciones_disp)
+        print('INVITACIONES')
+        print(num_invitaciones)
+        
+        if invitaciones_disp > num_invitaciones:
+            print('PUEDES INVITAR A GENTE')
+            invitar = True
+        else:
+            print('NO PUEDES INVITAR A MAS GENTE')        
+            invitar = False
+        
         if anteproyecto_materia:
             data.clear()
             data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle'])                 
@@ -797,13 +813,10 @@ def anteproyecto(request):
                                      + 'mas pronto posible.')
                     enviar_email('Actualizacion Documento Anteproyecto', mensaje_email, email_list)
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia}    
+            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia, 'invitar': invitar}    
             return render(request, 'Student/anteproyecto.html', context)
         else:
-            return redirect('materias')                                        
-            
-    context = {'formA': formA, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto'}    
-    return render(request, 'Student/anteproyecto.html', context)
+            return redirect('materias')                                                        
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
