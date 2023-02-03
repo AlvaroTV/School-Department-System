@@ -112,6 +112,11 @@ def studentPage(request):
     all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')    
     all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')                
     
+    try:
+        invitacion = Invitacion.objects.get(estudiante_destinatario = student.estudiante_aut)
+    except:
+        invitacion = None
+    
     if all_anteproyectos:        
         anteproyecto = all_anteproyectos[0].anteproyecto    
     else:
@@ -152,7 +157,7 @@ def studentPage(request):
         fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                    
     except:
         pass
-    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones, 'avisos':avisos, 'title': 'Inicio'}    
+    context = {'group': group, 'anteproyecto': anteproyecto, 'proyecto': proyecto, 'expediente': expediente, 'fechaObservacion': fechaObservacion,'observaciones': observaciones, 'avisos':avisos, 'invitacion': invitacion, 'title': 'Inicio'}    
     return render(request, 'Student/dashboard.html', context)
 
 @login_required(login_url='login')
@@ -311,7 +316,8 @@ def createStudent(request):
                 user.is_active = False
                 user.save()            
                 student.correoElectronico = formU.cleaned_data.get('email')
-                student.user = user            
+                student.user = user    
+                student.estudiante_aut = pre_estudiante
                 student.save()  
 
                 user_name = student.nombre
@@ -711,7 +717,11 @@ def anteproyecto(request):
     except:
         pass
     
-    if anteproyecto is None:             
+    if anteproyecto is None:     
+        try:
+            invitacion = Invitacion.objects.get(estudiante_destinatario = estudiante.estudiante_aut)
+        except:
+            invitacion = None        
         formA = AnteproyectoEstForm()                
                 
         if request.method == 'POST':          
@@ -741,6 +751,8 @@ def anteproyecto(request):
                     anteproyecto.save()
                     Estudiante_Anteproyecto.objects.create(estudiante=estudiante, anteproyecto=anteproyecto)                                                                                 
                     return redirect('materias')                                        
+        context = {'formA': formA, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group,  'title': 'Registro Anteproyecto', 'invitacion': invitacion}    
+        return render(request, 'Student/anteproyecto.html', context)
                     
     else:
         anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)        
@@ -1100,6 +1112,27 @@ def compatibilidadA(request, materiaPK):
         
     context = {'group': group, 'materia': materia, 'title': 'Comptabilidad'}    
     return render(request, 'Student/compatibilidadA.html', context)
+
+def crear_invitacion(request, pk_e, pk_a):
+    estudiante = request.user.estudiante         
+    anteproyecto = Anteproyecto.objects.get(id = pk_a)
+    estudiante_aut = Estudiante_Autorizado.objects.get(id = pk_e)
+    if not estudiante_aut.is_registrado:    
+        invitacion = Invitacion.objects.create(estudiante_remitente = estudiante, estudiante_destinatario = estudiante_aut, anteproyecto = anteproyecto)
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
+
+def aceptar_invitacion(request, pk):
+    estudiante = request.user.estudiante         
+    invitacion = Invitacion.objects.get(id = pk)
+    anteproyecto = invitacion.anteproyecto        
+    anteproyecto_est = Estudiante_Anteproyecto.objects.create(estudiante = estudiante, anteproyecto = anteproyecto)
+    invitacion.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
+
+def rechazar_invitacion(request, pk):
+    invitacion = Invitacion.objects.get(id = pk)
+    invitacion.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
 
 def password_reset_request(request):
     if request.method == "POST":

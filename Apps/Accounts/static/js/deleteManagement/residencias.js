@@ -30,7 +30,7 @@ window.onload = function() {
                         'El elemento ha sido removido.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

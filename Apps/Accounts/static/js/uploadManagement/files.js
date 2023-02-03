@@ -17,7 +17,7 @@ const $uploadForm = document.getElementById('uploadForm');
         }).then((result) => {
             if (result.isConfirmed) {                                
                 Swal.fire('Enviado!', '', 'success');                
-                setTimeout(() => { $uploadForm.submit(); }, 1500);
+                $uploadForm.submit();
             } else if (result.isDenied) {
                 Swal.fire('Envio cancelado', '', 'info');
             }

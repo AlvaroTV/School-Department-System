@@ -24,7 +24,7 @@ window.onload = function() {
                         'El anteproyecto le ha sido asignado.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

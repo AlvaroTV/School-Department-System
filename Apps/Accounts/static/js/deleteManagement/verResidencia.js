@@ -31,7 +31,7 @@ window.onload = function() {
                         'El elemento ha sido removido.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })
@@ -65,7 +65,7 @@ window.onload = function() {
                         'Se ha cancelado la Residencia del estudiante.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

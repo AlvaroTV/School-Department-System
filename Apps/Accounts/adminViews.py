@@ -614,8 +614,9 @@ def editarEstudiante(request, pk):
         if formE.is_valid():
             formE.save()
             
-        if formD.is_valid():
-            formD.save()
+        if not domicilio:    
+            if formD.is_valid():
+                formD.save()
     
         return redirect('verEstudiante', estudiante.id)
     
@@ -1625,7 +1626,7 @@ def subir_estudiantes_a(request):
                     estudiante_a = Estudiante_Autorizado.objects.create(num_control=row[0], nombre_completo=row[1])                                        
                 except:
                     pass                
-            return redirect('estudiantes_autorizados')
+            return redirect('estudiantes_autorizados' ,1, 0, 0)
     
     context = {'group': group, 'form': form, 'title': 'Subir Estudiantes'}
     return render(request, 'Admin/estudiantes_autorizados/subir_documento.html', context)

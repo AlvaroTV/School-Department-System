@@ -20,6 +20,9 @@ class Estudiante_Autorizado(models.Model):
     def save(self, *args, **kwargs):        
         self.nombre_completo = unidecode(self.nombre_completo.upper())        
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f'{self.num_control}'             
 
 class Materia(models.Model):    
     SEMESTRES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'))
@@ -258,6 +261,7 @@ class Estudiante(models.Model):
     # Llaves Foraneas
     domicilio = models.OneToOneField(Domicilio, on_delete=models.SET_NULL, null=True, blank=True)    
     expediente = models.OneToOneField(Expediente, on_delete=models.SET_NULL, null=True, blank=True)
+    estudiante_aut = models.OneToOneField(Estudiante_Autorizado, on_delete=models.SET_NULL, null=True, blank=True)
     #anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)
     #residencia = models.ForeignKey(Residencia, on_delete=models.SET_NULL, null=True, blank=True)
     
@@ -274,7 +278,7 @@ class Estudiante(models.Model):
     curp = models.CharField(max_length=18, null=True, blank=True)
     institutoSeguridadSocial = models.CharField(max_length=200, blank=True)                    
     numSeguridadSocial = models.CharField(max_length=70, null=True, blank=True)        
-    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/students/',null=True, blank=True)
+    fotoUsuario = models.ImageField(default='profilepic.png', upload_to='profilesPic/students/',null=True, blank=True)    
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)    
     
     def save(self, *args, **kwargs):        
@@ -305,6 +309,13 @@ class Estudiante_Residencia(models.Model):
     
     # Atributos
     estado = models.CharField(max_length=15, choices=ESTADOS, default='ACTIVO')
+
+class Invitacion(models.Model):
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
+    estudiante_remitente = models.OneToOneField(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)
+    estudiante_destinatario = models.OneToOneField(Estudiante_Autorizado, on_delete=models.SET_NULL, null=True, blank=True)    
+    anteproyecto = models.OneToOneField(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)        
+    fecha_elaboracion = models.DateField(default=date.today)
     
 class Avisos(models.Model):
     ENTIDADES = (('ESTUDIANTES', 'ESTUDIANTES'), ('DOCENTES', 'DOCENTES'), ('TODOS', 'TODOS'), ('PRIVADO', 'PRIVADO'))

@@ -33,7 +33,7 @@ window.onload = function() {
                         'El docente ha sido asignado.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

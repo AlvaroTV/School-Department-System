@@ -14,7 +14,7 @@ class EstudianteForm(ModelForm):
     class Meta:
         model = Estudiante
         fields = '__all__'
-        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'id']
+        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'id', 'estudiante_aut']
         labels = {
             'nombre': 'Nombre(s)',
             'apellidoP': 'Apellido Paterno',

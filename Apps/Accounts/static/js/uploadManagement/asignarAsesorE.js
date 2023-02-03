@@ -33,7 +33,7 @@ window.onload = function() {
                         'El asesor ha sido asignado correctamente.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

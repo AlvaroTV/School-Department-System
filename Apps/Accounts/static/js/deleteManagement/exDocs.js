@@ -30,7 +30,7 @@ window.onload = function() {
                         'El documento ha sido eliminado.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

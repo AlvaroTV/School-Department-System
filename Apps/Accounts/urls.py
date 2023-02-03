@@ -44,6 +44,10 @@ urlpatterns = [
     path('residencia/', proyectoResidencia, name='residencia'),    
     path('compatibilidadA/<materiaPK>', compatibilidadA, name='compatibilidadA'),    
         
+    path('crear_invitacion/<uuid:pk_e>/<uuid:pk_a>', aceptar_invitacion, name='aceptar_invitacion'),    
+    path('aceptar_invitacion/<uuid:pk>', aceptar_invitacion, name='aceptar_invitacion'),    
+    path('rechazar_invitacion/<uuid:pk>', rechazar_invitacion, name='rechazar_invitacion'),    
+        
     # Admin
     path('anteproyectos/<int:page>/<int:orderB><int:filter>', anteproyectos, name='anteproyectos'),    
     path('residencias/<int:page>/<int:orderB><int:filter>', residencias, name='residencias'),        

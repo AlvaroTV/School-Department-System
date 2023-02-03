@@ -33,7 +33,7 @@ window.onload = function() {
                         'La Organizacion o Empresa ha sido asignada.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })

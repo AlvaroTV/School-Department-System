@@ -29,7 +29,7 @@ window.onload = function() {
                         'El aviso ha sido removido.',
                         'success'
                     )                    
-                    setTimeout(() => { location.href = ref; }, 1500);
+                    location.href = ref;
                 }
             })
         })
