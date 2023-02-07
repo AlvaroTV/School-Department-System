@@ -25,6 +25,7 @@ from django.db.models.functions import Substr
 from django.db.models import Count
 from datetime import date, timedelta
 from django.utils import timezone
+from django.conf import settings
 import pytz
 import string  
 import random  
@@ -337,7 +338,7 @@ def createStudent(request):
 
                 email = render_to_string(email_template_name, c)
                 try:
-                    send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+                    send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
 
@@ -442,7 +443,7 @@ def expediente(request):
     rF = None
     fecha20d = None            
     fecha6w = None     
-    formE = None               
+    formE = ExpedienteViewForm()                 
         
     try:
         estatus = anteproyecto.estatus                       
@@ -1010,16 +1011,18 @@ def editarAnteproyecto(request):
     estudiante = request.user.estudiante         
     #anteproyecto = estudiante.anteproyecto
     anteproyecto = Estudiante_Anteproyecto.objects.filter(estudiante = estudiante, estado = 'ACTIVO')[0].anteproyecto        
-    estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()                    
+    #estudiantes = Estudiante.objects.filter(anteproyecto = anteproyecto).count()                    
+    all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]        
     
     codigo = anteproyecto.codigoUnion
     numIntegrantes = anteproyecto.numIntegrantes
     mensaje = ''
     
-    formA = AnteproyectoEstForm(instance = anteproyecto)                                                    
+    formA = AnteproyectoEditForm(instance = anteproyecto)                                                    
     
     if request.method == 'POST':                        
-        formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                          
+        formA = AnteproyectoEditForm(request.POST, instance = anteproyecto)                                          
                   
         if formA.is_valid():
             numIntegrantes2 = int(formA['numIntegrantes'].value())                        
@@ -1188,7 +1191,7 @@ def password_reset_request(request):
 					}
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                        send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     return redirect ("/password_reset/done/")

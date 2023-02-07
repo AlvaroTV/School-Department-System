@@ -698,7 +698,7 @@ def asignarRevisor1I(request, pkA, pkD):
     if revisor2 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
         asunto = 'El estado de su Anteproyecto se actualizo a: EN REVISION'
-        mensaje = ('Feliciades, ya le han sido asignado ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+        mensaje = ('Feliciades, ya le han sido asignados ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
                    + '*' + '\n'
                    + 'Revisor 1: ' + str(docente) + '\n'
                    + 'Correo Electronico: ' + docente.correoElectronico + '\n'
@@ -790,7 +790,7 @@ def asignarRevisor2I(request, pkA, pkD):
     if revisor1 and anteproyecto.estatus != 'ACEPTADO':
         anteproyecto.estatus = 'EN REVISION'
         asunto = 'El estado de su Anteproyecto se actualizo a: EN REVISION'
-        mensaje = ('Feliciades, ya le han sido asignado ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+        mensaje = ('Feliciades, ya le han sido asignados ambos revisores a su anteproyecto. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
                    + '*' + '\n'
                    + 'Revisor 1: ' + str(revisor1) + '\n'
                    + 'Correo Electronico: ' + revisor1.correoElectronico + '\n'

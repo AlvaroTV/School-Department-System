@@ -339,6 +339,23 @@ class AnteproyectoForm(ModelForm):
         super(AnteproyectoForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                        
+
+class AnteproyectoEditForm(ModelForm):
+    class Meta:        
+        model = Anteproyecto
+        fields = '__all__'
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion', 'anteproyectoDoc']   
+        labels = {
+            'a_nombre': 'Nombre del Anteproyecto',
+            'tipoProyecto': 'Tipo de Proyecto',
+            'fechaEntrega': 'Fecha de entrega',
+            'numIntegrantes': 'Numero de integrantes',                        
+        }                        
+
+    def __init__(self, *args, **kwargs):
+        super(AnteproyectoEditForm, self).__init__(*args, **kwargs)        
+        for myField in self.fields:                                    
+            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             
 class AnteproyectoDocForm(ModelForm):
     class Meta:

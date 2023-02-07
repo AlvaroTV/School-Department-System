@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage, BadHeaderError, send_mail
+from django.conf import settings
 
 def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):            
 
@@ -31,7 +32,7 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
         
     # Observacion anteproyecto - Para el Estudiante   
     elif tipo == 3:
-        mensaje = ('Su anteproyecto tiene una observacion. Es importante que revises las observaciones que se han realizado y subas tus cambios lo mas pronto posible.' + '\n'
+        mensaje = ('Su anteproyecto tiene una observacion. Es importante que revises las observaciones que se han realizado y subas tus cambios lo mas pronto posible.' + '\n' + '\n'
                    + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
     
     # Expediente
@@ -41,13 +42,12 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
             'FINALIZADO': 'Felicidades!. No se encontro ningun error con sus documentos. Ya puede pasar a la oficina de la jefa del departamento de vinculacion por su documento.',            
         }
         mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
-            
-        
+                    
     try:
         send_mail(
         asunto,
         mensaje,
-        'jefatura.vinculacion.sistemas@itoaxaca.edu.mx',
+        settings.EMAIL_HOST_USER,
         lista_destinos,
     )
     except BadHeaderError:

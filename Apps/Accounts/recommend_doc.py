@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import mean_absolute_error
+#from sklearn.model_selection import train_test_split
+#from sklearn.metrics.pairwise import cosine_similarity
+#from sklearn.metrics import mean_absolute_error
 
 def matrix_anteproyectos_materias(df_anteproyectos, df_anteproyecto_materia, df_materias):
     # Se eliminan aquellos atributos que no son necesarios y se renombra una columna para hacer la union con otro dataframe

@@ -10,6 +10,7 @@ $.datepicker.regional['es'] = {
     dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
     weekHeader: 'Sm',    
     dateFormat: 'mm/dd/yy',
+    //dateFormat: 'dd/mm/yy',
     firstDay: 1,
     isRTL: false,
     showMonthAfterYear: false,

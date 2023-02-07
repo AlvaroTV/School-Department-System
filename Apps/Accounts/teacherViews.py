@@ -347,7 +347,7 @@ def anteproyectoA(request, pk):
     fechaObservacion = None
     formEstadoR1 = None
     formEstadoR2 = None
-    data = ['id_mision', 'id_codigoUnion']                
+    data = ['id_mision', 'id_codigoUnion', 'id_calle']                
     estadoR1 = anteproyecto.estatusR1    
     estadoR2 = anteproyecto.estatusR2        
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')    
@@ -398,7 +398,7 @@ def anteproyectoA(request, pk):
                 if anteproyecto.estatusR1 == 'ACEPTADO' and anteproyecto.estatusR2 == 'ACEPTADO':
                     anteproyecto.estatus = 'REVISADO'
                     anteproyecto.save()
-                    enviar_email('El estado de su Anteproyecto se actualizo a: REVISADO.', '', lista_correos, 1, 'REVISADO')
+                    enviar_email('El estado de su Anteproyecto se actualizo a: REVISADO.', '', lista_correos, 1, 'REVISADO')                    
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
         else:
             formEstadoR2 = AnteproyectoEstadoFormR2(request.POST, instance = anteproyecto)        

@@ -13,6 +13,6 @@ def validate_len_num_control(value):
 # Ponerle este validator a cada FileField
 def validate_file_size(file):
     # La unidad esta en Bytes
-    max_upload_size = 5242880  # 5MB
+    max_upload_size = 20971520  # 20MB
     if file.size > max_upload_size:
         raise ValidationError("El tamaño del archivo es mayor que el límite permitido")
