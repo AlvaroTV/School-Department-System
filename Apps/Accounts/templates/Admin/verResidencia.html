@@ -89,16 +89,39 @@
             <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
                     <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% for field in formR %}
-                        {% if not field.id_for_label in data %}
+
                         <label class="block mt-4 text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                            {{ field }}
+                            <span class="text-gray-700 dark:text-gray-400">{{formR.nombre.label_tag}}</span>
+                            {{ formR.nombre }}
                         </label>
-                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                        {% endif %}
-                        {% endfor %}
+
+                        <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                            {% for field in formR %}
+                            {% if field.id_for_label not in data %}
+
+                            {% if field.id_for_label == 'id_periodoInicio' %}
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                <input type="text" value="{{residencia.periodoInicio|date:" d/M/Y"}}" name="periodoInicio"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_periodoInicio">
+                            </label>
+                            {% elif field.id_for_label == 'id_periodoFin' %}
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                <input type="text" name="periodoFin" value="{{residencia.periodoFin|date:" d/M/Y"}}"
+                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                    disabled="" required="" id="id_periodoFin">
+                            </label>
+                            {% else %}
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                {{ field }}
+                            </label>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </div>
 
                         <br>
                     </form>
@@ -425,85 +448,105 @@
 
             <br>
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-                Datos de la dependencia
+                Datos de la Organización o Empresa
             </h4>
-            <div class="grid gap-6 mb-8 md:grid-cols-1">
-                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                        <form action="" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% for field in formD %}
-                            {% if not field.id_for_label in data %}
+            <div class="mb-4 min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">{{formD.d_nombre.label_tag}}</span>
+                        {{ formD.d_nombre }}
+                    </label>
+                    <p id="messages" class="text-red-600">{{ formD.d_nombre.errors }}</p>
+
+                    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                        {% for field in formD %}
+                        {% if not field.id_for_label in data %}
+                        <div>
                             <label class="block mt-4 text-sm">
                                 <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
                                 {{ field }}
                             </label>
                             <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                            {% endif %}
-                            {% endfor %}
-
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400">Mision:</span>
-
-                                <textarea id="message" rows="4" disabled
-                                    class="block p-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Your message...">{{ dependencia.mision }}</textarea>
-                            </label>
-
-                            {% for field in formDom %}
-                            {% if not field.id_for_label in data %}
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                                {{ field }}
-                            </label>
-                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                            {% endif %}
-                            {% endfor %}
-
-                            <br>
-                            <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
-                                Titular de la dependencia
-                            </h4>
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400"><label
-                                        for="id_t_nombre">Nombre:</label></span>
-                                <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
-                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    disabled="" required="" id="id_t_nombre">
-                            </label>
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400"><label
-                                        for="id_t_nombre">Puesto:</label></span>
-                                <input type="text" name="t_nombre" value="{{dependencia.titular.t_puesto}}"
-                                    maxlength="100"
-                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    disabled="" required="" id="id_t_nombre">
-                            </label>
-
-                            <br>
-                            <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
-                                Asesor Externo
-                            </h4>
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400"><label
-                                        for="id_t_nombre">Nombre:</label></span>
-                                <input type="text" name="t_nombre" value="{{residencia.asesorExterno}}" maxlength="100"
-                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    disabled="" required="" id="id_t_nombre">
-                            </label>
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400"><label
-                                        for="id_t_nombre">Puesto:</label></span>
-                                <input type="text" name="t_nombre" value="{{residencia.asesorExterno.puesto}}"
-                                    maxlength="100"
-                                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    disabled="" required="" id="id_t_nombre">
-                            </label>
-                            <br>
-                        </form>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
                     </div>
-                </div>
-            </div>
+
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Mision:</span>
+
+                        <textarea id="message" rows="4" disabled
+                            class="block p-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Your message...">{{ dependencia.mision }}</textarea>
+                    </label>
+
+                    <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                        Direccion de la Organización o Empresa.
+                    </h4>
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">{{formDom.calle.label_tag}}</span>
+                        {{ formDom.calle }}
+                    </label>
+                    <p id="messages" class="text-red-600">{{ formDom.calle.errors }}</p>
+
+                    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                        {% for field in formDom %}
+                        {% if not field.id_for_label in data %}
+                        <div>
+                            <label class="block mt-4 text-sm">
+                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                {{ field }}
+                            </label>
+                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                        Titular de la Organización o Empresa.
+                    </h4>
+                    <div class="grid gap-6  md:grid-cols-2">
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400"><label
+                                    for="id_t_nombre">Nombre:</label></span>
+                            <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_t_nombre">
+                        </label>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400"><label
+                                    for="id_t_nombre">Puesto:</label></span>
+                            <input type="text" name="t_nombre" value="{{dependencia.titular.t_puesto}}" maxlength="100"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_t_nombre">
+                        </label>
+                    </div>
+
+                    <br>
+                    <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                        Asesor Externo
+                    </h4>
+                    <div class="grid gap-6  md:grid-cols-2">
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400"><label
+                                    for="id_t_nombre">Nombre:</label></span>
+                            <input type="text" name="t_nombre" value="{{residencia.asesorExterno}}" maxlength="100"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_t_nombre">
+                        </label>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400"><label
+                                    for="id_t_nombre">Puesto:</label></span>
+                            <input type="text" name="t_nombre" value="{{residencia.asesorExterno.puesto}}"
+                                maxlength="100"
+                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                                disabled="" required="" id="id_t_nombre">
+                        </label>
+                    </div>
+                    <br>
+                </form>
+            </div>            
         </div>
     </div>
     {% if group == 'admin' %}

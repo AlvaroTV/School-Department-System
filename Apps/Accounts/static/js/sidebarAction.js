@@ -37,7 +37,7 @@ console.log(url.pathname)
 console.log(pathName)
 
 
-if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA' | pathName == 'dependencias' | pathName == 'altaDependencia' | pathName == 'asesoresExternos'| pathName == 'altaAsesorE' | pathName == 'altaDomicilioD' | pathName == 'altaTitularD') {
+if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'editarAnteproyectoAdmin' | pathName == 'editarObservaciones' | pathName == 'asignarRevisor1' | pathName == 'asignarRevisor2' | pathName == 'anteproyectosTeacher' | pathName =='anteproyectoA' | pathName == 'agregarComentario' | pathName == 'anteproyecto' | pathName == 'editAnteproyecto' | pathName == 'compatibilidadA' | pathName == 'dependencias' | pathName == 'altaDependencia' | pathName == 'asesoresExternos'| pathName == 'altaAsesorE' | pathName == 'altaDomicilioD' | pathName == 'altaTitularD' | pathName == 'invitar') {
     anteproyectos.hidden = false
     a_anteproyectos.classList.add("dark:text-gray-100");
     a_anteproyectos.classList.add("text-blue-500");

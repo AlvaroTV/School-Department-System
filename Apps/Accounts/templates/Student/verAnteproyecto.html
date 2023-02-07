@@ -30,8 +30,7 @@
   <div class="grid gap-6 mb-8 md:grid-cols-1">
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
+        <form action="" method="POST" enctype="multipart/form-data">          
 
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">{{formA.a_nombre.label_tag}}</span>
@@ -52,14 +51,44 @@
             {% endfor %}
           </div>
           <br>
+          
         </form>
       </div>
     </div>
   </div>
 
+  {% if invitaciones %}
+  <h4 class="mt-8 text-lg font-semibold text-gray-600 dark:text-gray-300">
+    Invitaciones enviadas
+  </h4>
+  <div class="w-full overflow-hidden rounded-lg shadow-xs mb-4">    
+    <div class="w-full overflow-x-auto">      
+      <table class="w-full">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3 text-center">Realizada por</th>
+            <th class="px-4 py-3 text-center">Para</th>
+            <th class="px-4 py-3 text-center">Fecha envio</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          {% for invitacion in invitaciones %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_remitente}}</td>            
+            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_destinatario.nombre_completo}}</td>            
+            <td class="px-4 py-3 text-md text-center">{{invitacion.fecha_elaboracion|date:"d/M/Y"}}</td>            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>      
+    </div>
+  </div>
+  {% endif %}
+
   {% if invitar %}
   <div class="grid gap-6 mb-8 md:grid-cols-1">
-    <a href="">
+    <a href="{% url 'invitar' anteproyecto.id %}">
       <div class="px-4 py-3 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
         <p class="flex items-center text-sm text-teal-500 dark:text-teal-100">
           Haz clic aqui para invitar a los integrantes de tu equipo.
@@ -206,6 +235,11 @@
           {% csrf_token %}
           {% if not anteproyecto.anteproyectoDoc %}
           {% for field in formDoc %}
+          <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            * Solo se aceptan documentos PDF.
+            <br>
+            * Tamaño máximo del documento 5MB.                            
+          </p>
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
             {{ field }}
@@ -224,7 +258,7 @@
             <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
             {{formDoc.anteproyectoDoc.label}} PDF
           </a>
-          {% if fechaCorte >= fechaActual and anteproyecto.estatus != 'ACEPTADO' and anteproyecto.estatus != 'RECHAZADO'     %}
+          {% if fechaCorte >= fechaActual and anteproyecto.estatus != 'ACEPTADO' and anteproyecto.estatus != 'RECHAZADO' and anteproyecto.estatus != 'REVISADO' %}
           <div class="relative">
             <a class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
               href="{% url 'removeDoc' anteproyecto.id %}">Eliminar</a>

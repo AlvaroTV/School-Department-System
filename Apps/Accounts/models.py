@@ -188,6 +188,7 @@ class AsesorExterno(models.Model):
 class Residencia(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
     ESTADOS = (('INICIADA', 'INICIADA'), ('EN PROCESO', 'EN PROCESO'), ('PRORROGA', 'PRORROGA'), ('NO FINALIZADA', 'NO FINALIZADA'), ('RECHAZADA', 'RECHAZADA'), ('FINALIZADA', 'FINALIZADA'), ('CANCELADA', 'CANCELADA'))
+    N_INTEGRANTES = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'))
     
     # Llaves foraneas
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
@@ -197,11 +198,11 @@ class Residencia(models.Model):
     
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre = models.CharField(max_length=300)
-    tipoProyecto = models.CharField(max_length=25, choices=TIPOS)         
-    numIntegrantes = models.IntegerField(default=1)
+    tipoProyecto = models.CharField(max_length=25, choices=TIPOS)             
     estatus = models.CharField(max_length=15, choices=ESTADOS, default='INICIADA')    
     periodoInicio = models.DateField(null=True)
     periodoFin = models.DateField(null=True)    
+    numIntegrantes = models.IntegerField(choices=N_INTEGRANTES, default=1)
 
 class Anteproyecto(models.Model):
     TIPOS = (('PROPUESTA PROPIA', 'PROPUESTA PROPIA'), ('BANCO DE PROYECTOS', 'BANCO DE PROYECTOS'), ('TRABAJADOR', 'TRABAJADOR'))
@@ -226,7 +227,7 @@ class Anteproyecto(models.Model):
     estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')
     estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')    
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)    
-    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf'])], default=None)                        
+    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf']), validate_file_size], default=None)                        
 
 class Actualizacion_anteproyecto(models.Model):
     ESTADOS = (('NO LEIDO', 'NO LEIDO'), ('LEIDO', 'LEIDO'))
@@ -312,9 +313,9 @@ class Estudiante_Residencia(models.Model):
 
 class Invitacion(models.Model):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
-    estudiante_remitente = models.OneToOneField(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)
+    estudiante_remitente = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, blank=True)
     estudiante_destinatario = models.OneToOneField(Estudiante_Autorizado, on_delete=models.SET_NULL, null=True, blank=True)    
-    anteproyecto = models.OneToOneField(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)        
+    anteproyecto = models.ForeignKey(Anteproyecto, on_delete=models.SET_NULL, null=True, blank=True)        
     fecha_elaboracion = models.DateField(default=date.today)
     
 class Avisos(models.Model):

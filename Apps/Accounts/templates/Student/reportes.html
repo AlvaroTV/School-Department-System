@@ -20,6 +20,15 @@
                 </svg>
             </p>
         </div>
+        {% else %}
+        <div class="block w-25 px-4 py-3 mb-4 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
+            <p class="text-sm text-teal-500 dark:text-teal-100">
+                * Solo se aceptan documentos PDF.
+            </p>
+            <p class="text-sm text-teal-500 dark:text-teal-100">
+                * Tamaño máximo del documento 5MB.
+            </p>
+        </div>
         {% endif %}
         <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
             {% csrf_token %}
@@ -36,7 +45,7 @@
                     <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
                         {{field.label}}
                     </p>
-                    {% if field.value %}
+                    {% if field.value and not field.errors %}
                     <a class="text-green-500" href="/media/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
@@ -45,6 +54,7 @@
                     <br>
                     {% elif estatus == 'ACEPTADO' and residencia.periodoInicio %}
                     {{field}}
+                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -77,7 +87,7 @@
                     <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
                         {{field.label}}
                     </p>
-                    {% if field.value %}
+                    {% if field.value and not field.errors %}
                     <a class="text-green-500" href="/media/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
@@ -90,6 +100,7 @@
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1</p>
                     {% else %}
                     {{field}}
+                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"
@@ -119,7 +130,7 @@
                     <p class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-100">
                         {{field.label}}
                     </p>
-                    {% if field.value %}
+                    {% if field.value and not field.errors %}
                     <a class="text-green-500" href="/media/{{field.value}}" target="_blank">
                         <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50"
                             class="mx-auto d-block">
@@ -132,6 +143,7 @@
                     <p class="text-teal-500">* Necesita subir el Reporte parcial 1 y 2</p>
                     {% else %}
                     {{field}}
+                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
                     <div class="relative">
                         <br>
                         <input type="submit" value="Enviar"

@@ -31,23 +31,29 @@
               </h1>
               <p class="text-red-600">{{ mensaje }}</p>
 
-              {% for field in formE %}
-              {% if not field.id_for_label in data %}
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                {{ field }}
-              </label>
-              <p id="messages" class="text-red-600">{{ field.errors }}</p>
-              {% endif %}
-              {% endfor %}
+              <div class="grid gap-6 mb-8 md:grid-cols-2">
+                {% for field in formE %}
+                {% if not field.id_for_label in data %}
+                <div>
+                  <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                    {{ field }}
+                  </label>
+                  <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
 
-              {% for field in formU %}
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                {{ field }}
-              </label>
-              <p id="messages" class="text-red-600">{{ field.errors }}</p>
-              {% endfor %}
+                {% for field in formU %}
+                <div>
+                  <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                    {{ field }}
+                  </label>
+                  <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                </div>
+                {% endfor %}
+              </div>
 
               <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                 * Su contraseña no puede ser demasiado similar a su información personal.

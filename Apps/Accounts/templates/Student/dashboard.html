@@ -165,8 +165,8 @@
                         <th class="px-4 py-3">Invitado por</th>
                         <th class="px-4 py-3">Fecha de la invitacion</th>
                         <th class="px-4 py-3">Nombre anteproyecto</th>
-                        <th class="px-4 py-3">ACEPTAR</th>
-                        <th class="px-4 py-3">RECHAZAR</th>
+                        <th class="px-4 py-3 text-center">ACEPTAR</th>
+                        <th class="px-4 py-3 text-center">RECHAZAR</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -187,7 +187,7 @@
                         </td>
                         <td class="px-4 py-3 text-md">{{invitacion.fecha_elaboracion|date:"d/M/Y"}}</td>
                         <td class="px-4 py-3 text-md">{{invitacion.anteproyecto.a_nombre}}</td>
-                        <td class="px-4 py-3 btnAdd">
+                        <td class="px-4 py-3 btnAdd text-center">
                             <div class="flex items-center justify-center">
                                 <a href="{% url 'aceptar_invitacion' invitacion.id %}"
                                     class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">

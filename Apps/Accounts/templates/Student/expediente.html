@@ -9,7 +9,7 @@
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Expediente de usuario
-    </h2>
+    </h2>    
 
     {% if expediente.estatus == 'COMPLETO' %}
     <div class="mb-4 p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
@@ -22,6 +22,15 @@
         </svg>
       </p>
     </div>
+    {% else %}
+    <div class="block w-25 px-4 py-3 mb-4 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
+      <p class="text-sm text-teal-500 dark:text-teal-100">
+        * Solo se aceptan documentos PDF.
+      </p>
+      <p class="text-sm text-teal-500 dark:text-teal-100">
+        * Tamaño máximo del documento 5MB.                            
+      </p>
+    </div>    
     {% endif %}
 
     <form name="formulario" method="POST" action="" enctype="multipart/form-data" id="uploadForm">
@@ -32,7 +41,7 @@
         {% if field.id_for_label in data %}
         {% if field.id_for_label == 'id_dictamen' and semestre < 13 %} {% else %} <div
           class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-          {% if field.value %}
+          {% if field.value and not field.errors %}
           <a class="text-green-500" href="/media/{{field.value}}" target="_blank">
             <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
             {{field.label}} PDF
@@ -49,6 +58,7 @@
           {% endif %}
 
           {{field}}
+          <p id="messages" class="text-red-600">{{ field.errors }}</p>
           <div class="relative">
             <br>
             {% if estatus == 'ACEPTADO' and residencia.periodoInicio %}
@@ -66,7 +76,7 @@
       {% for field in form %}
       {% if not field.id_for_label in data %}
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        {% if field.value %}
+        {% if field.value and not field.errors %}
         <a class="text-green-500" href="/media/{{field.value}}" target="_blank">
           <img alt="Qries" src="{% static 'images/pdficon.png' %}" width=130" height="50" class="mx-auto d-block">
           {{field.label}} PDF
@@ -82,8 +92,8 @@
         <p class="text-red-600"> <strong>Fecha Entrega:</strong> {{fecha6w}} </p>
         {% endif %}
 
-
         {{field}}
+        <p id="messages" class="text-red-600">{{ field.errors }}</p>
         <div class="relative">
           <br>
           {% if estatus == 'ACEPTADO' and residencia.periodoInicio %}

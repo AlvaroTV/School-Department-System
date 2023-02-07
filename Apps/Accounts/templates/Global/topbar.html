@@ -23,11 +23,11 @@
       <!-- Theme toggler -->
       <li class="flex text-white">
         {% if group == 'student' %}
-        <span>Hola, {{request.user.estudiante.nombre}} </span>
+        <span>Hola estudiante, {{request.user.estudiante.nombre}} </span>
         {% elif group == 'teacher'  %}
-        <span>Hola, {{request.user.docente.nombre}} </span>
+        <span>Hola docente, {{request.user.docente.nombre}} </span>
         {% else %}
-        <span>Hola, {{request.user.first_name}} </span>
+        <span>Hola administrador, {{request.user.first_name}} </span>
         {% endif %}
       </li>
       <li class="flex text-blue-500">

@@ -1,15 +1,17 @@
 {% autoescape off %}
 
-Hola {{user_name}},
+¡Hola! {{user_name}},
 
-Estamos felices de que estés aquí. Verifiquemos su dirección de correo electrónico:
+¡Gracias por unirte al Sistema del Depto. De Sistemas y computación!
+
+Para completar tu registro, pulsa sobre el siguiente enlace:
 
 {{ protocol }}://{{ domain }}{% url 'activate_user' uidb64=uid token=token %}
 
-Si no realizó esta solicitud, simplemente puede ignorar este correo electrónico.
+Si no has solicitado personalmente el registro al Sistema del depto. De sistemas y computación, por favor ignora este correo.
 
 Atentamente,
 
-The Development Team.
+El equipo del Depto. de vinculación de sistemas y computación.
 
 {% endautoescape %}

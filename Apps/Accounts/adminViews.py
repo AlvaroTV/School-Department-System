@@ -170,6 +170,7 @@ def verExpediente(request, pk):
         formEstado = ExpedienteEstadoForm(request.POST, instance = expediente)     
         if formEstado.is_valid():
             formEstado.save()  
+            enviar_email('Expediente FINALIZADO', '', [estudiante.correoElectronico], 4, 'FINALIZADO')
             estado = formEstado.cleaned_data.get("estatus") 
             if estado == 'FINALIZADO':
                 descripcion = '<hr /><p><strong><span style="color:#e74c3c"><big>Feliciades!!!! </big></span></strong></p><hr /><div><p style="margin-left:0px; margin-right:0px"><span style="color:#3498db"><em>Tu expediente ha sido revisado y se ha dado por finalizado. Ya puedes pasar a la oficina del departamento de vinculaci&oacute;n a recoger tu documento.</em></span></p><br/><div style="width:100%"><div style="height:0;padding-bottom:56.25%;position:relative;width:100%"><iframe allowfullscreen="" frameBorder="0" height="100%" src="https://giphy.com/embed/G96zgIcQn1L2xpmdxi/video" style="left:0;position:absolute;top:0" width="100%"></iframe></div></div>'
@@ -310,7 +311,7 @@ def docentes(request, page, orderB):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @publicView
 def verAnteproyecto(request, pk):
-    group = request.user.groups.all()[0].name
+    group = request.user.groups.all()[0].name    
     anteproyecto = Anteproyecto.objects.get(id = pk)    
     all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
     all_anteproyectos = Estudiante_Anteproyecto.objects.all()            
@@ -318,6 +319,7 @@ def verAnteproyecto(request, pk):
     historial_estudiantes = []  
     all_estudiantes_a = all_estudiantes.filter(estado = 'ACTIVO')              
     lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes_a ]
+    resi = None
     
     for i in estudiantes:        
         anteproyecto_e = all_estudiantes.filter(estudiante = i)                
@@ -344,7 +346,7 @@ def verAnteproyecto(request, pk):
     fechaCorte = None
     fechaActual = date.today
     fechaObservacion = None
-    data = ['id_mision', 'id_codigoUnion']        
+    data = ['id_mision', 'id_codigoUnion', 'id_d_nombre', 'id_calle']        
     lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'REVISADO' ,'RECHAZADO']
     
     if observacion:
@@ -386,8 +388,9 @@ def verAnteproyecto(request, pk):
                         tipoProyecto = anteproyecto.tipoProyecto,
                         numIntegrantes = anteproyecto.numIntegrantes                    
                     )        
-                    residencia.save()                                                        
-                
+                    residencia.save()   
+                    resi = True                                                                         
+                    
                     for e in estudiantes:      
                         estudiante_residencia = Estudiante_Residencia(
                             estudiante = e,
@@ -400,9 +403,10 @@ def verAnteproyecto(request, pk):
                     e.save()
                                        
             formEstado.save()
-            asunto = 'El estado de su Anteproyecto se actualizo a: ' + estadoFinal
-            
+            asunto = 'El estado de su Anteproyecto se actualizo a: ' + estadoFinal            
             enviar_email(asunto, '', lista_correos, 1, estadoFinal)            
+            if resi:
+                enviar_email('Su Residencia ha comenzado.', '', lista_correos, 2, 'INICIADA')            
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
         
     context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data, 'actualizaciones': actualizaciones, 'historial_estudiantes': historial_estudiantes, 'title': 'Anteproyecto'}
@@ -532,9 +536,9 @@ def editarObservaciones(request, pk):
                     observacion = observacion,
                     observacionD = rObservacion
                 )
-                nuevaObservacion.save()   
-                
-                         
+                nuevaObservacion.save()                   
+                asunto = 'Tiene una nueva observacion'            
+                enviar_email(asunto, '', lista_correos, 3)                 
         else:                            
                 
             if rObservacion:            
@@ -700,7 +704,8 @@ def asignarRevisor1I(request, pkA, pkD):
                    + 'Correo Electronico: ' + docente.correoElectronico + '\n'
                    + '*' + '\n'
                    + 'Revisor 2: ' + str(revisor2) + '\n'
-                   + 'Correo Electronico: ' + revisor2.correoElectronico) 
+                   + 'Correo Electronico: ' + revisor2.correoElectronico + '\n' + '\n'
+                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.') 
         enviar_email(asunto, mensaje, lista_correos,)            
     anteproyecto.save()   
      
@@ -708,7 +713,8 @@ def asignarRevisor1I(request, pkA, pkD):
                + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
                + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
                + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
     enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])
         
     return redirect('verAnteproyecto', anteproyecto.id)
@@ -790,14 +796,16 @@ def asignarRevisor2I(request, pkA, pkD):
                    + 'Correo Electronico: ' + revisor1.correoElectronico + '\n'
                    + '*' + '\n'
                    + 'Revisor 2: ' + str(docente) + '\n'
-                   + 'Correo Electronico: ' + docente.correoElectronico)
-        enviar_email(asunto, mensaje, lista_correos,)          
+                   + 'Correo Electronico: ' + docente.correoElectronico + '\n' + '\n'
+                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+        enviar_email(asunto, mensaje, lista_correos)          
     anteproyecto.save()     
     mensaje = ('Se le informa que usted ha sido asignado como Revisor 2 del siguiente proyecto de residencia.' + "\n"
                + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
                + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
                + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
     enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])   
     return redirect('verAnteproyecto', anteproyecto.id)
 
@@ -906,7 +914,7 @@ def altaDocente(request):
 @publicView
 def verResidencia(request, pk):
     group = request.user.groups.all()[0].name
-    data = ['id_mision']        
+    data = ['id_mision', 'id_tipoProyecto', 'id_calle', 'id_d_nombre']        
     residencia = Residencia.objects.get(id = pk)    
     all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
     estudiantes = [i.estudiante for i in all_estudiantes ]     
@@ -928,6 +936,7 @@ def verResidencia(request, pk):
     dependencia = residencia.dependencia
     formR = ResidenciaViewForm(instance = residencia)                                
     formD = DependenciaViewForm(instance = dependencia)
+    formDom = DomicilioViewForm(instance = dependencia.domicilio)
     formER = ResidenciaEstadoForm(instance = residencia)
     
     if request.method == 'POST':
@@ -955,7 +964,7 @@ def verResidencia(request, pk):
             formER.save()      
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
-    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'asesorI': asesorI, 'revisor': revisor, 'dependencia': dependencia, 'formR': formR, 'formD': formD, 'formER': formER, 'data': data, 'title': 'Ver Residencia'}
+    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'asesorI': asesorI, 'revisor': revisor, 'dependencia': dependencia, 'formR': formR, 'formD': formD, 'formER': formER, 'formDom': formDom, 'data': data, 'title': 'Ver Residencia'}
     return render(request, 'Admin/verResidencia.html', context)        
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -1062,21 +1071,23 @@ def asignarAsesorI(request, pkR, pkD):
     if revisor and residencia.estatus == 'INICIADA':        
         residencia.estatus = 'EN PROCESO'
         asunto = 'El estado de su Residencia se actualizo a: EN PROCESO'
-        mensaje = ('Feliciades, ya le han sido asignado un asesor interno y a un revisor a su Residencia. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+        mensaje = ('¡Felicidades!, ya le han sido asignado un asesor interno y un revisor a su proyecto de residencia. Le recomendamos ponerse en contacto con ellos lo más pronto posible.'  + '\n'
                    + '*' + '\n'
                    + 'Asesor Interno: ' + str(docente) + '\n'
                    + 'Correo Electronico: ' + docente.correoElectronico + '\n'
                    + '*' + '\n'
                    + 'Revisor: ' + str(revisor) + '\n'
-                   + 'Correo Electronico: ' + revisor.correoElectronico) 
+                   + 'Correo Electronico: ' + revisor.correoElectronico + '\n' + '\n'
+                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
         enviar_email(asunto, mensaje, lista_correos,)    
     
     mensaje = ('Se le informa que usted ha sido asignado como Asesor Interno del siguiente proyecto de residencia.' + "\n"
                + 'Nombre del proyecto: ' + residencia.nombre + "\n"
                + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
                + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
-    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])            
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    enviar_email('Asignacion asesor interno proyecto de residencia', mensaje, [docente.correoElectronico])            
     residencia.save()
     return redirect('verResidencia', residencia.id)
 
@@ -1368,21 +1379,23 @@ def asignarRevisor(request, pkR, pkD):
     if asesor_interno and residencia.estatus == 'INICIADA':        
         residencia.estatus = 'EN PROCESO'
         asunto = 'El estado de su Residencia se actualizo a: EN PROCESO'
-        mensaje = ('Feliciades, ya le han sido asignado un asesor interno y a un revisor a su Residencia. Le recomendamos ponerse en contacto con ellos lo mas pronto posible.'  + '\n'
+        mensaje = ('¡Felicidades!, ya le han sido asignado un asesor interno y un revisor a su proyecto de residencia. Le recomendamos ponerse en contacto con ellos lo más pronto posible.'  + '\n'
                    + '*' + '\n'
                    + 'Asesor Interno: ' + str(asesor_interno) + '\n'
                    + 'Correo Electronico: ' + asesor_interno.correoElectronico + '\n'
                    + '*' + '\n'
                    + 'Revisor: ' + str(docente) + '\n'
-                   + 'Correo Electronico: ' + docente.correoElectronico) 
+                   + 'Correo Electronico: ' + docente.correoElectronico + '\n' + '\n'
+                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
         enviar_email(asunto, mensaje, lista_correos,)        
     residencia.save()
     mensaje = ('Se le informa que usted ha sido asignado como Revisor del siguiente proyecto de residencia.' + "\n"
                + 'Nombre del proyecto: ' + residencia.nombre + "\n"
                + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
                + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos))
-    enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])            
+               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos)  + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    enviar_email('Asignacion revisor proyecto de residencia', mensaje, [docente.correoElectronico])            
     return redirect('verResidencia', residencia.id)
 
 @admin_only

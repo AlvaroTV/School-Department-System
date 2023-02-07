@@ -185,16 +185,25 @@
     <div class="grid gap-6 mb-8 md:grid-cols-1">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
             <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% for field in formA %}
-                {% if not field.id_for_label in data %}
+
                 <label class="block mt-4 text-sm">
-                    <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                    {{ field }}
+                    <span class="text-gray-700 dark:text-gray-400">{{formA.a_nombre.label_tag}}</span>
+                    {{ formA.a_nombre }}
                 </label>
-                <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                {% endif %}
-                {% endfor %}
+                <p id="messages" class="text-red-600">{{ formA.a_nombre.errors }}</p>
+                <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+                    {% for field in formA %}
+                    {% if field.id_for_label != 'id_a_nombre' %}
+                    <div>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
                 <br>
             </form>
         </div>
@@ -602,42 +611,85 @@
         <h4 class="mb-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Datos de la Organización o Empresa
         </h4>
-        <div class="grid gap-6 mb-2 md:grid-cols-1">
-            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
+        <div class="min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
+            <form action="" method="POST" enctype="multipart/form-data">
+
+                {% if dependencia %}
+
+                <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">{{formD.d_nombre.label_tag}}</span>
+                    {{ formD.d_nombre }}
+                </label>
+                <p id="messages" class="text-red-600">{{ formD.d_nombre.errors }}</p>
+
+                <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
                     {% for field in formD %}
                     {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    <div>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    </div>
                     {% endif %}
                     {% endfor %}
+                </div>
 
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Mision:</span>
+                <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">Mision:</span>
 
-                        <textarea id="message" rows="4" disabled
-                            class="block p-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Your message...">{{ dependencia.mision }}</textarea>
-                    </label>
+                    <textarea id="message" rows="4" disabled
+                        class="block p-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Your message...">{{ dependencia.mision }}</textarea>
+                </label>
 
+                {% if dependencia.domicilio %}
+
+                <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                    Direccion de la Organización o Empresa.
+                </h4>
+                <label class="block mt-4 text-sm">
+                    <span class="text-gray-700 dark:text-gray-400">{{formDom.calle.label_tag}}</span>
+                    {{ formDom.calle }}
+                </label>
+                <p id="messages" class="text-red-600">{{ formDom.calle.errors }}</p>
+
+                <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
                     {% for field in formDom %}
                     {% if not field.id_for_label in data %}
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                        {{ field }}
-                    </label>
-                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    <div>
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                            {{ field }}
+                        </label>
+                        <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                    </div>
                     {% endif %}
                     {% endfor %}
+                </div>
 
-                    <br>
-                    <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
-                        Titular de la dependencia
-                    </h4>
+                {% else %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <p
+                        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+                        No se ha asignado una direccion a la Organización o Empresa.
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </p>
+                </div>
+                {% endif %}
+
+                <br>
+                <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                    Titular de la dependencia
+                </h4>
+
+                {% if dependencia.titular %}
+                <div class="grid gap-6  md:grid-cols-2">
                     <label class="block mt-4 text-sm">
                         <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
                         <input type="text" name="t_nombre" value="{{dependencia.titular}}" maxlength="100"
@@ -650,11 +702,28 @@
                             class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                             disabled="" required="" id="id_t_nombre">
                     </label>
+                </div>
 
-                    <br>
-                    <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
-                        Asesor Externo
-                    </h4>
+                {% else %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <p
+                        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+                        No se ha asignado un titular para la Organización o Empresa.
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </p>
+                </div>
+                {% endif %}
+
+                <br>
+                <h4 class="mb-4 text-base font-semibold text-gray-600 dark:text-gray-300">
+                    Asesor Externo
+                </h4>
+                {% if anteproyecto.asesorExterno %}
+                <div class="grid gap-6  md:grid-cols-2">
                     <label class="block mt-4 text-sm">
                         <span class="text-gray-700 dark:text-gray-400"><label for="id_t_nombre">Nombre:</label></span>
                         <input type="text" name="t_nombre" value="{{anteproyecto.asesorExterno}}" maxlength="100"
@@ -667,9 +736,36 @@
                             class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                             disabled="" required="" id="id_t_nombre">
                     </label>
-                    <br>
-                </form>
-            </div>
+                </div>
+                <br>
+                {% else %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <p
+                        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+                        No se ha asignado un asesor externo de la Organización o Empresa.
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </p>
+                </div>
+                {% endif %}
+                <br>
+                {% else %}
+                <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <p
+                        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-y-700 bg-y-100 transition-colors duration-150 dark:text-white dark:bg-y-700 border border-transparent rounded-lg">
+                        No se ha asignado una Organización o Empresa para este Anteproyecto.
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </p>
+                </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 </div>

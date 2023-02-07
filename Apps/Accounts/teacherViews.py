@@ -330,6 +330,8 @@ def anteproyectoA(request, pk):
     docente = request.user.docente
     anteproyecto = Anteproyecto.objects.get(id = pk)
     all_estudiantes = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto)            
+    all_estudiantes_act = all_estudiantes.filter(estado = 'ACTIVO')
+    lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes_act ]            
     estudiantes = [i.estudiante for i in all_estudiantes ]        
     revisor1 = anteproyecto.revisor1
     revisor2 = anteproyecto.revisor2                
@@ -348,7 +350,7 @@ def anteproyectoA(request, pk):
     data = ['id_mision', 'id_codigoUnion']                
     estadoR1 = anteproyecto.estatusR1    
     estadoR2 = anteproyecto.estatusR2        
-    actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
+    actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')    
     
     for i in estudiantes:
         anteproyecto_e = all_estudiantes.filter(estudiante = i)        
@@ -396,6 +398,7 @@ def anteproyectoA(request, pk):
                 if anteproyecto.estatusR1 == 'ACEPTADO' and anteproyecto.estatusR2 == 'ACEPTADO':
                     anteproyecto.estatus = 'REVISADO'
                     anteproyecto.save()
+                    enviar_email('El estado de su Anteproyecto se actualizo a: REVISADO.', '', lista_correos, 1, 'REVISADO')
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
         else:
             formEstadoR2 = AnteproyectoEstadoFormR2(request.POST, instance = anteproyecto)        
@@ -404,6 +407,7 @@ def anteproyectoA(request, pk):
                 if anteproyecto.estatusR1 == 'ACEPTADO' and anteproyecto.estatusR2 == 'ACEPTADO':
                     anteproyecto.estatus = 'REVISADO'
                     anteproyecto.save()
+                    enviar_email('El estado de su Anteproyecto se actualizo a: REVISADO.', '', lista_correos, 1, 'REVISADO')
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))    
             
     context = {'group': group, 'docente': docente, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstadoR1': formEstadoR1, 'formEstadoR2': formEstadoR2, 'data': data, 'editar': editar, 'actualizaciones': actualizaciones, 'title': 'Anteproyectos Activos'}    
@@ -456,7 +460,7 @@ def anteproyectoH(request, pk):
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
     observacion = anteproyecto.observacion
-    data = ['id_mision', 'id_codigoUnion']     
+    data = ['id_mision', 'id_codigoUnion', 'id_calle', 'id_d_nombre']     
     
     for i in estudiantes:
         anteproyecto_e = all_estudiantes.filter(estudiante = i)        

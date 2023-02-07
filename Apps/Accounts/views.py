@@ -109,8 +109,8 @@ def home(request):
 def studentPage(request):    
     group = request.user.groups.all()[0].name
     student = request.user.estudiante
-    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')    
-    all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')                
+    all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')
+    all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')                                    
     
     try:
         invitacion = Invitacion.objects.get(estudiante_destinatario = student.estudiante_aut)
@@ -441,7 +441,8 @@ def expediente(request):
     r2 = None
     rF = None
     fecha20d = None            
-    fecha6w = None                    
+    fecha6w = None     
+    formE = None               
         
     try:
         estatus = anteproyecto.estatus                       
@@ -462,9 +463,8 @@ def expediente(request):
                     expediente.save() 
                     estudiante.expediente = expediente                                                    
                     estudiante.save()                          
-                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-        else:            
-            formE = ExpedienteViewForm()
+                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                
+                    
     else:        
         r1 = expediente.reporteParcial1
         r2 = expediente.reporteParcial2
@@ -474,7 +474,7 @@ def expediente(request):
         if request.method == 'POST':            
             formE = ExpedienteForm(request.POST, request.FILES, instance=expediente)                                                         
                              
-            if formE.is_valid():                
+            if formE.is_valid():                     
                 formE.save()    
                 expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]        
                 if not expediente.estatus in estatus_lista:                    
@@ -486,10 +486,10 @@ def expediente(request):
                         mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
                         + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
                         + 'Semestre: ' + str(estudiante.semestre) + '\n' 
-                        + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
+                        + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.' + '\n' + '\n'
+                        + 'Atentamente,' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
                         enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found')) 
-    
+                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))             
     context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'data2': data2, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
     return render(request, 'Student/expediente.html', context)
 
@@ -544,7 +544,8 @@ def reportes(request):
         mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
                 + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
                 + 'Semestre: ' + str(estudiante.semestre) + '\n' 
-                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.')
+                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.' + '\n'
+                + 'Atentamente,' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
         expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]               
         r1 = expediente.reporteParcial1
         r2 = expediente.reporteParcial2
@@ -756,20 +757,16 @@ def anteproyecto(request):
                     
     else:
         anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto = anteproyecto)        
+                
+        estudiantes_anteproyecto = Estudiante_Anteproyecto.objects.filter(anteproyecto = anteproyecto).count()                
+        invitaciones = Invitacion.objects.filter(anteproyecto = anteproyecto)
+        num_invitaciones = invitaciones.count()
+        num_integrantes = estudiantes_anteproyecto + num_invitaciones
         
-        #! Esta variable depende del numero de invitaciones que se han enviado y el numero de integrantes        
-        invitaciones_disp = anteproyecto.numIntegrantes - 1
-        num_invitaciones = Invitacion.objects.filter(anteproyecto = anteproyecto).count()        
-        print('INVITACIONES DISPONIBLES')
-        print(invitaciones_disp)
-        print('INVITACIONES')
-        print(num_invitaciones)
         
-        if invitaciones_disp > num_invitaciones:
-            print('PUEDES INVITAR A GENTE')
+        if anteproyecto.numIntegrantes > num_integrantes:            
             invitar = True
-        else:
-            print('NO PUEDES INVITAR A MAS GENTE')        
+        else:            
             invitar = False
         
         if anteproyecto_materia:
@@ -796,9 +793,9 @@ def anteproyecto(request):
             formDoc = AnteproyectoDocForm(instance = anteproyecto)
             formAE = AsesorEViewForm(instance = anteproyecto.asesorExterno)     
             
-            if request.method == 'POST':        
-                formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)
-                if formDoc.is_valid():                
+            if request.method == 'POST':                     
+                formDoc = AnteproyectoDocForm(request.POST, request.FILES, instance=anteproyecto)                
+                if formDoc.is_valid():   
                     formDoc.save()
                     actualizacion = Actualizacion_anteproyecto(anteproyecto = anteproyecto, descripcion = 'Se actualizó el documento del Anteproyecto')
                     actualizacion.save()
@@ -807,13 +804,16 @@ def anteproyecto(request):
                         email_list.append(revisor1.correoElectronico)
                     if revisor2:
                         email_list.append(revisor2.correoElectronico)
-                    
                     mensaje_email = ('Nombre del anteproyecto: ' + anteproyecto.a_nombre + '\n'
-                                     + 'Se han realizado las correcciones necesarias en el documento del anteproyecto. Revisar las correcciones lo' 
-                                     + 'mas pronto posible.')
+                                     + 'Se han realizado las correcciones necesarias en el documento del anteproyecto. Revisar las correcciones lo ' 
+                                     + 'mas pronto posible.' + '\n' + '\n' 
+                                     + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
                     enviar_email('Actualizacion Documento Anteproyecto', mensaje_email, email_list)
-                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia, 'invitar': invitar}    
+                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                                       
+                else:
+                    anteproyecto.anteproyectoDoc = None                                        
+                    
+            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia, 'invitar': invitar, 'invitaciones': invitaciones}    
             return render(request, 'Student/anteproyecto.html', context)
         else:
             return redirect('materias')                                                        
@@ -1045,7 +1045,7 @@ def editarAnteproyecto(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def proyectoResidencia(request):
-    data = ['id_codigoUnion']
+    data = ['id_codigoUnion', 'id_nombre', 'id_d_nombre', 'id_mision', 'id_calle']
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante        
@@ -1126,13 +1126,33 @@ def compatibilidadA(request, materiaPK):
     context = {'group': group, 'materia': materia, 'title': 'Comptabilidad'}    
     return render(request, 'Student/compatibilidadA.html', context)
 
-def crear_invitacion(request, pk_e, pk_a):
+def invitar(request, pk):
+    group = request.user.groups.all()[0].name                
+    anteproyecto = Anteproyecto.objects.get(id = pk)        
+    all_estudiantes_aut = Estudiante_Autorizado.objects.all()
+    estudiantes_ant = Estudiante_Anteproyecto.objects.filter(estado = 'ACTIVO')
+    lista_ids = [estudiante_ant.estudiante.estudiante_aut.id for estudiante_ant in estudiantes_ant]   
+    lista_est_invitados = Invitacion.objects.filter(estudiante_destinatario__in = all_estudiantes_aut).values_list('estudiante_destinatario_id', flat=True)   
+    if lista_est_invitados:        
+        lista_ids.extend(list(set(lista_est_invitados) - set(lista_ids)))
+    estudiantes = all_estudiantes_aut.exclude(id__in = lista_ids)    
+        
+    if request.method == 'POST':
+        text = request.POST['search']                         
+        try:
+            estudiantes = estudiantes.filter(num_control__contains = text)
+        except:
+            estudiantes = None
+    
+    context  = {'group': group, 'title': 'Invitar estudiante', 'anteproyecto': anteproyecto, 'estudiantes': estudiantes}
+    return render(request, 'Student/invitar_e.html', context)
+
+def crear_invitacion(request, pk_e, pk_a):    
     estudiante = request.user.estudiante         
     anteproyecto = Anteproyecto.objects.get(id = pk_a)
-    estudiante_aut = Estudiante_Autorizado.objects.get(id = pk_e)
-    if not estudiante_aut.is_registrado:    
-        invitacion = Invitacion.objects.create(estudiante_remitente = estudiante, estudiante_destinatario = estudiante_aut, anteproyecto = anteproyecto)
-    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))        
+    estudiante_aut = Estudiante_Autorizado.objects.get(id = pk_e)    
+    invitacion = Invitacion.objects.create(estudiante_remitente = estudiante, estudiante_destinatario = estudiante_aut, anteproyecto = anteproyecto)
+    return redirect('anteproyecto')        
 
 def aceptar_invitacion(request, pk):
     estudiante = request.user.estudiante         

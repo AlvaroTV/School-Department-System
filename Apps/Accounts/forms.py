@@ -14,7 +14,7 @@ class EstudianteForm(ModelForm):
     class Meta:
         model = Estudiante
         fields = '__all__'
-        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'id', 'estudiante_aut']
+        exclude = ['domicilio', 'user', 'expediente', 'anteproyecto', 'residencia', 'id', 'estudiante_aut', 'carrera']
         labels = {
             'nombre': 'Nombre(s)',
             'apellidoP': 'Apellido Paterno',
@@ -26,7 +26,10 @@ class EstudianteForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(EstudianteForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+            if myField == 'semestre':                
+                self.fields[myField].widget.attrs['class'] = 'block w-12 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                
+            else:
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -54,7 +57,7 @@ class CreateUserForm(UserCreationForm):
         
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
-        for myField in self.fields:
+        for myField in self.fields:                        
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
 
 class CreateUserFormEmail(ModelForm):
@@ -176,6 +179,7 @@ class ExpedienteForm(ModelForm):
         super(ExpedienteForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+            self.fields[myField].widget.attrs['accept'] = '.pdf'  
             
 class ExpedienteViewForm(ModelForm):
     class Meta:
@@ -213,6 +217,7 @@ class Reporte1Form(ModelForm):
         super(Reporte1Form, self).__init__(*args, **kwargs)        
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'        
+            self.fields[myField].widget.attrs['accept'] = '.pdf'  
 
 class Reporte2Form(ModelForm):
     class Meta:
@@ -228,6 +233,7 @@ class Reporte2Form(ModelForm):
         super(Reporte2Form, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                    
+            self.fields[myField].widget.attrs['accept'] = '.pdf'  
 
 class ReporteFinalForm(ModelForm):
     class Meta:
@@ -243,6 +249,7 @@ class ReporteFinalForm(ModelForm):
         super(ReporteFinalForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                    
+            self.fields[myField].widget.attrs['accept'] = '.pdf'  
 
 class DocenteForm(ModelForm):
     class Meta:
@@ -290,6 +297,9 @@ class AnteproyectoEstForm(ModelForm):
         for myField in self.fields:            
             if myField == 'periodoInicio' or myField == 'periodoFin':                
                 self.fields[myField].widget.attrs['class'] = 'ml-4 mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                
+            elif myField == 'anteproyectoDoc':
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                self.fields[myField].widget.attrs['accept'] = '.pdf'  
             else :
                 self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             
@@ -297,13 +307,12 @@ class AnteproyectoViewForm(ModelForm):
     class Meta:
         model = Anteproyecto
         fields = '__all__'     
-        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatus', 'estatusR1', 'estatusR2', 'id']   
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'anteproyectoDoc', 'observacion', 'estatus', 'estatusR1', 'estatusR2', 'id', 'codigoUnion']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
             'fechaEntrega': 'Fecha de entrega',
-            'numIntegrantes': 'Numero de integrantes',
-            'codigoUnion': 'Codigo de union',
+            'numIntegrantes': 'Numero de integrantes',            
             'periodoInicio': 'Fecha inicio',            
             'periodoFin': 'Fecha Fin',            
         }        
@@ -311,7 +320,10 @@ class AnteproyectoViewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(AnteproyectoViewForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            if myField == 'numIntegrantes':
+                self.fields[myField].widget.attrs['class'] = 'block w-12 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            else:
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
             self.fields[myField].widget.attrs['disabled'] = True
 
 class AnteproyectoForm(ModelForm):
@@ -340,6 +352,7 @@ class AnteproyectoDocForm(ModelForm):
         super(AnteproyectoDocForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                                    
+            self.fields[myField].widget.attrs['accept'] = '.pdf'  
 
 class ResidenciaForm(ModelForm):
     class Meta:
@@ -387,7 +400,7 @@ class ResidenciaViewForm(ModelForm):
     class Meta:
         model = Residencia
         fields = '__all__'
-        exclude = ['dependencia', 'asesorExterno', 'r_asesorInterno', 'r_revisor', 'id']
+        exclude = ['dependencia', 'asesorExterno', 'r_asesorInterno', 'r_revisor', 'id', 'estatus']
         labels = {
             'nombre': 'Nombre del proyecto de Residencia',
             'tipoProyecto': 'Tipo de Proyecto',
@@ -400,7 +413,10 @@ class ResidenciaViewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ResidenciaViewForm, self).__init__(*args, **kwargs)
         for myField in self.fields:
-            self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                             
+            if myField == 'numIntegrantes':
+                self.fields[myField].widget.attrs['class'] = 'block w-12 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            else:
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                             
             self.fields[myField].widget.attrs['disabled'] = True
                     
 class DependenciaForm(ModelForm):
