@@ -176,6 +176,7 @@ def materias(request):
             materias = perfilAcademico.materias.all()
         except:        
             materias = None    
+        anteproyecto = None
             
     elif group == 'student':
         estudiante = request.user.estudiante
@@ -277,7 +278,7 @@ def materias(request):
             
         all_semestres.append(dataRow)                
     
-    context = {'group': group, 'all_semestres': all_semestres, 'materias': materias, 'title': 'Materias'}    
+    context = {'group': group, 'all_semestres': all_semestres, 'materias': materias, 'anteproyecto': anteproyecto, 'title': 'Materias'}    
     return render(request, 'Teacher/materias.html', context)
 
 def tomarRevisor1(request, pk):    

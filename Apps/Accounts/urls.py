@@ -41,8 +41,10 @@ urlpatterns = [
     path('editAnteproyecto/', editarAnteproyecto, name='editarAnteproyecto'),
     path('reportes/', reportes, name='reportes'),    
     path('removeDoc/<uuid:pk>', removeDoc, name='removeDoc'),    
-    path('residencia/', proyectoResidencia, name='residencia'),    
+    path('residencia/', proyectoResidencia, name='residencia'),  
+      
     path('compatibilidadA/<materiaPK>', compatibilidadA, name='compatibilidadA'),    
+    path('eliminar_materia/<uuid:pk>/<materiaPK>', eliminar_materia, name='eliminar_materia'),    
             
     path('invitar/<uuid:pk>', invitar, name='invitar'),    
     path('crear_invitacion/<uuid:pk_e>/<uuid:pk_a>', crear_invitacion, name='crear_invitacion'),    

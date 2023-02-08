@@ -15,7 +15,7 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
             'RECHAZADO': 'Lamentamos informarle que su anteproyecto ha sido RECHAZADO. Si tiene mas dudas puede acudir con la jefa del departamento de vinculacion',            
             'CANCELADO': 'Lamentamos informarle que su anteproyecto ha sido CANCELDADO. Si tiene mas dudas puede acudir con la jefa del departamento de vinculacion',                        
         }
-        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
+        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
             
     # Residencia - Para el Estudiante
     elif tipo == 2:
@@ -28,12 +28,12 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
             'FINALIZADA': 'Felicidades, su proyecto de residencia ha concluido satiisfactoriamente.',
             'CANCELADA': 'Lamentamos informarle que su proyecto de residencia ha sido CANDELADO.',            
         }
-        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.' )
+        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.' )
         
     # Observacion anteproyecto - Para el Estudiante   
     elif tipo == 3:
         mensaje = ('Su anteproyecto tiene una observacion. Es importante que revises las observaciones que se han realizado y subas tus cambios lo mas pronto posible.' + '\n' + '\n'
-                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                   + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
     
     # Expediente
     elif tipo == 4:
@@ -41,7 +41,7 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
             'COMPLETO': 'Su expediente esta completo. Solo falta que sus documentos sean revisados para verificar que no exista algun problema con ellos.',
             'FINALIZADO': 'Felicidades!. No se encontro ningun error con sus documentos. Ya puede pasar a la oficina de la jefa del departamento de vinculacion por su documento.',            
         }
-        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
+        mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
                     
     try:
         send_mail(

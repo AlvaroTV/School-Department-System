@@ -705,16 +705,15 @@ def asignarRevisor1I(request, pkA, pkD):
                    + '*' + '\n'
                    + 'Revisor 2: ' + str(revisor2) + '\n'
                    + 'Correo Electronico: ' + revisor2.correoElectronico + '\n' + '\n'
-                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.') 
+                   + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.') 
         enviar_email(asunto, mensaje, lista_correos,)            
     anteproyecto.save()   
      
-    mensaje = ('Se le informa que usted ha sido asignado como Revisor 1 del siguiente proyecto de residencia.' + "\n"
-               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
-               + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
-               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
-               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    mensaje = ('Buenos días,' + "\n" + 'Se informa que ha sido asignado como revisor 1 del anteproyecto de residencia profesional.' + "\n"
+               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"               
+               + 'Integrante(s):' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
     enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])
         
     return redirect('verAnteproyecto', anteproyecto.id)
@@ -800,12 +799,11 @@ def asignarRevisor2I(request, pkA, pkD):
                    + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
         enviar_email(asunto, mensaje, lista_correos)          
     anteproyecto.save()     
-    mensaje = ('Se le informa que usted ha sido asignado como Revisor 2 del siguiente proyecto de residencia.' + "\n"
-               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"
-               + 'Tipo Proyecto: ' + anteproyecto.tipoProyecto + "\n"
-               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
-               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    mensaje = ('Buenos días,' + "\n" + 'Se informa que ha sido asignado como revisor 2 del anteproyecto de residencia profesional.' + "\n"
+               + 'Nombre del anteproyecto: ' + anteproyecto.a_nombre + "\n"               
+               + 'Integrante(s):' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
     enviar_email('Asignacion revisor anteproyecto', mensaje, [docente.correoElectronico])   
     return redirect('verAnteproyecto', anteproyecto.id)
 
@@ -914,7 +912,7 @@ def altaDocente(request):
 @publicView
 def verResidencia(request, pk):
     group = request.user.groups.all()[0].name
-    data = ['id_mision', 'id_tipoProyecto', 'id_calle', 'id_d_nombre']        
+    data = ['id_mision', 'id_tipoProyecto', 'id_calle', 'id_d_nombre', 'id_nombre']        
     residencia = Residencia.objects.get(id = pk)    
     all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
     estudiantes = [i.estudiante for i in all_estudiantes ]     
@@ -1078,15 +1076,14 @@ def asignarAsesorI(request, pkR, pkD):
                    + '*' + '\n'
                    + 'Revisor: ' + str(revisor) + '\n'
                    + 'Correo Electronico: ' + revisor.correoElectronico + '\n' + '\n'
-                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                   + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
         enviar_email(asunto, mensaje, lista_correos,)    
     
-    mensaje = ('Se le informa que usted ha sido asignado como Asesor Interno del siguiente proyecto de residencia.' + "\n"
-               + 'Nombre del proyecto: ' + residencia.nombre + "\n"
-               + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
-               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
-               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    mensaje = ('Buenos días,' + "\n" + 'Se le informa que usted ha sido asignado como Asesor Interno del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del proyecto: ' + residencia.nombre + "\n"               
+               + 'Integrante(s):' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico:' + "\n" + "\n".join(lista_correos) + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
     enviar_email('Asignacion asesor interno proyecto de residencia', mensaje, [docente.correoElectronico])            
     residencia.save()
     return redirect('verResidencia', residencia.id)
@@ -1386,15 +1383,14 @@ def asignarRevisor(request, pkR, pkD):
                    + '*' + '\n'
                    + 'Revisor: ' + str(docente) + '\n'
                    + 'Correo Electronico: ' + docente.correoElectronico + '\n' + '\n'
-                   + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                   + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
         enviar_email(asunto, mensaje, lista_correos,)        
     residencia.save()
-    mensaje = ('Se le informa que usted ha sido asignado como Revisor del siguiente proyecto de residencia.' + "\n"
-               + 'Nombre del proyecto: ' + residencia.nombre + "\n"
-               + 'Tipo Proyecto: ' + residencia.tipoProyecto + "\n"
-               + 'Integrantes:' + "\n" + estudiantes_str + "\n"
-               + 'Correo electronico de los integrantes:' + "\n" + "\n".join(lista_correos)  + '\n' + '\n'
-               + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+    mensaje = ('Buenos días,' + "\n" + 'Se le informa que usted ha sido asignado como Revisor del siguiente proyecto de residencia.' + "\n"
+               + 'Nombre del proyecto: ' + residencia.nombre + "\n"               
+               + 'Integrante(s):' + "\n" + estudiantes_str + "\n"
+               + 'Correo electronico:' + "\n" + "\n".join(lista_correos)  + '\n' + '\n'
+               + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
     enviar_email('Asignacion revisor proyecto de residencia', mensaje, [docente.correoElectronico])            
     return redirect('verResidencia', residencia.id)
 

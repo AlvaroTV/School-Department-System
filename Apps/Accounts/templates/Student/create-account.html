@@ -39,7 +39,7 @@
                     <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
                     {{ field }}
                   </label>
-                  <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                  <p id="messages" class="text-xs text-red-600">{{ field.errors }}</p>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -50,11 +50,11 @@
                     <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
                     {{ field }}
                   </label>
-                  <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                  <p id="messages" class="text-xs text-red-600">{{ field.errors }}</p>
                 </div>
                 {% endfor %}
               </div>
-
+              
               <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                 * Su contraseña no puede ser demasiado similar a su información personal.
                 <br>

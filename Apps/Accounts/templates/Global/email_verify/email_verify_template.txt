@@ -12,6 +12,6 @@ Si no has solicitado personalmente el registro al Sistema del depto. De sistemas
 
 Atentamente,
 
-El equipo del Depto. de vinculación de sistemas y computación.
+La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.
 
 {% endautoescape %}

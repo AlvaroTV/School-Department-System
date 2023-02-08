@@ -100,17 +100,17 @@
         <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
           Estado <strong> revisor 1 </strong>
         </p>
-        {% if anteproyecto.estatusR2 == 'ACEPTADO' %}
+        {% if anteproyecto.estatusR1 == 'ACEPTADO' %}
         <span
           class="text-sm px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-          {{anteproyecto.estatusR2}}
+          {{anteproyecto.estatusR1}}
         </span>
-        {% elif anteproyecto.estatusR2 == 'EN REVISION' %}
+        {% elif anteproyecto.estatusR1 == 'EN REVISION' %}
         <span
           class="text-sm px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
           {{anteproyecto.estatusR2}}
         </span>
-        {% elif anteproyecto.estatusR2 == 'RECHAZADO' %}
+        {% elif anteproyecto.estatusR1 == 'RECHAZADO' %}
         <span
           class="text-sm px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
           {{anteproyecto.estatusR2}}

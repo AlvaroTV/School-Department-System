@@ -41,11 +41,11 @@ window.onload = function() {
             var target = e.target;            
             var ref = e.target.href;
             
-            if (target.tagName === 'TD'){                                
-                ref = target.childNodes[1].href;                
-            }else if(target.tagName === 'P'){                   
+            if (target.tagName === 'svg'){                                
                 ref = target.parentNode.href;
-            }                                                      
+            }else if(target.tagName === 'path'){                             
+                ref = target.parentNode.parentNode.href;
+            }            
             
             Swal.fire({
                 title: 'Esta seguro que quiere aceptar la invitacion?',                

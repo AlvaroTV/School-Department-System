@@ -7,8 +7,7 @@ Swal.fire({
     color: '#716add',
     background: '#fff url(/media/trees.png)',
     backdrop: `
-      rgba(0,0,123,0.4)
-      url("/media/nyan-cat.gif")
+      rgba(0,0,123,0.4)      
       left top
       no-repeat
     `

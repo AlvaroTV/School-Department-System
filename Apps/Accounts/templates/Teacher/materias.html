@@ -54,7 +54,7 @@
                         <td class="px-4 py-3 text-white border border-slate-600 btnDelete"
                             style="background-color:#b067e0;">
                             {% if group == 'student' %}
-                            <a href="#">
+                            <a href="{% url 'eliminar_materia' anteproyecto.id materia %}">
                                 {% else %}
                                 <a href="{% url 'removeMateria' materia %}">
                                     {% endif %}
@@ -98,6 +98,10 @@
 <script src="{% static 'js/messages/docentes.js' %}"></script>
 <script src="{% static 'js/deleteManagement/materias.js' %}"></script>
 {% else %}
+{% if materias %}
+<script src="{% static 'js/messages/estudiantes2.js' %}"></script>
+{% else %}
 <script src="{% static 'js/messages/estudiantes.js' %}"></script>
+{% endif %}
 {% endif %}
 {% endblock %}

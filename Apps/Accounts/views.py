@@ -488,7 +488,7 @@ def expediente(request):
                         + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
                         + 'Semestre: ' + str(estudiante.semestre) + '\n' 
                         + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.' + '\n' + '\n'
-                        + 'Atentamente,' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                        + 'Atentamente,' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
                         enviar_email('Expediente del estudiante completo', mensaje, ['destiono-jefadeptovinculacion@itoaxaca.edu.mx'])                                  
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))             
     context = {'form': formE, 'expediente': expediente, 'anteproyecto': anteproyecto, 'r1': r1, 'r2': r2, 'rF': rF, 'data': data, 'data2': data2, 'fecha20d': fecha20d, 'fecha6w': fecha6w, 'estatus': estatus, 'group': group, 'semestre': semestre, 'residencia': residencia, 'title': 'Expediente'}    
@@ -545,8 +545,8 @@ def reportes(request):
         mensaje = ('Estudiante: ' + str(estudiante) + '\n' 
                 + 'Numero de Control: ' + str(estudiante.numControl) + '\n' 
                 + 'Semestre: ' + str(estudiante.semestre) + '\n' 
-                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.' + '\n'
-                + 'Atentamente,' + '\n' + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                + 'El estudiante ha subido todos sus documentos pertenecientes a su expediente.' + '\n' + '\n'
+                + 'Atentamente,' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
         expediente_list = Expediente.objects.filter(id = expediente.id).values()[0]               
         r1 = expediente.reporteParcial1
         r2 = expediente.reporteParcial2
@@ -808,7 +808,7 @@ def anteproyecto(request):
                     mensaje_email = ('Nombre del anteproyecto: ' + anteproyecto.a_nombre + '\n'
                                      + 'Se han realizado las correcciones necesarias en el documento del anteproyecto. Revisar las correcciones lo ' 
                                      + 'mas pronto posible.' + '\n' + '\n' 
-                                     + 'Atentamente,' + "\n" + 'El equipo del Depto. de vinculación de sistemas y computación.')
+                                     + 'Atentamente,' + "\n" + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
                     enviar_email('Actualizacion Documento Anteproyecto', mensaje_email, email_list)
                     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))                                       
                 else:
@@ -1128,6 +1128,14 @@ def compatibilidadA(request, materiaPK):
         
     context = {'group': group, 'materia': materia, 'title': 'Comptabilidad'}    
     return render(request, 'Student/compatibilidadA.html', context)
+
+@login_required(login_url='login')
+def eliminar_materia(request, pk, materiaPK):
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    materia = Materia.objects.get(id = materiaPK)
+    anteproyecto_materia = Anteproyecto_materia.objects.get(anteproyecto = anteproyecto, materia = materia)
+    anteproyecto_materia.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 def invitar(request, pk):
     group = request.user.groups.all()[0].name                
