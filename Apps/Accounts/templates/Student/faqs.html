@@ -3,6 +3,12 @@
 
 {% block content %}
 <div class="soymain">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'faqs' %}"> Preguntas Frecuentes</a>
+            </li>
+        </ul>
+    </div>
     <h2 class="titulo text-2xl text-gray-600 dark:text-gray-300">Preguntas Frecuentes</h2>
     <div class="categorias" id="categorias">
         <div class="categoria activa dark:bg-gray-800" data-categoria="metodos-pago">

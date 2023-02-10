@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reporte</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" media="all" />
+</head>
+
+<body>
+  <header class="clearfix">
+
+    <div id="logo">
+      <img src="{% static 'images/reporte_pdf/liston.jpg' %}">
+      <div id="company" class="clearfix">
+        <div>Instituto Tecnológico de Oaxaca</div>
+        <div>
+          <div> Departamento de Gestión Tecnológica y Vinculación</div>
+        </div>
+        <div>Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico,<br /> C.P. 68030</div>
+
+      </div>
+    </div>
+    <h1>Reporte de datos</h1>
+    <div id="project">
+      <div> Departamento de Proyectos de Vinculación del Depto. de Sistemas y Computación</div>
+      <div><span>JEFE</span> BIBI</div>
+      <div><span>CORREO </span><a href="mailto:jefatura.vinculacion.sistemas@itoaxaca.edu.mx">jefatura.vinculacion.sistemas@itoaxaca.edu.mx</a></div>
+      <div><span>FECHA</span> 17 de abri del 2015</div>
+    </div>
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th class="service">Estado del proyecto</th>
+          <th class="desc">Nombre del proyecto</th>
+          <th>Numero de integrantes</th>
+          <th>QTY</th>
+          <th>Secto perteneciente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="service">Finalizado</td>
+          <td class="desc">Proyecto para la integridad de los estudiantes en el ambito social de la salud</td>
+          <td class="unit">2</td>
+          <td class="qty">26</td>
+          <td class="total">Privado</td>
+        </tr>
+        <tr>
+          <td class="service">Finalizado</td>
+          <td class="desc">Proyecto para la integridad de los estudiantes en el ambito social de la salud</td>
+          <td class="unit">3</td>
+          <td class="qty">80</td>
+          <td class="total">Privado</td>
+        </tr>
+        <tr>
+          <td class="service">Finalizado</td>
+          <td class="desc">Proyecto para la integridad de los estudiantes en el ambito social de la salud</td>
+          <td class="unit">3</td>
+          <td class="qty">20</td>
+          <td class="total">Privado</td>
+        </tr>
+        <tr>
+          <td class="service">Finalizado</td>
+          <td class="desc">Proyecto para la integridad de los estudiantes en el ambito social de la salud</td>
+          <td class="unit">3</td>
+          <td class="qty">4</td>
+          <td class="total">Privado</td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div id="notices">
+      <div>Total:</div>
+      <div class="notice">Numero de proyectos en el sector publico es:</div>
+      <div class="notice">Numero de proyectos en el sector privado es:</div>
+    </div>
+  </main>
+  <footer>
+    Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico, C.P. 68030. Tel. (951) 5015016
+    e-mail: tec_oax@itoaxaca.edu.mx | www.oaxaca.tecnm.mx
+
+    <div id="logo2">
+
+      <img src="{% static 'images/reporte_pdf/logoito.png' %}">
+
+    </div>
+  </footer>
+</body>
+
+</html>

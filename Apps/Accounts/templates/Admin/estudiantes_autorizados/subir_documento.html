@@ -5,8 +5,16 @@
 {% block content %}
 
 <div class="container px-6 mx-auto grid">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'estudiantes_autorizados' 1 0 0 %}"> Estudiantes autorizados </a> /
+                <a class="text-blue-500" href="{% url 'subir_estudiantes_a' %}"> Documento estudiantes autorizados </a>
+            </li>
+        </ul>
+    </div>
     <div class="relative my-6 h-12">
-
         <div class="absolute inset-y-0 left-0 ">
             <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Documento con los estudiantes
                 autorizados a residencia.</h2>

@@ -3,7 +3,11 @@
 
 <!-- Remove everything INSIDE this div to a really blank page -->
 <div class="container px-6 mx-auto grid ">
-
+  <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+    <ul>
+      <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'anteproyecto' %}"> Ver Anteproyecto</a> </li>
+    </ul>
+  </div>
   <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
     Datos del anteproyecto
   </h2>
@@ -30,7 +34,7 @@
   <div class="grid gap-6 mb-8 md:grid-cols-1">
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <form action="" method="POST" enctype="multipart/form-data">          
+        <form action="" method="POST" enctype="multipart/form-data">
 
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">{{formA.a_nombre.label_tag}}</span>
@@ -51,7 +55,7 @@
             {% endfor %}
           </div>
           <br>
-          
+
         </form>
       </div>
     </div>
@@ -61,8 +65,8 @@
   <h4 class="mt-8 text-lg font-semibold text-gray-600 dark:text-gray-300">
     Invitaciones enviadas
   </h4>
-  <div class="w-full overflow-hidden rounded-lg shadow-xs mb-4">    
-    <div class="w-full overflow-x-auto">      
+  <div class="w-full overflow-hidden rounded-lg shadow-xs mb-4">
+    <div class="w-full overflow-x-auto">
       <table class="w-full">
         <thead>
           <tr
@@ -75,13 +79,13 @@
         <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
           {% for invitacion in invitaciones %}
           <tr class="text-gray-700 dark:text-gray-400">
-            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_remitente}}</td>            
-            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_destinatario.nombre_completo}}</td>            
-            <td class="px-4 py-3 text-md text-center">{{invitacion.fecha_elaboracion|date:"d/M/Y"}}</td>            
+            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_remitente}}</td>
+            <td class="px-4 py-3 text-md text-center">{{invitacion.estudiante_destinatario.nombre_completo}}</td>
+            <td class="px-4 py-3 text-md text-center">{{invitacion.fecha_elaboracion|date:"d/M/Y"}}</td>
           </tr>
           {% endfor %}
         </tbody>
-      </table>      
+      </table>
     </div>
   </div>
   {% endif %}
@@ -238,7 +242,7 @@
           <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
             * Solo se aceptan documentos PDF.
             <br>
-            * Tamaño máximo del documento 20MB.                            
+            * Tamaño máximo del documento 20MB.
           </p>
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>

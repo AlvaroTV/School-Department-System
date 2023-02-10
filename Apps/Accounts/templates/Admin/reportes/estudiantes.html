@@ -4,7 +4,15 @@
 {% block content %}
 
 <div class="container grid px-6 mx-auto">    
-    
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'generar_reportes' %}"> Reportes </a> /
+                <a class="text-blue-500" href="{% url 'generar_reporte_estudiante' 0 0 0 0 %}"> Reporte estudiantes </a>
+            </li>
+        </ul>
+    </div>
     <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
             Reporte estudiantes
@@ -20,7 +28,7 @@
         </div>
         <div class="relative ">  
             <br>          
-            <form action="{% url 'export_excel' tipo=1 name=file_name %}" method="GET">
+            <form action="{% url 'verPDF' %}" method="GET">
                 <input hidden="hidden" type="text" name="my_list" value="{{filtros}}">
                 <input type="submit" value="Descargar PDF"
                     class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">

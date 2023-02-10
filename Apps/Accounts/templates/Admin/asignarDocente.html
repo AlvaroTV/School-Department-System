@@ -5,6 +5,16 @@
 
 <main class="h-full pb-16 overflow-y-auto">
     <div class="container grid px-6 mx-auto">
+        <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+            <ul>
+                <li>
+                    <a href="/">Inicio</a> /
+                    <a href="{% url 'anteproyectos' 1 0 0 %}"> Anteproyectos</a> /
+                    <a href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a> /
+                    <a class="text-blue-500"> Asignar docente</a> 
+                </li>
+            </ul>
+        </div>
         <div class="grid gap-6 mt-8 mb-8 md:grid-cols-2">
             <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
                 {% if revisor1 %}
@@ -325,7 +335,7 @@
             </div>
         </div>
         {% if not buttons %}
-        
+
         <div class="flex flex-col flex-wrap mb-4 space-y-4 md:flex-row-reverse md:items-start md:space-x-4">
             <div>
                 {% if revisor1 %}
@@ -334,16 +344,16 @@
                     <a href="{% url 'asignarRevisor2' 1 anteproyecto.id %}">
                         {% elif asesorI %}
                         <a href="{% url 'asignarAsesorIL' 1 residencia.id %}">
-                        {% elif revisor %}
-                        <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
-                    {% endif %}
-                    <button
-                        class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                        Todos los docentes
-                    </button>
-                </a>
+                            {% elif revisor %}
+                            <a href="{% url 'asignarRevisorL' 1 residencia.id %}">
+                                {% endif %}
+                                <button
+                                    class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                    Todos los docentes
+                                </button>
+                            </a>
             </div>
-        </div>                
+        </div>
         {% endif %}
 
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">

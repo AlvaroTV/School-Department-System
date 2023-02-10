@@ -8,57 +8,71 @@
 {% block content %}
 
 <div class="container px-6 mx-auto grid">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li><a href="/">Inicio</a> / <a href="{% url 'materias' %}">
+                    Materias</a> /<a class="text-blue-500" href="{% url 'compatibilidadA' materia.id %}"> Compatibilidad</a> </li>
+        </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Compatibilidad Anteproyecto - Materia</h2>
 
-    <div class="grid gap-6 mb-8 md:grid-cols-2">
-        <div class="min-w-0 p-4 text-white bg-purple-600 rounded-lg shadow-xs">
-            <h4 class="mb-4 font-semibold">
-                Semestre {{materia.semestre}}
-            </h4>
-            <p>
-                {{materia.nombre}}
-            </p>
+    <div class="grid gap-6 mt-8 mb-8 md:grid-cols-2">
+        <div>
+            <div class=" text-center p-4 text-white bg-purple-600 rounded-lg shadow-xs">
+                <h4 class="mb-4 font-semibold">
+                    Semestre {{materia.semestre}}
+                </h4>
+                <p>
+                    {{materia.nombre}}
+                </p>
+            </div>
+
+            <div class=" ">
+                <img aria-hidden="true" class="object-cover h-full w-full " height="650" width="300"
+                    src="{% static 'images/libro.png' %}" alt="AsesorExterno">
+
+            </div>
+        </div>
+        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <div class="px-4 py-3 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
+                <p class="text-sm text-teal-500 dark:text-teal-100">
+                    Indique que tan relacionado se encuentra su proyecto con esta materia.
+                </p>
+            </div>
+            <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    * El valor de 1 indica que su proyecto tiene poca relación con esta materia.
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    * El valor de 10 indica que su proyecto tiene mucha relación con esta materia.
+                </p>
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid gap-6 mb-2 md:grid-cols-1 ">
+                    <div class="boydelrange">
+                        <div class="absoludelrange">
+                            <span class="mb-1 text-lg font-semibold text-gray-600 dark:text-gray-300"
+                                id="rangeValue">1</span>
+                            <Input class="ranger" type="range" name="Compatibilidad" value="1" min="1" max="10" step="1"
+                                onChange="rangeSlide(this.value)" onmousemove="rangeSlide(this.value)"></Input>
+                        </div>
+                        <script type="text/javascript">
+                            function rangeSlide(value) {
+                                document.getElementById('rangeValue').innerHTML = value;
+                            }
+                        </script>
+                        <button
+                            class="px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <br>
         </div>
     </div>
 
-    <div class="px-4 py-3 bg-teal-100 rounded-lg shadow-md dark:bg-teal-500">
-        <p class="text-sm text-teal-500 dark:text-teal-100">
-            Indique que tan relacionado se encuentra su proyeto con esta materia.
-        </p>
-    </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-            * El valor de 1 indica que su proyecto tiene poca relacion con esta materia.
-        </p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-            * El valor de 10 indica que su proyecto tiene mucha relacion con esta materia.
-        </p>
-    </div>
-
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="grid gap-6 mb-2 md:grid-cols-1 ">
-                <div class="boydelrange">
-                    <div class="absoludelrange">
-                        <span class="mb-1 text-lg font-semibold text-gray-600 dark:text-gray-300"
-                            id="rangeValue">1</span>
-                        <Input class="ranger" type="range" name="Compatibilidad" value="1" min="1" max="10" step="1"
-                            onChange="rangeSlide(this.value)" onmousemove="rangeSlide(this.value)"></Input>
-                    </div>
-                    <script type="text/javascript">
-                        function rangeSlide(value) {
-                            document.getElementById('rangeValue').innerHTML = value;
-                        }
-                    </script>
-                    <button
-                        class="px-4 py-2 mt-8 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                        Enviar
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
 
 {% endblock %}

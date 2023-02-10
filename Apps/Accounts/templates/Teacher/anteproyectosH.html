@@ -4,6 +4,11 @@
 {% block content %}
 
 <div class="container grid px-6 mx-auto">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'anteproyectosH' 1 1 0 0 0 0 %}"> Anteproyectos historicos</a> </li>
+        </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Anteproyectos pasados - Revisor 1
     </h2>
@@ -137,7 +142,7 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-center">
-                                <a href="{% url 'verAnteproyecto' anteproyecto.id %}">
+                                <a href="{% url 'anteproyectoH' anteproyecto.id %}">
                                     <button
                                         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                                         aria-label="Like">

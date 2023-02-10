@@ -133,6 +133,8 @@ urlpatterns = [
     path('estudiantes_autorizados/<int:page>/<int:filter1>/<filter2>', estudiantes_autorizados, name='estudiantes_autorizados'), 
     path('subir_estudiantes_a/', subir_estudiantes_a, name='subir_estudiantes_a'), 
     
+    path('verPDF/', ver_pdf, name='verPDF'),
+    
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      
     path('tSettings/', teacherSettings, name='teacherSettings'),
@@ -141,8 +143,9 @@ urlpatterns = [
     path('anteproyectoA/<uuid:pk>', anteproyectoA, name='anteproyectoA'),
     path('anteproyectoH/<uuid:pk>', anteproyectoH, name='anteproyectoH'),
     path('agregarComentario/<uuid:pk>', agregarComentario, name='agregarComentario'),
-    path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),    
-    path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'),      
+    #path('anteproyectoH/', anteproyectoH, name='anteproyectoH'),    
+    path('residenciasTeacher/', residenciasTeacher, name='residenciasTeacher'), 
+    path('verResidenciaH/<uuid:pk>', residenciaH, name='verResidenciaH'),             
     path('verReporte/<uuid:pk>', verReporte, name='verReporte'),          
     
     path('tomarRevisor1/<uuid:pk>', tomarRevisor1, name='tomarRevisor1'),      

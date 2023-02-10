@@ -1262,7 +1262,7 @@ def dependencias_a(request, page, orderB, filter):
 @admin_only
 def ver_dependencia(request, pk):
     group = request.user.groups.all()[0].name   
-    data = ['id_mision'] 
+    data = ['id_mision', 'id_d_nombre', 'id_calle'] 
     dependencia = Dependencia.objects.get(id = pk)
     domicilio = dependencia.domicilio
     titular = dependencia.titular
@@ -1553,7 +1553,7 @@ def generar_reporte_residencias(request, filter1, filter2, filter3, filter4, fil
 @admin_only
 def export_excel(request, tipo, name):
     response = HttpResponse(content_type = 'applications/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(name)
+    response['Content-Disposition'] = 'attachment; filename={}.xls'.format(name)
     wb = xlwt.Workbook(encoding = 'utf-8')
     ws = wb.add_sheet('Expenses')
     row_num = 0
@@ -1639,6 +1639,11 @@ def subir_estudiantes_a(request):
     
     context = {'group': group, 'form': form, 'title': 'Subir Estudiantes'}
     return render(request, 'Admin/estudiantes_autorizados/subir_documento.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def ver_pdf(request):
+    return render(request, 'Admin/pdf_template.html')
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

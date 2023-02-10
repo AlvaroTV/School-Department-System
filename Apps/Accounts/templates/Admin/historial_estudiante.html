@@ -3,9 +3,19 @@
 
 {% block content %}
 <div class="container grid px-6 mx-auto">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'estudiantes' 1 0 %}"> Estudiantes</a> /
+                <a href="{% url 'verEstudiante' estudiante.id %}"> Ver estudiante</a> /
+                <a class="text-blue-500" href="{% url 'historial_estudiante' estudiante.id %}"> Historial estudiante</a>
+            </li>
+        </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Historial del estudiante
-    </h2>    
+    </h2>
 
     <div class="mt-8 container px-6 mx-auto grid">
         <div class="mb-4 w-full overflow-x-auto">

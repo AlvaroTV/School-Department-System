@@ -6,10 +6,14 @@
 <main class="h-full pb-16 overflow-y-auto">
 
   <div class="container px-6 mx-auto grid">
-
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+      <ul>
+        <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'expediente' %}"> Expediente</a> </li>
+      </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Expediente de usuario
-    </h2>    
+    </h2>
 
     {% if expediente.estatus == 'COMPLETO' %}
     <div class="mb-4 p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
@@ -28,9 +32,9 @@
         * Solo se aceptan documentos PDF.
       </p>
       <p class="text-sm text-teal-500 dark:text-teal-100">
-        * Tamaño máximo del documento: 20MB.                            
+        * Tamaño máximo del documento: 20MB.
       </p>
-    </div>    
+    </div>
     {% endif %}
 
     <form name="formulario" method="POST" action="" enctype="multipart/form-data" id="uploadForm">

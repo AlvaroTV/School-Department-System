@@ -6,6 +6,12 @@
 {% if not dependencia %}
 
 <div class="container px-6 mx-auto grid ">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li><a href="/">Inicio</a> / <a href="{% url 'anteproyecto' %}"> Ver Anteproyecto</a> / <a class="text-blue-500" href="{% url 'dependencias' 1 0 %}"> Organizaciones o Empresas </a>
+            </li>
+        </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Organización o Empresa
     </h2>
@@ -216,7 +222,7 @@
                     <!-- Modal description -->
                     <p class="text-sm text-gray-700 dark:text-gray-400">
                         <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">Nombre de la Organización o Empresa</span>                            
+                            <span class="text-gray-700 dark:text-gray-400">Nombre de la Organización o Empresa</span>
                         </label>
                     </p>
                     <div class="relative w-full whitespace-no-wrap max-w-xl mr-10 focus-within:text-purple-500">
@@ -230,7 +236,7 @@
                         <input name="search"
                             class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
                             type="text" placeholder="Instituto Tecnologico" aria-label="Search" />
-                    </div>                    
+                    </div>
 
                 </div>
                 <footer

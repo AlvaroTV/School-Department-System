@@ -4,6 +4,27 @@
 {% block content %}
 
 <div class="container px-6 mx-auto grid">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        {% if is_historico %}
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'residenciasH' 1 1 0 0 0 0 %}"> Proyectos de residencia historicos </a> /
+                <a href="{% url 'verResidenciaH' residencia.id %}"> Residencia pasada</a> /
+                <a class="text-blue-500" href="{% url 'verReporte' estudiante.id %}"> Ver reportes</a>
+            </li>
+        </ul>
+        {% else %}
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'residenciasTeacher' %}"> Proyectos de residencia activos </a> /
+                <a href="{% url 'verResidencia' residencia.id %}"> Ver residencia</a> /
+                <a class="text-blue-500" href="{% url 'verReporte' estudiante.id %}"> Ver reportes</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Reportes parciales
     </h2>

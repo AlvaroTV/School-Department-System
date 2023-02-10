@@ -4,7 +4,11 @@
 {% block content %}
 
 <div class="container grid px-6 mx-auto">
-
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+          <li><a href="/">Inicio</a> / <a href="{% url 'anteproyecto' %}"> Ver Anteproyecto</a> / <a class="text-blue-500" href="{% url 'invitar' anteproyecto.id %}"> Invitar</a> </li>
+        </ul>
+      </div>
     <div
         class="mt-8 flex items-center justify-between p-4 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple">
         <div class="flex items-center">

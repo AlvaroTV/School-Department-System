@@ -510,10 +510,32 @@ def residenciaA(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @teacher_only
-def residenciaH(request):
-    group = request.user.groups.all()[0].name
-    docente = request.user.docente
-    context = {'group': group}    
+def residenciaH(request, pk):
+    group = request.user.groups.all()[0].name        
+    data = ['id_mision', 'id_tipoProyecto', 'id_calle', 'id_d_nombre', 'id_nombre']            
+    residencia = Residencia.objects.get(id = pk)
+    all_estudiantes = Estudiante_Residencia.objects.filter(residencia = residencia)            
+    estudiantes = [i.estudiante for i in all_estudiantes ]         
+    
+    for i in estudiantes:        
+        residencia_e = all_estudiantes.filter(estudiante = i)        
+        
+        if residencia_e:
+            estado_residencia = residencia_e[0].estado
+        else:
+            estado_residencia = None                    
+                    
+        setattr(i, 'residencia_estatus', estado_residencia)          
+        
+    asesorI = residencia.r_asesorInterno
+    revisor = residencia.r_revisor
+    dependencia = residencia.dependencia
+    formR = ResidenciaViewForm(instance = residencia)                                
+    formD = DependenciaViewForm(instance = dependencia)
+    formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    formER = ResidenciaEstadoForm(instance = residencia)
+                        
+    context = {'group': group, 'residencia': residencia, 'estudiantes': estudiantes, 'asesorI': asesorI, 'revisor': revisor, 'dependencia': dependencia, 'formR': formR, 'formD': formD, 'formER': formER, 'formDom': formDom, 'data': data, 'title': 'Residencia Historica'}
     return render(request, 'Teacher/residenciaH.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -522,6 +544,13 @@ def verReporte(request, pk):
     estudiante = Estudiante.objects.get(id = pk)    
     group = request.user.groups.all()[0].name
     docente = request.user.docente
+    residencia = Estudiante_Residencia.objects.get(estudiante = estudiante, estado = 'ACTIVO').residencia
+    estados = ['RECHAZADA', 'NO FINALIZADA', 'FINALIZADA', 'CANCELADA']
+    if residencia.estatus in estados:
+        is_historico = True
+    else:
+        is_historico = False
+        
     #anteproyecto = estudiante.anteproyecto    
     expediente = estudiante.expediente
     r1 = None    
@@ -532,7 +561,7 @@ def verReporte(request, pk):
         r2 = expediente.reporteParcial2
         rF = expediente.reporteFinal   
         
-    context = {'group': group, 'estudiante': estudiante, 'r1': r1, 'r2': r2, 'rF': rF}    
+    context = {'group': group, 'estudiante': estudiante, 'residencia': residencia, 'is_historico': is_historico, 'r1': r1, 'r2': r2, 'rF': rF}    
     return render(request, 'Teacher/verReporte.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

@@ -4,6 +4,15 @@
 {% block content %}
 
 <div class="container px-6 mx-auto grid ">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+        <ul>
+            <li>
+                <a href="/">Inicio</a> /
+                <a href="{% url 'dependencias_a' 1 0 0 %}"> Organizaciones o Empresas </a> /
+                <a class="text-blue-500" href="{% url 'altaDependencia_a' %}"> Alta organización o empresa </a>
+            </li>
+        </ul>
+    </div>
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Registro de una Organización o Empresa
     </h2>

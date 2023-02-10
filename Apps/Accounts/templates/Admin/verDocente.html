@@ -6,6 +6,15 @@
 <main class="h-full pb-16 overflow-y-auto">
   <!-- Remove everything INSIDE this div to a really blank page -->
   <div class="container px-6 mx-auto grid">
+    <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+      <ul>
+        <li>
+          <a href="/">Inicio</a> /
+          <a href="{% url 'docentes' 1 0 %}"> Docentes</a> /
+          <a class="text-blue-500" href="{% url 'verDocente' docente.id %}"> Ver docente</a>
+        </li>
+      </ul>
+    </div>
     <h2 class="mt-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Actividad del docente
     </h2>
@@ -208,7 +217,7 @@
           <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block " height="150"
             width="150" id="imageschool" />
         </label>
-        <br>        
+        <br>
         <ul class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
           <li class="mb-4 text-md font-semibold text-gray-600 dark:text-gray-300">
             Puesto:
@@ -234,7 +243,7 @@
               No tiene materias
             </span>
           </li>
-          {% endif %}          
+          {% endif %}
         </ul>
       </div>
     </div>

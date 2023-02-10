@@ -49,7 +49,7 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
     residencias.hidden = false
     a_residencias.classList.add("dark:text-gray-100");
     a_residencias.classList.add("text-blue-500");
-} else if (pathName == 'residenciasH' ) {
+} else if (pathName == 'residenciasH' | pathName == 'verResidenciaH') {
     residenciasH.hidden = false    
     a_residenciasH.classList.add("dark:text-gray-100");
     a_residenciasH.classList.add("text-blue-500");

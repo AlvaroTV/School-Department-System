@@ -6,6 +6,15 @@
 <body>
     <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
         <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
+            <div class="section-content mr-6 pr-6 my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+                <ul>
+                    <li>
+                        <a href="/">Inicio</a> /
+                        <a href="{% url 'docentes' 1 0 %}"> Docentes</a> /
+                        <a class="text-blue-500" href="{% url 'altaDocente' %}"> Alta docente</a>
+                    </li>
+                </ul>
+            </div>
             <div class="flex flex-col overflow-y-auto md:flex-row">
                 <div class="h-32 md:h-auto md:w-1/2">
                     <img aria-hidden="true" class="object-cover w-full h-full dark:hidden"
@@ -20,35 +29,44 @@
                             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                                 Crear cuenta
                             </h1>
+                            <div class="grid gap-6 mb-2 mt-2 md:grid-cols-2">
+                                {% for field in formD %}
+                                {% if not field.id_for_label in data %}
+                                <div>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                        {{ field }}
+                                    </label>
+                                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
 
-                            {% for field in formD %}
-                            {% if not field.id_for_label in data %}
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                                {{ field }}
-                            </label>
-                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                            {% endif %}
-                            {% endfor %}
+                                {% for field in formU %}
+                                {% if field.id_for_label == 'id_username' %}
+                                <div>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">Nombre de usuario:</span>
+                                        <br>
+                                        <span class="text-gray-700 dark:text-gray-400 text-sm font-medium">No acepta espacios, solo letras,
+                                            dígitos
+                                            y @/./+/-/_ </span>
+                                        {{ field }}
+                                    </label>
+                                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                                </div>
+                                {% else %}
+                                <div>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
+                                        {{ field }}
+                                    </label>
+                                    <p id="messages" class="text-red-600">{{ field.errors }}</p>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
 
-                            {% for field in formU %}
-                            {% if field.id_for_label == 'id_username' %}
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400">Nombre de usuario:</span>
-                                <br>
-                                <span class="text-gray-700 dark:text-gray-400">No acepta espacios, solo letras, dígitos
-                                    y @/./+/-/_ </span>
-                                {{ field }}
-                            </label>
-                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                            {% else %}
-                            <label class="block mt-4 text-sm">
-                                <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
-                                {{ field }}
-                            </label>
-                            <p id="messages" class="text-red-600">{{ field.errors }}</p>
-                            {% endif %}
-                            {% endfor %}
                             <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                                 * La contraseña no puede ser demasiado similar a otra información personal.
                                 <br>

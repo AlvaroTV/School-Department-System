@@ -855,7 +855,7 @@ def dependencias(request, page, orderB):
     next_page = page+1
     prev_page = page-1    
     
-    context = {'anteproyecto': anteproyecto, 'dependencia': dependencia, 'group': group, 'dependencias': dependencias, 'start': start+1, 'end': end, 'totalD': totalD, 'n_buttons': n_buttons , 'buttons': buttons, 'next_page': next_page, 'prev_page': prev_page, 'page': page, 'orderB': orderB, 'title': 'Dependencia'}    
+    context = {'anteproyecto': anteproyecto, 'dependencia': dependencia, 'group': group, 'dependencias': dependencias, 'start': start+1, 'end': end, 'totalD': totalD, 'n_buttons': n_buttons , 'buttons': buttons, 'next_page': next_page, 'prev_page': prev_page, 'page': page, 'orderB': orderB, 'title': 'Organizaciones o Empresas'}    
     return render(request, 'Student/dependencia.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -890,7 +890,7 @@ def alta_dependencia(request):
             anteproyecto.save()
             return redirect('alta_titular_d')                                                
     
-    context = {'anteproyecto': anteproyecto, 'dependencia': dependencia, 'formD': formD, 'group': group, 'dependencias': dependencias,'title': 'Alta Dependencia'}    
+    context = {'anteproyecto': anteproyecto, 'dependencia': dependencia, 'formD': formD, 'group': group, 'dependencias': dependencias,'title': 'Registro Organización o Empresa '}    
     return render(request, 'Student/altaDependencia.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
