@@ -255,7 +255,7 @@ class DocenteForm(ModelForm):
     class Meta:
         model = Docente
         fields = '__all__'
-        exclude = ['user', 'perfilAcademico', 'id', 'estatus']
+        exclude = ['user', 'perfilAcademico', 'id']
         labels = {
             'curp': 'CURP',
             'rfc': 'RFC',

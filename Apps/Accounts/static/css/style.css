@@ -10,9 +10,7 @@ a {
 }
 
 body {
-  position: relative;
-  width: 21cm;  
-  height: 29.7cm; 
+  position: relative;  
   margin: 0 auto; 
   color: #001028;
   background: #FFFFFF; 
@@ -53,7 +51,7 @@ h1 {
   font-weight: normal;
   text-align: center;
   margin: 0 0 20px 0;
-  background: url(../images/reporte_pdf/dimension.png);
+  background: url(Apps/Accounts/static/images/reporte_pdf/dimension.png);
 }
 
 #project {

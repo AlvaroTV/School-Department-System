@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <title>Reporte</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" media="all" />
 </head>
 
 <body>
@@ -27,11 +27,14 @@
     <div id="project">
       <div> Departamento de Proyectos de Vinculación del Depto. de Sistemas y Computación</div>
       <div><span>JEFE</span> BIBI</div>
-      <div><span>CORREO </span><a href="mailto:jefatura.vinculacion.sistemas@itoaxaca.edu.mx">jefatura.vinculacion.sistemas@itoaxaca.edu.mx</a></div>
+      <div><span>CORREO </span><a
+          href="mailto:jefatura.vinculacion.sistemas@itoaxaca.edu.mx">jefatura.vinculacion.sistemas@itoaxaca.edu.mx</a>
+      </div>
       <div><span>FECHA</span> 17 de abri del 2015</div>
     </div>
   </header>
   <main>
+
     <table>
       <thead>
         <tr>
@@ -72,6 +75,50 @@
           <td class="total">Privado</td>
         </tr>
 
+      </tbody>
+    </table>
+    <table class="w-full whitespace-no-wrap">
+      <thead>
+        <tr
+          class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <th class="px-4 py-3">Numero de Control</th>
+          <th class="px-4 py-3">Estudiante</th>
+          <th class="px-4 py-3">Correo Electronico</th>
+          <th class="px-4 py-3 text-center">Semestre</th>                    
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+        {% for estudiante in all_estudiantes %}
+        <tr class="text-gray-700 dark:text-gray-400">
+          <td class="px-4 py-3">
+            <div class="flex items-center justify-center">
+              {{estudiante.numControl}}
+            </div>
+          </td>
+          <td class="px-4 py-3">
+            <div class="flex items-center text-sm">
+              <!-- Avatar with inset shadow -->
+              <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                <img class="object-cover w-full h-full rounded-full" src="{{estudiante.fotoUsuario.url}}" alt=""
+                  loading="lazy">
+                <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                </div>
+              </div>
+              <div>
+                <p class="font-semibold">{{estudiante}}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-3">
+            {{estudiante.correoElectronico}}
+          </td>
+          <td class="px-4 py-3 text-center">
+            <div class="flex items-center justify-center">
+              {{estudiante.semestre}}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
     <div id="notices">

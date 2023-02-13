@@ -7,6 +7,18 @@ from django.views.decorators.cache import cache_control
 from django.http import FileResponse, HttpResponse
 from django.db.models import Value, F
 from django.db.models.functions import Concat
+from django.template.loader import render_to_string
+import weasyprint
+from weasyprint.text.fonts import FontConfiguration
+from weasyprint import HTML
+
+from io import BytesIO
+from django.shortcuts import render
+from django.http import FileResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.conf import settings
+
 import io
 import json
 import xlwt
@@ -270,17 +282,17 @@ def docentes(request, page, orderB):
     #all_docentes_v = all_docentes.values()
     #all_docentes_list = list(all_docentes_v)
     #df_d = pd.DataFrame(all_docentes_list)
-    #df_d.to_csv('docentes.csv', index=False)
+    #df_d.to_csv('docentes2.csv', index=False)
     #
     #all_materias = Materia.objects.all().values()
     #all_materias_list = list(all_materias)
     #df_m = pd.DataFrame(all_materias_list)
-    #df_m.to_csv('materias.csv', index=False)    
+    #df_m.to_csv('materias2.csv', index=False)    
     #
     #perfil_academico = PerfilAcademico.materias.through.objects.all().values()    
     #perfil_academico_list = list(perfil_academico)    
     #df_pa = pd.DataFrame(perfil_academico_list)
-    #df_pa.to_csv('perfilacademico_materias.csv', index=False)
+    #df_pa.to_csv('perfilacademico_materias2.csv', index=False)
         
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -639,7 +651,7 @@ def removeEstudiante(request, pk):
 def asignarRevisor1(request, page, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)        
-    all_docentes = Docente.objects.all()        
+    all_docentes = Docente.objects.filter(estatus = 'ACTIVO')        
     start = (page-1)*10    
     end = page*10
     
@@ -730,7 +742,7 @@ def removeRevisor1(request, pk):
 def asignarRevisor2(request, page, pk):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)
-    all_docentes = Docente.objects.all()        
+    all_docentes = Docente.objects.filter(estatus = 'ACTIVO')        
     start = (page-1)*10    
     end = page*10
     
@@ -1022,7 +1034,7 @@ def editarResidenciaAdmin(request, pk):
 def asignarAsesorIL(request, page, pk):
     group = request.user.groups.all()[0].name
     residencia = Residencia.objects.get(id = pk)        
-    all_docentes = Docente.objects.all()        
+    all_docentes = Docente.objects.filter(estatus = 'ACTIVO')
     start = (page-1)*10    
     end = page*10
     estudiante = Estudiante_Residencia.objects.filter(residencia = residencia, estado = 'ACTIVO')[0].estudiante    
@@ -1565,10 +1577,10 @@ def export_excel(request, tipo, name):
     rows = []
     
     if tipo == 1:                    
-        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Correo Electronico', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
+        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
         all_estudiantes = MyViewModel.objects.all().order_by('numControl')
         estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)            
-        rows = estudiantes.values_list('numControl', 'nombre', 'apellidoP', 'apellidoM', 'correoElectronico', 'semestre', 'a_nombre', 'anteproyecto_estatus', 'residencia_estatus', 'estado_anteproyecto', 'estado_residencia')    
+        rows = estudiantes.values_list('numControl', 'nombre', 'apellidoP', 'apellidoM', 'semestre', 'a_nombre', 'anteproyecto_estatus', 'residencia_estatus', 'estado_anteproyecto', 'estado_residencia')    
     elif tipo == 2:
         columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
         all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
@@ -1640,10 +1652,82 @@ def subir_estudiantes_a(request):
     context = {'group': group, 'form': form, 'title': 'Subir Estudiantes'}
     return render(request, 'Admin/estudiantes_autorizados/subir_documento.html', context)
 
+def convert_to_pdf(request, context, template_path):
+    template = get_template(template_path)
+    html = template.render(context)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
-def ver_pdf(request):
-    return render(request, 'Admin/pdf_template.html')
+def ver_pdf(request, tipo, name):
+    filtros = request.GET.getlist('my_list2')[0]
+    
+    if tipo == 1:                    
+        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
+        all_estudiantes = MyViewModel.objects.all().order_by('numControl')
+        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)                    
+    elif tipo == 2:
+        columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
+        all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
+        anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)                    
+    
+    
+    context = {'estudiantes': estudiantes}
+    pdf = convert_to_pdf(request, context, 'Admin/pdf_template2.html')
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = name
+        #filename = "Invoice_%s.pdf" %("12341231")
+        content = "inline; filename=%s" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def estudiantes_pdf(request, tipo, name):
+    filtros = request.GET.getlist('my_list2')[0]
+    
+    if tipo == 1:                    
+        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
+        all_estudiantes = MyViewModel.objects.all().order_by('numControl')
+        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)                    
+    elif tipo == 2:
+        columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
+        all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
+        anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)                    
+    
+    
+    context = {'estudiantes': estudiantes}
+    pdf = convert_to_pdf(request, context, 'Admin/pdf_template2.html')
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = name
+        #filename = "Invoice_%s.pdf" %("12341231")
+        content = "inline; filename=%s" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+
+
+#def ver_pdf(request):
+#    context = {}
+#    html_content = render_to_string("Admin/pdf_template.html", context)
+#    response = HttpResponse(content_type='application/pdf')
+#    response['Content-Disposition'] = 'inline; filename="file.pdf"'
+#    
+#    font_config = FontConfiguration()        
+#    HTML(string=html_content).write_pdf(response, font_config=font_config)
+#    #weasyprint.HTML(string=html_content).write_pdf(response)
+#    return response
+#    return render(request, 'Admin/pdf_template.html')
+
+
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

@@ -1,0 +1,133 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reporte</title>  
+  <style type="text/css">
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+    .table, td, th {  
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    text-align: left;
+    }
+
+    .table {
+    border-collapse: collapse;
+    width: 100%;
+
+    }
+
+    .table th, td {
+    padding: 5px;
+    text-align: center;
+    }
+
+    .td{
+    word-break: inherit;
+    }
+
+    .list-group h3{
+        font-size: 3em;
+    }
+    .list-group p {
+        font-size: 1em;
+    }
+
+    .table1 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 5px;
+        background-color: #fff;
+        border: none;
+        text-align: center;
+    }
+
+    .table1 td {
+        border: none;
+    }
+
+</style>
+</head>
+
+<body>
+  <header class="clearfix">
+
+    <div id="logo">      
+      <img src="Apps/Accounts/static/images/reporte_pdf/liston.jpg">
+      <div id="company" class="clearfix">
+        <div>Instituto Tecnológico de Oaxaca</div>
+        <div>
+          <div> Departamento de Gestión Tecnológica y Vinculación</div>
+        </div>
+        <div>Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico,<br /> C.P. 68030</div>
+
+      </div>
+    </div>
+    <h1>Reporte de datos</h1>
+    <div id="project">
+      <div> Departamento de Proyectos de Vinculación del Depto. de Sistemas y Computación</div>
+      <div><span>JEFE</span> BIBI</div>
+      <div><span>CORREO </span><a
+          href="mailto:jefatura.vinculacion.sistemas@itoaxaca.edu.mx">jefatura.vinculacion.sistemas@itoaxaca.edu.mx</a>
+      </div>
+      <div><span>FECHA</span> 17 de abri del 2015</div>
+    </div>
+  </header>
+  <main>
+    <table>      
+      <thead>
+        <tr>
+          <th style="text-align:center">Numero de control</th>
+          <th style="text-align:center">Nombre</th>
+          <th style="text-align:center">Apellido Paterno</th>
+          <th style="text-align:center">Apellido Materno</th>
+          <th style="text-align:center">Semestre</th>
+          <th style="text-align:center">Nombre anteproyecto</th>          
+          <th style="text-align:center">Estado anteproyecto</th>
+          <th style="text-align:center">Estatus estudiante anteproyecto</th>          
+          <th style="text-align:center">Estado Residencia</th>          
+          <th style="text-align:center">Estatus estudiante residencia</th>          
+        </tr>
+      </thead>
+      <tbody>
+        {% for estudiante in estudiantes %}
+        <tr>
+          <td class="service">{{estudiante.numControl}}</td>
+          <td class="desc">{{estudiante.nombre}}</td>
+          <td class="unit">{{estudiante.apellidoP}}</td>
+          <td class="qty">{{estudiante.apellidoM}}</td>
+          <td class="total">{{estudiante.semestre}}</td>
+          <td class="total">{{estudiante.a_nombre}}</td>
+          <td class="total">{{estudiante.anteproyecto_estatus}}</td>
+          <td class="total">{{estudiante.estado_anteproyecto}}</td>
+          <td class="total">{{estudiante.residencia_estatus}}</td>          
+          <td class="total">{{estudiante.estado_residencia}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>    
+    <div id="notices">
+      <div>Total:</div>
+      <div class="notice">Numero de proyectos en el sector publico es:</div>
+      <div class="notice">Numero de proyectos en el sector privado es:</div>
+    </div>
+  </main>
+  <footer>
+    Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico, C.P. 68030. Tel. (951) 5015016
+    e-mail: tec_oax@itoaxaca.edu.mx | www.oaxaca.tecnm.mx
+
+    <div id="logo2">
+
+      <img src="Apps/Accounts/static/images/reporte_pdf/logoito.png">      
+
+    </div>
+  </footer>
+</body>
+
+</html>
