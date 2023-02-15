@@ -702,7 +702,9 @@ def anteproyecto(request):
     revisor1 = None
     revisor2 = None
     observaciones = None  
-    formDoc = None                               
+    formDoc = None
+    tiempo_restante = 1   
+                                   
     enviados = anteproyectos.exclude(codigoUnion='0000000000').filter(estatus='ENVIADO')                    
     codigo = '0000000000'     
     mensaje = ''       
@@ -714,8 +716,14 @@ def anteproyecto(request):
         dias = 5 + observacion.incrementarDias
         fechaObservacion = fechaObservacion + timedelta(days=dias)           
         fechaCorte = fechaObservacion + timedelta(days=1)             
-        fechaActual = date.today
-        fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")                   
+        #fechaActual = date.today
+        fechaActual = datetime.now().date()        
+        
+        tiempo_restante = fechaObservacion - fechaActual
+        tiempo_restante = tiempo_restante.days
+        tiempo_restante = max(0, tiempo_restante)
+        
+        fechaObservacion = fechaObservacion.strftime("%d/%b/%Y")               
     except:
         pass
     
@@ -772,10 +780,16 @@ def anteproyecto(request):
         
         if anteproyecto_materia:
             data.clear()
-            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle'])                 
+            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle'])    
+            estados = ['ENVIADO', 'PENDIENTE', 'EN REVISION']                                     
             actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
             if anteproyecto.numIntegrantes == 1:            
                 data.append('id_codigoUnion')  
+                
+            if anteproyecto.estatus in estados and tiempo_restante < 1:
+                mensaje_dias = True
+            else:
+                mensaje_dias = False
             
             revisor1 = anteproyecto.revisor1
             revisor2 = anteproyecto.revisor2                 
@@ -814,7 +828,7 @@ def anteproyecto(request):
                 else:
                     anteproyecto.anteproyectoDoc = None                                        
                     
-            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia, 'invitar': invitar, 'invitaciones': invitaciones}    
+            context = {'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'data': data, 'mensaje':mensaje, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'group': group, 'observaciones': observaciones, 'revisor1': revisor1, 'revisor2': revisor2, 'fechaObservacion': fechaObservacion, 'fechaCorte': fechaCorte, 'fechaActual': fechaActual, 'title': 'Anteproyecto', 'actualizaciones': actualizaciones, 'anteproyecto_materia': anteproyecto_materia, 'invitar': invitar, 'invitaciones': invitaciones, 'tiempo_restante': tiempo_restante, 'mensaje_dias': mensaje_dias}    
             return render(request, 'Student/anteproyecto.html', context)
         else:
             return redirect('materias')                                                        
@@ -1149,11 +1163,15 @@ def invitar(request, pk):
     estudiantes = all_estudiantes_aut.exclude(id__in = lista_ids)    
         
     if request.method == 'POST':
-        text = request.POST['search']                         
-        try:
-            estudiantes = estudiantes.filter(num_control__contains = text)
-        except:
-            estudiantes = None
+        opc = int(request.POST['search_options'])
+        text = request.POST['search'].upper()    
+        if opc == 1:                     
+            estudiantes = estudiantes.filter(nombre_completo__contains = text)
+        elif opc == 2:    
+            try:
+                estudiantes = estudiantes.filter(num_control__contains = text)
+            except:
+                estudiantes = None            
     
     context  = {'group': group, 'title': 'Invitar estudiante', 'anteproyecto': anteproyecto, 'estudiantes': estudiantes}
     return render(request, 'Student/invitar_e.html', context)

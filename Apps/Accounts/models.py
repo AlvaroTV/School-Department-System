@@ -56,6 +56,13 @@ class TitularDependencia(models.Model):
     t_apellidoM = models.CharField(max_length=70)
     t_puesto = models.CharField(max_length=50)
     
+    def save(self, *args, **kwargs):        
+        self.t_nombre = unidecode(self.t_nombre.upper())        
+        self.t_apellidoP = unidecode(self.t_apellidoP.upper())        
+        self.t_apellidoM = unidecode(self.t_apellidoM.upper())        
+        self.t_puesto = unidecode(self.t_puesto.upper())        
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f'{self.t_nombre} {self.t_apellidoP} {self.t_apellidoM}'
 
@@ -163,6 +170,11 @@ class Dependencia(models.Model):
     correoElectronico = models.CharField(max_length=200, null=True, blank=True)    
     mision = models.CharField(max_length=1000)
     
+    def save(self, *args, **kwargs):        
+        self.d_nombre = unidecode(self.d_nombre.upper())        
+        self.mision = unidecode(self.mision.upper())                
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f'{self.d_nombre}'
 

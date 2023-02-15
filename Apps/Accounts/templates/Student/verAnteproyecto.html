@@ -114,8 +114,10 @@
     <div class="w-full overflow-x-auto">
       {% if observaciones %}
       <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-        <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}} </strong>
-        </p>
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+          <p class="text-red-600">Fecha limite para realizar las correcciones: <strong> {{fechaObservacion}} </strong></p>
+          <p class="text-red-600">Te quedan <strong> {{tiempo_restante}} </strong> días para hacer las correcciones</p>
+        </div>        
       </div>
       <br>
       <table class="w-full">
@@ -242,7 +244,7 @@
           <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
             * Solo se aceptan documentos PDF.
             <br>
-            * Tamaño máximo del documento 20MB.
+            * Tamaño máximo del documento 5MB.
           </p>
           <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
@@ -585,3 +587,10 @@
 
   </div>
 </div>
+
+{% block scripts %}
+{% if mensaje_dias %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+<script src="{% static 'js/messages/no_dias.js' %}"></script>
+{% endif %}
+{% endblock %}

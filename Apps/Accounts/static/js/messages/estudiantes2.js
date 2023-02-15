@@ -1,3 +1,7 @@
+const btnDelete = document.querySelectorAll('.btnDelete');
+const elementValue2 = document.querySelectorAll('.elementValue2');
+
+
 Swal.fire({
   title: 'Finalizar o agregar mas materias?',  
   width: 600,
@@ -23,4 +27,38 @@ Swal.fire({
     )
     location.href = '/anteproyecto'
   }
+})
+
+btnDelete.forEach((btn, index) => {
+  btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = e.target;            
+      var ref = e.target.href;
+      
+      if (target.tagName === 'TD'){                                
+          ref = target.childNodes[1].href;                
+      }else if(target.tagName === 'P'){                   
+          ref = target.parentNode.href;
+      }                                                      
+      
+      Swal.fire({
+          title: 'Desea remover esta materia?',
+          text: elementValue2.item(index).textContent,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, remover!',
+          allowOutsideClick: () => false,
+          allowEscapeKey: () => false,
+          preConfirm: () => {
+              Swal.fire(
+                  'Eliminado!',
+                  'El elemento ha sido removido.',
+                  'success'
+              )                    
+              location.href = ref;
+          }
+      })
+  })
 })

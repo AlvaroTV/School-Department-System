@@ -109,29 +109,38 @@
             <div class="mt-2 mb-4">
                 <!-- Modal title -->
                 <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-                    Busqueda de estudiante (Numero de control):
+                    Busqueda del estudiante por:
                 </p>
                 <!-- Modal description -->
-
-                <div class="flex inline-flex items-center rounded-lg flex-grow ">
-                    <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">
-                    </svg>
-                    <div class="flex justify-center w-full bg:mr-32 flex-grow">
-                        <div class="relative  whitespace-no-wrap max-w-xl mr-10 focus-within:text-purple-500">
-                            <div class="absolute inset-y-0 flex items-center pl-2">
-                                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
+                <div class="grid gap-6 mb-8 md:grid-cols-1">
+                    <div class="flex inline-flex items-center rounded-lg flex-grow ">
+                        <div>
+                            <select id="s2" name="search_options"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm text-center rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected value="1">NOMBRE</option>
+                                <option value="2">NUMERO DE CONTROL</option>                                
+                            </select>
+                        </div>
+                        <svg class="w-5 h-5" fill="" viewBox="0 0 20 20">
+                        </svg>
+                        <div class="flex justify-center bg:mr-32 flex-grow">
+                            <div
+                                class="relative w-full whitespace-no-wrap max-w-xl mr-10 focus-within:text-purple-500">
+                                <div class="absolute inset-y-0 flex items-center pl-2">
+                                    <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <input name="search"
+                                    class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                                    type="text" placeholder="Buscar estudiante" aria-label="Search" />
                             </div>
-                            <input name="search"
-                                class="w-largo pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-                                type="text" placeholder="Numero de control" aria-label="Search">
                         </div>
                     </div>
+                    <!-- Search input -->
                 </div>
-                <!-- Search input -->
             </div>
             <footer
                 class="flex flex-col items-center justify-end px-3 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">

@@ -8,9 +8,6 @@ from django.http import FileResponse, HttpResponse
 from django.db.models import Value, F
 from django.db.models.functions import Concat
 from django.template.loader import render_to_string
-import weasyprint
-from weasyprint.text.fonts import FontConfiguration
-from weasyprint import HTML
 
 from io import BytesIO
 from django.shortcuts import render
@@ -25,7 +22,8 @@ import xlwt
 import ast
 
 # Import model
-from .recommend_doc import recomendaciones_docentes
+#from .recommend_doc import recomendaciones_docentes
+from .recomendacion_d import recomendaciones_docentes
 
 #from django.db.models import Count
 from django.core.mail import EmailMessage, BadHeaderError, send_mail
@@ -665,9 +663,16 @@ def asignarRevisor1(request, page, pk):
     df_anteproyecto_materia = pd.DataFrame(anteproyecto_materia_list)
     df_docentes = pd.DataFrame(docente_list)
     df_perfil_academico = pd.DataFrame(perfil_academico_list)
-    df_materias = pd.DataFrame(materia_list)
-    docentes_id_list = recomendaciones_docentes(df_anteproyectos, df_anteproyecto_materia, df_docentes, df_perfil_academico, df_materias)            
-    recomendaciones = all_docentes.filter(id__in = docentes_id_list)    
+    df_materias = pd.DataFrame(materia_list)    
+    docentes_id_list = recomendaciones_docentes(df_anteproyectos, df_anteproyecto_materia, df_docentes, df_perfil_academico, df_materias)                
+    #recomendaciones = all_docentes.filter(id__in = docentes_id_list)
+    recomendaciones = []
+    for i in docentes_id_list:
+        try:
+            d = all_docentes.get(id = i)
+            recomendaciones.append(d)
+        except:
+            pass    
 
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -758,7 +763,14 @@ def asignarRevisor2(request, page, pk):
     df_perfil_academico = pd.DataFrame(perfil_academico_list)
     df_materias = pd.DataFrame(materia_list)
     docentes_id_list = recomendaciones_docentes(df_anteproyectos, df_anteproyecto_materia, df_docentes, df_perfil_academico, df_materias)            
-    recomendaciones = all_docentes.filter(id__in = docentes_id_list)    
+    #recomendaciones = all_docentes.filter(id__in = docentes_id_list)    
+    recomendaciones = []
+    for i in docentes_id_list:
+        try:
+            d = all_docentes.get(id = i)
+            recomendaciones.append(d)
+        except:
+            pass    
     
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -1727,7 +1739,111 @@ def estudiantes_pdf(request, tipo, name):
 #    return response
 #    return render(request, 'Admin/pdf_template.html')
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def act_docente_anteproyectosA(request, pk):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id=pk)
+    estados = ['ACEPTADO', 'RECHAZADO', 'CANCELADO']
+    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente).exclude(estatus__in=estados).order_by('fechaEntrega')
+    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente).exclude(estatus__in=estados).order_by('fechaEntrega')            
+    
+    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2, 'docente': docente, 'title': 'Anteproyectos Activos'}    
+    return render(request, 'Admin/actividad_docente/actividad_anteproyectosA.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def act_docente_anteproyectosH(request, pk, page1, page2, orderB1, orderB2, filter1, filter2):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id=pk)
+    estados = ['ACEPTADO', 'RECHAZADO', 'CANCELADO']
+    all_anteproyectosR1 = Anteproyecto.objects.filter(revisor1=docente, estatus__in=estados)
+    all_anteproyectosR2 = Anteproyecto.objects.filter(revisor2=docente, estatus__in=estados)
+    
+    start1 = (page1-1)*10    
+    end1 = page1*10
+    
+    start2 = (page2-1)*10    
+    end2 = page2*10
+    
+    all_anteproyectosR1 = filtrar_anteproyectos(all_anteproyectosR1, filter1)
+    all_anteproyectosR1 = ordenar_anteproyectos(all_anteproyectosR1, orderB1)
+    all_anteproyectosR1 = all_anteproyectosR1[start1:end1]    
+    if end1 != all_anteproyectosR1.count():
+        end1 = end1-10+all_anteproyectosR1.count()
+    totalA1 = all_anteproyectosR1.count()
+    n_buttons1 = math.ceil(totalA1/10)
+    buttons1 = [item for item in range(1, n_buttons1+1)]
+    next_page1 = page1+1
+    prev_page1 = page1-1    
+    
+    all_anteproyectosR2 = filtrar_anteproyectos(all_anteproyectosR2, filter2)
+    all_anteproyectosR2 = ordenar_anteproyectos(all_anteproyectosR2, orderB2)
+    all_anteproyectosR2 = all_anteproyectosR2[start2:end2]  
+    if end2 != all_anteproyectosR2.count():
+        end2 = end2-10+all_anteproyectosR2.count()  
+    totalA2 = all_anteproyectosR2.count()
+    n_buttons2 = math.ceil(totalA2/10)
+    buttons2 = [item for item in range(1, n_buttons2+1)]
+    next_page2 = page2+1
+    prev_page2 = page2-1        
+    
+        
+    context = {'group': group, 'all_anteproyectosR1': all_anteproyectosR1, 'all_anteproyectosR2': all_anteproyectosR2, 'totalA1': totalA1, 'totalA2': totalA2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2, 'docente': docente, 'title': 'Anteproyectos Historicos'}    
+    return render(request, 'Admin/actividad_docente/actividad_anteproyectosH.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def act_docente_residenciasA(request, pk):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id=pk)
+    estados = ['FINALIZADA', 'RECHAZADA', 'NO FINALIZADA', 'CANCELADA']
+    all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente).exclude(estatus__in=estados)
+    all_residenciasR = Residencia.objects.filter(r_revisor=docente).exclude(estatus__in=estados)            
+    
+    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'docente': docente, 'title': 'Residencias Activas'}    
+    return render(request, 'Admin/actividad_docente/actividad_residenciasA.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def act_docente_residenciasH(request, pk, page1, page2, orderB1, orderB2, filter1, filter2):
+    group = request.user.groups.all()[0].name
+    docente = Docente.objects.get(id=pk)
+    estados = ['RECHAZADA', 'NO FINALIZADA', 'FINALIZADA', 'CANCELADA']
+    
+    all_residenciasA = Residencia.objects.filter(r_asesorInterno=docente, estatus__in=estados)
+    all_residenciasR = Residencia.objects.filter(r_revisor=docente, estatus__in=estados)        
+    
+    start1 = (page1-1)*10    
+    end1 = page1*10
+    
+    start2 = (page2-1)*10    
+    end2 = page2*10
+    
+    all_residenciasA = filtrar_residencias(all_residenciasA, filter1)
+    all_residenciasA = ordenar_residencias(all_residenciasA, orderB1)
+    all_residenciasA = all_residenciasA[start1:end1]    
+    if end1 != all_residenciasA.count():
+        end1 = end1-10+all_residenciasA.count()
+    totalR1 = all_residenciasA.count()
+    n_buttons1 = math.ceil(totalR1/10)
+    buttons1 = [item for item in range(1, n_buttons1+1)]
+    next_page1 = page1+1
+    prev_page1 = page1-1   
+    
+    all_residenciasR = filtrar_residencias(all_residenciasR, filter1)
+    all_residenciasR = ordenar_residencias(all_residenciasR, orderB1)
+    all_residenciasR = all_residenciasR[start2:end2]    
+    if end2 != all_residenciasR.count():
+        end2 = end2-10+all_residenciasR.count()
+    totalR2 = all_residenciasR.count()
+    n_buttons2 = math.ceil(totalR2/10)
+    buttons2 = [item for item in range(1, n_buttons2+1)]
+    next_page2 = page2+1
+    prev_page2 = page2-1   
+    
+    context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'totalR1': totalR1, 'totalR2': totalR2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2, 'docente': docente, 'title': 'Residencias Historicas'}    
+    return render(request, 'Admin/actividad_docente/actividad_residenciasH.html', context)
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

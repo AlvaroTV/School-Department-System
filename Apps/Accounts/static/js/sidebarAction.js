@@ -61,7 +61,7 @@ if (pathName == 'anteproyectos' | pathName == 'verAnteproyecto' | pathName == 'e
     estudiantes.hidden = false
     a_estudiantes.classList.add("dark:text-gray-100");
     a_estudiantes.classList.add("text-blue-500");
-} else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente' | pathName == 'altaDocente') {
+} else if (pathName == 'docentes' | pathName == 'verDocente' | pathName == 'editarDocente' | pathName == 'altaDocente' | pathName == 'act_docente_anteproyectosA' | pathName == 'act_docente_anteproyectosH' | pathName == 'act_docente_residenciasA' | pathName == 'act_docente_residenciasH') {
     docentes.hidden = false
     a_docentes.classList.add("dark:text-gray-100");
     a_docentes.classList.add("text-blue-500");

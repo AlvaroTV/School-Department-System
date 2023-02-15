@@ -93,6 +93,11 @@ urlpatterns = [
     path('verDocente/<uuid:pk>', verDocente, name='verDocente'),           
     path('editarDocente/<uuid:pk>', editarDocente, name='editarDocente'),           
     path('altaDocente/', altaDocente, name='altaDocente'), 
+    path('act_docente_anteproyectosA/<uuid:pk>', act_docente_anteproyectosA, name='act_docente_anteproyectosA'), 
+    path('act_docente_anteproyectosH/<uuid:pk>/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', act_docente_anteproyectosH, name='act_docente_anteproyectosH'),     
+    path('act_docente_residenciasA/<uuid:pk>', act_docente_residenciasA, name='act_docente_residenciasA'), 
+    path('act_docente_residenciasH/<uuid:pk>/<int:page1><int:page2>/<int:orderB1><int:orderB2>/<int:filter1><int:filter2>', act_docente_residenciasH, name='act_docente_residenciasH'), 
+    
     
     path('editarMateria/<uuid:pk>', editarMateria, name='editarMateria'),           
     path('altaMateria/', altaMateria, name='altaMateria'),       
