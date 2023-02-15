@@ -137,9 +137,8 @@ urlpatterns = [
     
     path('estudiantes_autorizados/<int:page>/<int:filter1>/<filter2>', estudiantes_autorizados, name='estudiantes_autorizados'), 
     path('subir_estudiantes_a/', subir_estudiantes_a, name='subir_estudiantes_a'), 
-    
-    path('verPDF/<int:tipo>/<str:name>', ver_pdf, name='verPDF'),
-    path('estudiantesPDF/<int:tipo>/<str:name>', ver_pdf, name='estudiantesPDF'),
+        
+    path('export_pdf/<int:tipo>/<str:name>', export_pdf, name='export_pdf'),    
     
     # Teacher 
     path('tProfile/', teacherProfile, name='teacherProfile'),      

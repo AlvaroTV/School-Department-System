@@ -39,8 +39,8 @@
         </div>
         <div class="relative ">
             <br>
-            <form action="{% url 'export_excel' tipo=3 name=file_name %}" method="GET">
-                <input hidden="hidden" type="text" name="my_list" value="{{filtros}}">
+            <form action="{% url 'export_pdf' tipo=3 name=file_name %}" method="GET" target="_blank">
+                <input hidden="hidden" type="text" name="my_list2" value="{{filtros}}">
                 <input type="submit" value="Descargar PDF"
                     class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
             </form>

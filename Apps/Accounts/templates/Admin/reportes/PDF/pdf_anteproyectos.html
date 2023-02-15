@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reporte</title>  
+  <style type="text/css">
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+    .table, td, th {  
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    text-align: left;
+    }
+
+    .table {
+    border-collapse: collapse;
+    width: 100%;
+
+    }
+
+    .table th, td {
+    padding: 5px;
+    text-align: center;
+    }
+
+    .td{
+    word-break: inherit;
+    }
+
+    .list-group h3{
+        font-size: 3em;
+    }
+    .list-group p {
+        font-size: 1em;
+    }
+
+    .table1 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 5px;
+        background-color: #fff;
+        border: none;
+        text-align: center;
+    }
+
+    .table1 td {
+        border: none;
+    }
+
+</style>
+</head>
+
+<body>
+  <header class="clearfix">
+
+    <div id="logo">      
+      <img src="Apps/Accounts/static/images/reporte_pdf/liston.jpg">
+      <div id="company" class="clearfix">
+        <div>Instituto Tecnológico de Oaxaca</div>
+        <div>
+          <div> Departamento de sistemas y computación</div>
+        </div>
+        <div>Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico,<br /> C.P. 68030</div>
+      </div>
+    </div>
+    <h1>Reporte de anteproyectos</h1>
+    <div id="project">
+      <div> Jefa de la oficina de proyectos de vinculación del depto. De sistemas y computación</div>
+      <div>BIBIANA DIAZ SARMIENTO </div>
+      <div><span>CORREO: </span><a
+          href="mailto:jefatura.vinculacion.sistemas@itoaxaca.edu.mx">jefatura.vinculacion.sistemas@itoaxaca.edu.mx</a>
+      </div>
+      <div><span>FECHA: </span> {{fecha_actual}}</div>
+    </div>
+  </header>
+  <main>
+    <table class="table1">      
+      <thead>
+        <tr>
+          <th style="text-align:center">Nombre del anteproyecto</th>
+          <th style="text-align:center">Tipo de proyecto</th>
+          <th style="text-align:center">Numero de integrantes</th>
+          <th style="text-align:center">Fecha de entrega</th>
+          <th style="text-align:center">Estatus del anteproyecto</th>
+          <th style="text-align:center">Estatus del revisor 1</th>          
+          <th style="text-align:center">Estatus del revisor 2</th>
+          <th style="text-align:center">Nombre revisor 1</th>          
+          <th style="text-align:center">Nombre revisor 2</th>          
+          <th style="text-align:center">Organizacion o empresa</th>          
+        </tr>
+      </thead>
+      <tbody>
+        {% for anteproyecto in anteproyectos %}
+        <tr>
+          <td class="service">{{anteproyecto.a_nombre}}</td>
+          <td class="desc">{{anteproyecto.tipoProyecto}}</td>
+          <td class="unit">{{anteproyecto.numIntegrantes}}</td>
+          <td class="qty">{{anteproyecto.fechaEntrega}}</td>
+          <td class="total">{{anteproyecto.estatus}}</td>
+          <td class="total">{{anteproyecto.estatusR1}}</td>
+          <td class="total">{{anteproyecto.estatusR2}}</td>
+          <td class="total">{{anteproyecto.revisor1}}</td>
+          <td class="total">{{anteproyecto.revisor2}}</td>          
+          <td class="total">{{anteproyecto.dependencia.d_nombre}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>    
+    <div id="notices">
+      <div>Datos totales: {{datos_t}}</div>
+      
+    </div>
+  </main>
+  <footer>
+    Avenida Ing. Víctor Bravo Ahuja No. 125 Esquina Calzada Tecnológico, C.P. 68030. Tel. (951) 5015016
+    e-mail: tec_oax@itoaxaca.edu.mx | www.oaxaca.tecnm.mx
+
+    <div id="logo2">
+
+      <img src="Apps/Accounts/static/images/reporte_pdf/logoito.png" height="50" width="50">      
+
+    </div>
+  </footer>
+</body>
+
+</html>

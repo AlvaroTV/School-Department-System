@@ -1675,21 +1675,33 @@ def convert_to_pdf(request, context, template_path):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
-def ver_pdf(request, tipo, name):
+def export_pdf(request, tipo, name):
     filtros = request.GET.getlist('my_list2')[0]
-    
+    filtros = ast.literal_eval(filtros)
+    fecha_actual = datetime.now()
     if tipo == 1:                    
         columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
         all_estudiantes = MyViewModel.objects.all().order_by('numControl')
-        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)                    
+        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)           
+        datos_t = len(estudiantes)         
+        context = {'estudiantes': estudiantes, 'fecha_actual': fecha_actual, 'datos_t': datos_t}
+        template_path = 'Admin/reportes/PDF/pdf_estudiantes.html'
     elif tipo == 2:
         columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
         all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
         anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)                    
-    
-    
-    context = {'estudiantes': estudiantes}
-    pdf = convert_to_pdf(request, context, 'Admin/pdf_template2.html')
+        datos_t = len(anteproyectos)        
+        context = {'anteproyectos': anteproyectos, 'fecha_actual': fecha_actual, 'datos_t': datos_t}
+        template_path = 'Admin/reportes/PDF/pdf_anteproyectos.html'    
+    elif tipo == 3:
+        columns = ['Nombre del proyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Periodo inicio', 'Periodo fin', 'Estatus del proyecto', 'Revisor', 'Asesor interno', 'Asesor externo', 'Organizacion o empresa']    
+        all_residencias = Residencia.objects.annotate(nombre_r=Concat(F('r_revisor__apellidoP'), Value(" "), F("r_revisor__apellidoM"), Value(" "), F('r_revisor__nombre')), nombre_asesor_i=Concat(F('r_asesorInterno__apellidoP'), Value(" "), F("r_asesorInterno__apellidoM"), Value(" "), F('r_asesorInterno__nombre')), nombre_asesor_e=Concat(F('asesorExterno__apellidoP'), Value(" "), F("asesorExterno__apellidoM"), Value(" "), F('asesorExterno__nombre')))
+        residencias, filtros_list = filtrar_residencias_rep(all_residencias, filtros)                    
+        datos_t = len(residencias)        
+        context = {'residencias': residencias, 'fecha_actual': fecha_actual, 'datos_t': datos_t}
+        template_path = 'Admin/reportes/PDF/pdf_residencias.html'    
+        
+    pdf = convert_to_pdf(request, context, template_path)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         filename = name
@@ -1698,34 +1710,6 @@ def ver_pdf(request, tipo, name):
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")
-
-
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@admin_only
-def estudiantes_pdf(request, tipo, name):
-    filtros = request.GET.getlist('my_list2')[0]
-    
-    if tipo == 1:                    
-        columns = ['Numero de control', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Semestre', 'Nombre anteproyecto' ,'Anteproyecto', 'Residencia', 'Estatus anteproyecto', 'Estatus residencia']    
-        all_estudiantes = MyViewModel.objects.all().order_by('numControl')
-        estudiantes, filtros_list = filtrar_estudiantes_rep(all_estudiantes, filtros)                    
-    elif tipo == 2:
-        columns = ['Nombre del anteproyecto', 'Tipo de proyecto', 'Numero de integrantes', 'Fecha de entrega', 'Estatus del anteproyecto', 'Estatus del revisor 1', 'Estatus del revisor 2' , 'Nombre revisor 1', 'Nombre revisor 2', 'Organizacion o empresa']    
-        all_anteproyectos = Anteproyecto.objects.annotate(nombre_r1=Concat(F('revisor1__apellidoP'), Value(" "), F("revisor1__apellidoM"), Value(" "), F('revisor1__nombre')), nombre_r2=Concat(F('revisor2__apellidoP'), Value(" "), F("revisor2__apellidoM"), Value(" "), F('revisor2__nombre')))
-        anteproyectos, filtros_list = filtrar_anteproyectos_rep(all_anteproyectos, filtros)                    
-    
-    
-    context = {'estudiantes': estudiantes}
-    pdf = convert_to_pdf(request, context, 'Admin/pdf_template2.html')
-    if pdf:
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = name
-        #filename = "Invoice_%s.pdf" %("12341231")
-        content = "inline; filename=%s" %(filename)
-        response['Content-Disposition'] = content
-        return response
-    return HttpResponse("Not found")
-
 
 #def ver_pdf(request):
 #    context = {}
@@ -2171,8 +2155,8 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
     filtro1 = filtros[0]
     filtro2 = filtros[1]
     filtro3 = filtros[2]
-    filtro4 = filtros[3]
-            
+    filtro4 = filtros[3]    
+    
     if filtro1 == 9:
         estudiantes = estudiantes.filter(semestre = 9)
         filtros_list.append('Semestre 9')
@@ -2248,7 +2232,7 @@ def filtrar_estudiantes_rep(all_estudiantes, filtros):
     elif filtro4 == 8:        
         estudiantes = estudiantes.filter(residencia_estatus = 'SIN ENVIO')                           
         filtros_list.append('Residencia SIN ENVIO')
-    
+        
     return estudiantes, filtros_list
 
 def filtrar_anteproyectos_rep(all_anteproyectos, filtros):
