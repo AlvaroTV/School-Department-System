@@ -1700,7 +1700,7 @@ def export_pdf(request, tipo, name):
         datos_t = len(residencias)        
         context = {'residencias': residencias, 'fecha_actual': fecha_actual, 'datos_t': datos_t}
         template_path = 'Admin/reportes/PDF/pdf_residencias.html'    
-        
+                    
     pdf = convert_to_pdf(request, context, template_path)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
@@ -1710,18 +1710,20 @@ def export_pdf(request, tipo, name):
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")
-
-#def ver_pdf(request):
-#    context = {}
-#    html_content = render_to_string("Admin/pdf_template.html", context)
-#    response = HttpResponse(content_type='application/pdf')
-#    response['Content-Disposition'] = 'inline; filename="file.pdf"'
-#    
-#    font_config = FontConfiguration()        
-#    HTML(string=html_content).write_pdf(response, font_config=font_config)
-#    #weasyprint.HTML(string=html_content).write_pdf(response)
-#    return response
-#    return render(request, 'Admin/pdf_template.html')
+    
+    #pdf_page_orientation = 'Landscape'
+    #response = HttpResponse(content_type='application/pdf')    
+    #filename = name
+    #content = "inline; filename=%s" %(filename)
+    #response['Content-Disposition'] = content
+    #template = get_template(template_path)
+    #html = template.render(context)    
+    #pisa.CreatePDF(
+    #    html, dest=response, 
+    #    link_callback=lambda uri, rel: os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, '')),
+    #    orientation= pdf_page_orientation
+    #)
+    #return response
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only

@@ -9,6 +9,7 @@
   <style type="text/css">
     @page {
         size: A4;
+        size: landscape;
         margin: 1cm;
     }
     .table, td, th {  
@@ -47,11 +48,7 @@
         border: none;
         text-align: center;
     }
-
-    .table1 td {
-        border: none;
-    }
-
+    
 </style>
 </head>
 
@@ -59,7 +56,7 @@
   <header class="clearfix">
 
     <div id="logo">      
-      <img src="Apps/Accounts/static/images/reporte_pdf/liston.jpg">
+      <img src="{% static '/images/reporte_pdf/liston.jpg' %}">
       <div id="company" class="clearfix">
         <div>Instituto Tecnológico de Oaxaca</div>
         <div>

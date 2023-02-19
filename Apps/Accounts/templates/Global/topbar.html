@@ -22,11 +22,13 @@
       <!-- Theme toggler -->
       <li class="flex text-blue-500">
         {% if group == 'student' %}
-        <span>Hola estudiante, {{request.user.estudiante.nombre}} </span>
+        <span>Hola estudiante, <strong> {{request.user.estudiante.nombre}} </strong> </span>
         {% elif group == 'teacher'  %}
-        <span>Hola docente, {{request.user.docente.nombre}} </span>
-        {% else %}
-        <span>Hola administrador, {{request.user.first_name}} </span>
+        <span>Hola docente, <strong> {{request.user.docente.nombre}} </strong> </span>
+        {% elif group == 'admin'%}
+        <span>Hola Jefa de la oficina de proyectos de vinculación, <strong> {{request.user.first_name}} </strong> </span>
+        {% elif group == 'jefe_carrera_sistemas'%}
+        <span>Hola Jefa del depto. Sistemas Computacionales, <strong> {{request.user.first_name}} </strong> </span>
         {% endif %}
       </li>
       <li class="flex text-blue-500">
@@ -148,3 +150,9 @@
     </ul>
   </div>
 </header>
+
+{% block scripts %}
+
+<script src="{% static 'js/check_inactivity.js' %}"></script>
+
+{% endblock %}

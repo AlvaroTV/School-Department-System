@@ -7,12 +7,21 @@
     <div class="container grid px-6 mx-auto">
         <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
             <ul>
+                {% if revisor1 or revisor2 %}
                 <li>
                     <a href="/">Inicio</a> /
                     <a href="{% url 'anteproyectos' 1 0 0 %}"> Anteproyectos</a> /
                     <a href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a> /
                     <a class="text-blue-500"> Asignar docente</a> 
                 </li>
+                {% elif asesorI or revisor %}
+                <li>
+                    <a href="/">Inicio</a> /
+                    <a href="{% url 'residencias' 1 0 0 %}"> Residencias</a> /
+                    <a href="{% url 'verResidencia' residencia.id %}"> Ver resiencia</a> /
+                    <a class="text-blue-500"> Asignar docente</a> 
+                </li>
+                {% endif %}
             </ul>
         </div>
         <div class="grid gap-6 mt-8 mb-8 md:grid-cols-2">
@@ -56,7 +65,7 @@
                             <th class="px-4 py-3">Numero Celular</th>
                             <th class="px-4 py-3">Correo Electronico</th>
                             <th class="px-4 py-3">Estatus</th>
-                            <th class="px-4 py-3">Seleccionar</th>
+                            <th class="px-4 py-3">Asignar Docente</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -128,7 +137,7 @@
                             <th class="px-4 py-3">Numero Celular</th>
                             <th class="px-4 py-3">Correo Electronico</th>
                             <th class="px-4 py-3">Estatus</th>
-                            <th class="px-4 py-3">Seleccionar</th>
+                            <th class="px-4 py-3">Asignar Docente</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">

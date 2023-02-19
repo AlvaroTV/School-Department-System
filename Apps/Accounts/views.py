@@ -15,7 +15,8 @@ from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes, force_str
 
 from django.core.mail import EmailMessage
-
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.views.decorators.cache import never_cache
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
@@ -170,29 +171,19 @@ def teacherPage(request):
     if all_avisos:
         for aviso in all_avisos:
             fin_aviso = aviso.fechaCreacion + timedelta(days=aviso.tiempoVida)
-            fecha_actual = timezone.now()            
-            print(f'Fecha de Creacion: {aviso.fechaCreacion}')
-            print(f'Fecha eliminacion: {fin_aviso}')
-            print(f'Fehca Actual: {fecha_actual}')
-            print('Fechas con el cambio:')
+            fecha_actual = timezone.now()                        
             fin_aviso = convert_to_localtime(fin_aviso)
-            fecha_actual = convert_to_localtime(fecha_actual)
-            print('Fecha de Creacion: ', convert_to_localtime(aviso.fechaCreacion))            
-            print('Fecha eliminacion: ', fin_aviso)            
-            print('Fecha Actual: ', fecha_actual)            
-            if fecha_actual > fin_aviso:
-                print('Eliminar este aviso')
+            fecha_actual = convert_to_localtime(fecha_actual)            
+            if fecha_actual > fin_aviso:            
                 aviso.delete()
-            print('\n================================')
-            
+                        
     avisosP = all_avisos.filter(docente = docente)
     avisosT = all_avisos.filter(entidad = 'TODOS')
     avisosD = all_avisos.filter(entidad = 'DOCENTES')
     avisos = avisosP | avisosT | avisosD
     
     all_anteproyectos = Anteproyecto.objects.all()
-    all_residencias = Residencia.objects.all()
-    all_anteproyectos_E = all_anteproyectos.filter(estatus = 'ENVIADO')
+    all_residencias = Residencia.objects.all()    
     
     anteproyectos_activos_r1 = all_anteproyectos.filter(revisor1=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
     anteproyectos_activos_r2 = all_anteproyectos.filter(revisor2=docente).exclude(estatus__in=['ACEPTADO', 'RECHAZADO'])
@@ -217,23 +208,22 @@ def teacherPage(request):
     all_anteproyectos_activos = anteproyectos_activos_r1 | anteproyectos_activos_r2
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto__in=all_anteproyectos_activos, tipo='ACTUALIZADO').exclude(estado='LEIDO').order_by('-fecha')
     
-    context = {'group': group, 'docente': docente, 'anteproyectos': all_anteproyectos_E, 'actividad_docente': actividad_docente, 'actualizaciones': actualizaciones, 'avisos': avisos, 'title': 'Inicio'}
+    context = {'group': group, 'docente': docente, 'actividad_docente': actividad_docente, 'actualizaciones': actualizaciones, 'avisos': avisos, 'title': 'Inicio'}
     return render(request, 'Teacher/dashboard.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @unauthenticated_user
-def loginPage(request):
-
+def loginPage(request):    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-                                
         if user and user.is_active:
             login(request, user)
             return redirect('home')
         else:
-            messages.info(request, 'Número de control o contraseña incorrecta')
+            #messages.info(request, 'Número de control o contraseña incorrecta')    
+            messages.info(request, 'Invalid username or password')    
 
     context = {}
     return render(request, 'Global/login.html', context)
@@ -1151,7 +1141,9 @@ def eliminar_materia(request, pk, materiaPK):
     anteproyecto_materia.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-def invitar(request, pk):
+@login_required(login_url='login')
+@admin_only
+def invitar(request, pk, page):
     group = request.user.groups.all()[0].name                
     anteproyecto = Anteproyecto.objects.get(id = pk)        
     all_estudiantes_aut = Estudiante_Autorizado.objects.all()
@@ -1160,20 +1152,33 @@ def invitar(request, pk):
     lista_est_invitados = Invitacion.objects.filter(estudiante_destinatario__in = all_estudiantes_aut).values_list('estudiante_destinatario_id', flat=True)   
     if lista_est_invitados:        
         lista_ids.extend(list(set(lista_est_invitados) - set(lista_ids)))
-    estudiantes = all_estudiantes_aut.exclude(id__in = lista_ids)    
-        
+    all_estudiantes = all_estudiantes_aut.exclude(id__in = lista_ids)    
+    start = (page-1)*10    
+    end = page*10    
+    search = None
+               
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
         text = request.POST['search'].upper()    
+        search = True
         if opc == 1:                     
-            estudiantes = estudiantes.filter(nombre_completo__contains = text)
+            all_estudiantes = all_estudiantes.filter(nombre_completo__contains = text)
         elif opc == 2:    
             try:
-                estudiantes = estudiantes.filter(num_control__contains = text)
+                all_estudiantes = all_estudiantes.filter(num_control__contains = text)
             except:
-                estudiantes = None            
+                all_estudiantes = None            
+                
+    estudiantes = all_estudiantes[start:end]    
+    if end != estudiantes.count():
+        end = end-10+estudiantes.count()
+    totalE = all_estudiantes.count()
+    n_buttons = math.ceil(totalE/10)
+    buttons = [item for item in range(1, n_buttons+1)]
+    next_page = page+1
+    prev_page = page-1 
     
-    context  = {'group': group, 'title': 'Invitar estudiante', 'anteproyecto': anteproyecto, 'estudiantes': estudiantes}
+    context  = {'group': group, 'title': 'Invitar estudiante', 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'totalE': totalE, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons, 'search': search}
     return render(request, 'Student/invitar_e.html', context)
 
 def crear_invitacion(request, pk_e, pk_a):    

@@ -46,7 +46,7 @@ urlpatterns = [
     path('compatibilidadA/<materiaPK>', compatibilidadA, name='compatibilidadA'),    
     path('eliminar_materia/<uuid:pk>/<materiaPK>', eliminar_materia, name='eliminar_materia'),    
             
-    path('invitar/<uuid:pk>', invitar, name='invitar'),    
+    path('invitar/<uuid:pk>/<int:page>', invitar, name='invitar'),    
     path('crear_invitacion/<uuid:pk_e>/<uuid:pk_a>', crear_invitacion, name='crear_invitacion'),    
     path('aceptar_invitacion/<uuid:pk>', aceptar_invitacion, name='aceptar_invitacion'),    
     path('rechazar_invitacion/<uuid:pk>', rechazar_invitacion, name='rechazar_invitacion'),    
