@@ -41,11 +41,8 @@ def home(request):
     all_anteproyectos = Anteproyecto.objects.all()
     all_residencias = Residencia.objects.all()
     docentes = Docente.objects.all().count()
-    totalAlumnos = all_estudiantes.count()    
-        
-    #all_anteproyectos = Estudiante_Anteproyecto.objects.filter(estudiante = student, estado = 'ACTIVO')    
-    all_e_anteproyectos = Estudiante_Anteproyecto.objects.filter(estado = 'ACTIVO')       
-    #all_residencias = Estudiante_Residencia.objects.filter(estudiante = student, estado = 'ACTIVO')        
+    totalAlumnos = all_estudiantes.count()                
+    all_e_anteproyectos = Estudiante_Anteproyecto.objects.filter(estado = 'ACTIVO')           
     all_e_residencias = Estudiante_Residencia.objects.filter(estado = 'ACTIVO')       
     
     anteproyectosT = all_anteproyectos.count()
@@ -63,42 +60,9 @@ def home(request):
     residenciasP = all_residencias.filter(estatus = 'PROROGA').count()
     residenciasF = all_residencias.filter(estatus = 'FINALIZADA').count()
     
-    epedientesC = Expediente.objects.filter(estatus = 'COMPLETO').count()
-                          
-    generaciones = all_estudiantes.values(generacion = Substr('numControl', 1, 4)).distinct()    
-    list_generaciones = []
-    cantidad_generaciones = []
-    cantidad_anteproyectos = []        
-    cantidad_residencias = []    
-    cantidadT_anteproyectos = []
-    #prueba1 = []
-    #prueba2 = []
-    cantidadT_residencias = []   
-    anteproyectos_months = []
-        
-    for g in generaciones:         
-        list_generaciones.append(g['generacion'])        
-        cantidad_generaciones.append(all_estudiantes.filter(numControl__startswith=g['generacion']).count())                
-        estudiantes_gen = all_estudiantes.filter(numControl__startswith=g['generacion'])        
-        #cantidad_anteproyectos.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None).count())            
-        cantidad_anteproyectos.append(all_e_anteproyectos.filter(estudiante__in=estudiantes_gen).count())                   
-        #cantidad_residencias.append((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None).count())) 
-        cantidad_residencias.append(all_e_residencias.filter(estudiante__in=estudiantes_gen).count())                    
-        #prueba1.append(all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)) 
-        #prueba2.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
-        #cantidadT_anteproyectos.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(anteproyecto=None)).values('anteproyecto').annotate(dcount=Count('anteproyecto'))).count()) 
-        cantidadT_anteproyectos.append(all_e_anteproyectos.filter(estudiante__in=estudiantes_gen).distinct('anteproyecto').count()) 
-        #cantidadT_residencias.append(((all_estudiantes.filter(numControl__startswith=g['generacion']).exclude(residencia=None)).values('residencia').annotate(dcount=Count('residencia'))).count()) 
-        cantidadT_anteproyectos.append(all_e_residencias.filter(estudiante__in=estudiantes_gen).distinct('residencia').count()) 
-        #cantidadT_residencias.append(1) 
-                    
+    epedientesC = Expediente.objects.filter(estatus = 'COMPLETO').count()                              
     
-    for i in range(1,13): anteproyectos_months.append(all_anteproyectos.filter(fechaEntrega__month=i).count())        
-    
-    dataPie1 = [list_generaciones, cantidad_generaciones, cantidad_anteproyectos, cantidad_residencias, cantidadT_anteproyectos, cantidadT_residencias]     
-        
-    
-    context = {'group': group, 'totalAlumnos': totalAlumnos, 'anteproyectosE': anteproyectosE, 'anteproyectosT': anteproyectosT, 'anteproyectosP': anteproyectosP, 'anteproyectosER': anteproyectosER, 'anteproyectosRE': anteproyectosRE, 'anteproyectosA': anteproyectosA, 'anteproyectosR': anteproyectosR, 'residenciasI': residenciasI, 'residenciasEP': residenciasEP, 'residenciasP': residenciasP ,'residenciasF': residenciasF, 'docentes': docentes, 'dataPie1': dataPie1, 'anteproyectos_months': anteproyectos_months, 'title': 'Inicio', 'epedientesC': epedientesC}
+    context = {'group': group, 'totalAlumnos': totalAlumnos, 'anteproyectosE': anteproyectosE, 'anteproyectosT': anteproyectosT, 'anteproyectosP': anteproyectosP, 'anteproyectosER': anteproyectosER, 'anteproyectosRE': anteproyectosRE, 'anteproyectosA': anteproyectosA, 'anteproyectosR': anteproyectosR, 'residenciasI': residenciasI, 'residenciasEP': residenciasEP, 'residenciasP': residenciasP ,'residenciasF': residenciasF, 'docentes': docentes, 'title': 'Inicio', 'epedientesC': epedientesC}
     return render(request, 'Global/dashboard.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
