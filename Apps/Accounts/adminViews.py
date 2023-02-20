@@ -1,23 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.http import FileResponse, HttpResponse
 from django.db.models import Value, F
 from django.db.models.functions import Concat
-from django.template.loader import render_to_string
 
 from io import BytesIO
 from django.shortcuts import render
-from django.http import FileResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.conf import settings
 
 import io
-import json
 import xlwt
 import ast
 
@@ -26,7 +20,6 @@ import ast
 from .recomendacion_d import recomendaciones_docentes
 
 #from django.db.models import Count
-from django.core.mail import EmailMessage, BadHeaderError, send_mail
 from datetime import date, timedelta, datetime
 from django.db.models.functions import Substr
 import math
@@ -47,19 +40,7 @@ def anteproyectos(request, page, orderB, filter):
     group = request.user.groups.all()[0].name    
     all_anteproyectos = Anteproyecto.objects.all()     
     start = (page-1)*10    
-    end = page*10
-    
-    #all_anteproyectos_e = all_anteproyectos.filter(estatus = 'ENVIADO')
-    #all_anteproyectos_v = all_anteproyectos_e.values()
-    #all_anteproyectos_list = list(all_anteproyectos_v)
-    #all_anteproyectos_e_list = list(all_anteproyectos_e)
-    #df_a = pd.DataFrame(all_anteproyectos_list)
-    #df_a.to_csv('anteproyectos.csv', index=False)        
-    #
-    #all_anteproyecto_materia = Anteproyecto_materia.objects.filter(anteproyecto__in = all_anteproyectos_e_list).values()
-    #all_anteproyecto_materia_list = list(all_anteproyecto_materia)
-    #df_am = pd.DataFrame(all_anteproyecto_materia_list)
-    #df_am.to_csv('anteproyecto_materia.csv', index=False)            
+    end = page*10        
     
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -275,22 +256,7 @@ def docentes(request, page, orderB):
     group = request.user.groups.all()[0].name    
     all_docentes = Docente.objects.all()
     start = (page-1)*10    
-    end = page*10            
-    
-    #all_docentes_v = all_docentes.values()
-    #all_docentes_list = list(all_docentes_v)
-    #df_d = pd.DataFrame(all_docentes_list)
-    #df_d.to_csv('docentes2.csv', index=False)
-    #
-    #all_materias = Materia.objects.all().values()
-    #all_materias_list = list(all_materias)
-    #df_m = pd.DataFrame(all_materias_list)
-    #df_m.to_csv('materias2.csv', index=False)    
-    #
-    #perfil_academico = PerfilAcademico.materias.through.objects.all().values()    
-    #perfil_academico_list = list(perfil_academico)    
-    #df_pa = pd.DataFrame(perfil_academico_list)
-    #df_pa.to_csv('perfilacademico_materias2.csv', index=False)
+    end = page*10                    
         
     if request.method == 'POST':
         opc = int(request.POST['search_options'])
@@ -388,8 +354,7 @@ def verAnteproyecto(request, pk):
             estadoFinal = formEstado['estatus'].value()        
             estudiantes = [i.estudiante for i in all_estudiantes if i.estado == 'ACTIVO' ]                   
             if estadoInicial in lista and estadoFinal == 'ACEPTADO':                
-                estudiante_resi = Estudiante_Residencia.objects.filter(estudiante = estudiantes[0], estado='ACTIVO')
-                print(estudiante_resi)
+                estudiante_resi = Estudiante_Residencia.objects.filter(estudiante = estudiantes[0], estado='ACTIVO')                
                 if not estudiante_resi:     
                     residencia = Residencia(
                         dependencia = dependencia,
@@ -863,13 +828,7 @@ def verDocente(request, pk):
     anteproyectos_pasados_r2 = all_anteproyectos.filter(estatus='ACEPTADO', revisor2=docente)
     
     residencias_pasadas_a = all_residencias.filter(estatus='FINALIZADA', r_asesorInterno=docente)
-    residencias_pasadas_r = all_residencias.filter(estatus='FINALIZADA', r_revisor=docente)
-        
-    for i in residencias_activas_a:
-        print(i.nombre)
-    
-    for i in residencias_activas_r:
-        print(i.nombre)
+    residencias_pasadas_r = all_residencias.filter(estatus='FINALIZADA', r_revisor=docente)            
          
     actividad_docente = [anteproyectos_activos_r1.count() + anteproyectos_activos_r2.count(),
                          residencias_activas_a.count() + residencias_activas_r.count(), 
@@ -1709,21 +1668,7 @@ def export_pdf(request, tipo, name):
         content = "inline; filename=%s" %(filename)
         response['Content-Disposition'] = content
         return response
-    return HttpResponse("Not found")
-    
-    #pdf_page_orientation = 'Landscape'
-    #response = HttpResponse(content_type='application/pdf')    
-    #filename = name
-    #content = "inline; filename=%s" %(filename)
-    #response['Content-Disposition'] = content
-    #template = get_template(template_path)
-    #html = template.render(context)    
-    #pisa.CreatePDF(
-    #    html, dest=response, 
-    #    link_callback=lambda uri, rel: os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, '')),
-    #    orientation= pdf_page_orientation
-    #)
-    #return response
+    return HttpResponse("Not found")        
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only

@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
 
-from django.utils.http import urlsafe_base64_encode
 from django.db.models.query_utils import Q
-from django.utils.encoding import force_bytes
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -14,9 +12,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes, force_str
 
-from django.core.mail import EmailMessage
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
-from django.views.decorators.cache import never_cache
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
@@ -352,8 +347,7 @@ def estudianteViewProfile(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
-def estudianteSettings(request):
-    # Falta Wachar que rollo con el correo 
+def estudianteSettings(request):    
     user = request.user
     group = user.groups.all()[0].name
     estudiante = user.estudiante
@@ -384,12 +378,8 @@ def estudianteSettings(request):
             formD = DomicilioForm(request.POST, instance=domicilio)
             formE = EstudianteForm(
                 request.POST, request.FILES, instance=estudiante)            
-            formU = CreateUserFormEmail(request.POST, instance = user)  
-            print(formE.is_valid())          
-            print(formU.is_valid())   
-            print(formU.errors)       
-            if formE.is_valid() and formU.is_valid():
-                print(':v')
+            formU = CreateUserFormEmail(request.POST, instance = user)              
+            if formE.is_valid() and formU.is_valid():                
                 formE.save()
                 formU.save()
                 correo = formU.cleaned_data['email']
@@ -960,8 +950,7 @@ def asesoresE(request):
     asesorE = None    
     dependencia = None
     all_asesores = None
-    if anteproyecto:
-        print(':V')
+    if anteproyecto:        
         asesoreE = anteproyecto.asesorExterno
         dependencia = anteproyecto.dependencia
         all_asesores = AsesorExterno.objects.filter(dependencia=dependencia)

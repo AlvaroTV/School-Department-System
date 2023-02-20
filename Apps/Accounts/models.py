@@ -31,6 +31,10 @@ class Materia(models.Model):
     nombre = models.CharField(max_length=150, null=True)
     semestre = models.IntegerField(choices=SEMESTRES)     
     
+    def save(self, *args, **kwargs):        
+        self.nombre = unidecode(self.nombre.upper())                    
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return f'{self.id}'
 

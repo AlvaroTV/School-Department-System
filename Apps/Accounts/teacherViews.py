@@ -1,8 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 #from django.db.models import Count
 from datetime import date, timedelta, datetime
@@ -196,8 +193,7 @@ def materias(request):
         q_materias = Anteproyecto_materia.objects.filter(anteproyecto=anteproyecto)        
         materias = []        
         for m in q_materias:
-            materias.append(m.materia)
-            print(m.materia)
+            materias.append(m.materia)            
     else:
         materias = None
         perfilAcademico = None

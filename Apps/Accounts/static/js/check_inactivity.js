@@ -38,8 +38,8 @@ function refreshCheck() {
     if (refresh_rate - last_user_action === 20) {
         let timerInterval;
         Swal.fire({
-            title: 'Tu sesion esta por expirar, deseas continuar?',
-            html: 'La sesion se cerrara en <b></b> segundos.',
+            title: 'Tu sesión esta por expirar, deseas continuar? ',
+            html: 'La sesión se cerrara en <b></b> segundos.',
             icon: 'warning',
             timer: 20000,
             timerProgressBar: true,
@@ -53,8 +53,8 @@ function refreshCheck() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Si, continuar!',
-            cancelButtonText: 'Si, continuar!',
+            confirmButtonText: 'Sí, continuar!',
+            cancelButtonText: 'Sí, continuar! ',
             allowOutsideClick: () => false,
             allowEscapeKey: () => false,
             preConfirm: () => {
