@@ -106,6 +106,7 @@ urlpatterns = [
     path('alta_titular_dep/<uuid:pk>', alta_titular_dep, name='alta_titular_dep'),       
     path('alta_domicilio_dep/<uuid:pk>', alta_domicilio_dep, name='alta_domicilio_dep'),       
     path('ver_dependencia/<uuid:pk>', ver_dependencia, name='ver_dependencia'),              
+    path('editar_dependencia/<uuid:pk>', editar_dependencia, name='editar_dependencia'),              
     
     path('verResidencia/<uuid:pk>', verResidencia, name='verResidencia'),        
     path('eliminarResidencia/<uuid:pk>', eliminarResidencia, name='eliminarResidencia'),        

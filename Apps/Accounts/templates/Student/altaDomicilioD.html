@@ -21,7 +21,7 @@
 
     <div class="min-w-0 p-4 bg-bluemin rounded-lg shadow-xs dark:bg-gray-800">
         <div class="grid gap-6  md:grid-cols-2">
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
                 {% csrf_token %}
                 <label class="block mt-4 text-sm">
                     <span class="text-gray-700 dark:text-gray-400">{{formDom.calle.label_tag}}</span>
@@ -67,4 +67,8 @@
 
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/uploadManagement/dependencia.js' %}"></script>
 {% endblock %}

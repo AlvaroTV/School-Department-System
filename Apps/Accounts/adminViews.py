@@ -1254,24 +1254,33 @@ def ver_dependencia(request, pk):
     formDom = DomicilioViewForm(instance = domicilio)
     formT = TitularViewForm(instance = titular)
     
-    context = {'group': group, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'data': data, 'title': 'Editar Materia'}
+    context = {'group': group, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'data': data, 'title': 'Ver Dependencia'}
     return render(request, 'Admin/ver_dependencia.html', context)  
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
 def editar_dependencia(request, pk):
-    group = request.user.groups.all()[0].name    
+    group = request.user.groups.all()[0].name   
+    data = ['id_mision', 'id_d_nombre', 'id_calle'] 
     dependencia = Dependencia.objects.get(id = pk)
-    form =  DependenciaForm(instance = dependencia)
+    domicilio = dependencia.domicilio    
+    titular = dependencia.titular
+    formD =  DependenciaForm(instance = dependencia)
+    formDom = DomicilioForm(instance = domicilio)
+    formT = TitularForm(instance = titular)
     
     if request.method == 'POST':
-        form = DependenciaForm(request.POST, instance = dependencia)
-        if form.is_valid():
-            form.save()
-            return redirect('materias_a', 1, 0, 0)
+        formD = DependenciaForm(request.POST, instance = dependencia)
+        formDom = DomicilioForm(request.POST, instance = domicilio)
+        formT = TitularForm(request.POST, instance = titular)
+        if formD.is_valid() and formDom.is_valid() and formT.is_valid():
+            formD.save()
+            formDom.save()
+            formT.save()
+            return redirect('dependencias_a', 1, 0, 0)
     
-    context = {'group': group, 'materia': dependencia, 'form': form, 'title': 'Editar Materia'}
-    return render(request, 'Admin/editar_materia.html', context)            
+    context = {'group': group, 'data': data, 'dependencia': dependencia, 'formD': formD, 'formDom': formDom, 'formT': formT, 'title': 'Editar Dependencia'}
+    return render(request, 'Admin/editar_dependencia.html', context)            
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only

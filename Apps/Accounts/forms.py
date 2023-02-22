@@ -495,6 +495,7 @@ class TitularViewForm(ModelForm):
     class Meta:
         model = TitularDependencia
         fields = '__all__'
+        exclude = ['id']
         labels = {
             't_nombre': 'Nombre(s)',
             't_apellidoP': 'Apellido Paterno',

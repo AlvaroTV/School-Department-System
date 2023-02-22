@@ -22,6 +22,7 @@ from django.db.models import Count
 from datetime import date, timedelta
 from django.utils import timezone
 from django.conf import settings
+import re
 import pytz
 import string  
 import random  
@@ -258,40 +259,50 @@ def createStudent(request):
             if pre_estudiante:
                 pre_estudiante.is_registrado = True
                 pre_estudiante.save()
-                student = formE.save()
-                user = formU.save()                                
-                group = Group.objects.get(name='student')
-                user.username = student.numControl
-                user.groups.add(group)
-                user.is_active = False
-                user.save()            
-                student.correoElectronico = formU.cleaned_data.get('email')
-                student.user = user    
-                student.estudiante_aut = pre_estudiante
-                student.save()  
+                                
+                str_numControl = formE.cleaned_data['numControl']
+                str_email = formU.cleaned_data['email'].split('@')[0]                
+                pattern = r'^\D*{}$'.format(re.escape(str_numControl))
+                                
+                email_is_valid = re.match(pattern, str_email) is not None and str_email.endswith(str_numControl)
+                
+                if email_is_valid:
+                    student = formE.save()
+                    user = formU.save()                                
+                    group = Group.objects.get(name='student')
+                    user.username = student.numControl
+                    user.groups.add(group)
+                    user.is_active = False
+                    user.save()            
+                    student.correoElectronico = formU.cleaned_data.get('email')
+                    student.user = user    
+                    student.estudiante_aut = pre_estudiante
+                    student.save()  
 
-                user_name = student.nombre
-                current_site = get_current_site(request)
-                subject = "Activa tu cuenta."
-                email_template_name = 'Global/email_verify/email_verify_template.txt'
-                c = {
-                "user_name": user_name,    
-			    "email":user.email,
-			    'domain':current_site.domain,
-			    'site_name': 'ITO Sistemas',
-			    "uid": urlsafe_base64_encode(force_bytes(user.pk)),			
-			    "user": user,
-			    'token': default_token_generator.make_token(user),
-			    'protocol': 'http',
-			    }                        
+                    user_name = student.nombre
+                    current_site = get_current_site(request)
+                    subject = "Activa tu cuenta."
+                    email_template_name = 'Global/email_verify/email_verify_template.txt'
+                    c = {
+                    "user_name": user_name,    
+			        "email":user.email,
+			        'domain':current_site.domain,
+			        'site_name': 'ITO Sistemas',
+			        "uid": urlsafe_base64_encode(force_bytes(user.pk)),			
+			        "user": user,
+			        'token': default_token_generator.make_token(user),
+			        'protocol': 'http',
+			        }                        
 
-                email = render_to_string(email_template_name, c)
-                try:
-                    send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-                except BadHeaderError:
-                    return HttpResponse('Invalid header found.')
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
 
-                return redirect('email_verification', student.id)
+                    return redirect('email_verification', student.id)
+                else:
+                    mensaje = 'El correo institucional debe pertenecer al mismo estudiante. Verifique que su correo no tenga errores.'
             else:
                 mensaje = 'Lamentamos informarle que usted no cumple con los requisitos para realizar su residencia.'
 
@@ -1095,7 +1106,7 @@ def eliminar_materia(request, pk, materiaPK):
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 @login_required(login_url='login')
-@admin_only
+@student_only
 def invitar(request, pk, page):
     group = request.user.groups.all()[0].name                
     anteproyecto = Anteproyecto.objects.get(id = pk)        

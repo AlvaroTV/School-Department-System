@@ -1,5 +1,5 @@
 :root {
-	--primario: purple;
+	--primario: #1b396a;
 	--gris-claro: #B8B8B8;
 	--sombra: 0 0 13px 0 rgba(185,185,185, .25);
 }
@@ -49,7 +49,7 @@
 
 .categoria:hover {
 	box-shadow: var(--sombra);
-	color: purple;
+	color: #1b396a;
 }
 
 .categoria:hover path {
@@ -68,7 +68,7 @@
 
 .categoria.activa {
 	border: 2px solid var(--primario);
-	color: purple;
+	color: #1b396a;
 }
 
 .categoria.activa path {
