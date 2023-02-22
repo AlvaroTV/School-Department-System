@@ -1,0 +1,197 @@
+{% extends 'Global/main.html'%}
+{% load static %}
+
+{% block content %}
+
+<main class="h-full pb-16 overflow-y-auto">
+    <div class="container grid px-6 mx-auto">
+        <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
+            <ul>
+                <li>
+                  <a href="/">Inicio</a> /
+                  <a href="{% url 'anteproyectos' 1 0 0 %}"> Anteproyectos</a> /
+                  <a href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a> /
+                  <a class="text-blue-500" href="{% url 'anteproyectos_similares' anteproyecto.id 1 %}"> Anteproyectos similares</a>
+                </li>
+              </ul>
+        </div>        
+        <div>
+            <div class=" text-center p-4 mb-6 text-white bg-purple-600 rounded-lg shadow-xs">
+                <h4 class="mb-4 font-semibold">
+                    Anteproyectos similares del anteproyecto
+                </h4>
+                <p>
+                    "{{anteproyecto.a_nombre}}"
+                </p>
+            </div>            
+        </div>
+
+        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Nombre Anteproyecto</th>
+                            <th class="px-4 py-3 text-center">Tipo de proyecto</th>
+                            <th class="px-4 py-3">Dependencia</th>
+                            <th class="px-4 py-3">Estatus</th>
+                            <th class="px-4 py-3 text-center">Fecha Entrega</th>
+                            <th class="px-4 py-3 text-center">Similitud</th>
+                            <th class="px-4 py-3 text-center">Ver Anteproyecto</th>                            
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        {% for anteproyecto in anteproyectos %}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">
+                                {{anteproyecto.0.a_nombre}}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{anteproyecto.0.tipoProyecto}}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                {{anteproyecto.0.dependencia}}
+                            </td>
+                            <td class="px-4 py-3 text-xs whitespace-no-wrap">
+                                {% if anteproyecto.0.estatus == 'ACEPTADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% elif anteproyecto.0.estatus == 'ENVIADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-500 dark:text-blue-100">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% elif anteproyecto.0.estatus == 'EN REVISION' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-teal-700 bg-teal-100 rounded-full dark:text-white dark:bg-teal-500">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% elif anteproyecto.0.estatus == 'RECHAZADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% elif anteproyecto.0.estatus == 'CANCELADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% elif anteproyecto.0.estatus == 'REVISADO' %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-y-100 rounded-full  dark:bg-y-700">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% else %}
+                                <span
+                                    class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                    {{anteproyecto.0.estatus}}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-center">
+                                {{anteproyecto.0.fechaEntrega|date:"d/M/Y"}}
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                {{anteproyecto.1|truncatechars:7}}
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-center">
+                                    <a href="{% url 'verAnteproyecto' anteproyecto.0.id %}" target="_blank">
+                                        <button
+                                            class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Like">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+                <span class="flex items-center col-span-3">
+                    Mostrando {{start}} - {{end}} de {{totalA}}
+                </span>
+                <span class="col-span-2"></span>
+                <!-- Pagination -->
+                {% if buttons %}
+                <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+                    <nav aria-label="Table navigation">
+                        <ul class="inline-flex items-center">
+                            <li>
+                                {% if prev_page == 0 %}
+                                <a href="{% url 'anteproyectos_similares' anteproyecto.id n_buttons %}">
+                                    {% else %}
+                                    <a href="{% url 'anteproyectos_similares' anteproyecto.id prev_page %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Previous">
+                                            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
+                            </li>
+                            {% for button in buttons %}
+                            {% if button == page %}
+                            <li>
+                                <a href="{% url 'anteproyectos_similares' anteproyecto.id button   %}">
+                                    <button
+                                        class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a href="{% url 'anteproyectos_similares' anteproyecto.id button %}">
+                                    <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                                        {{button}}
+                                    </button>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <li>
+                                {% if next_page > n_buttons %}
+                                <a href="{% url 'anteproyectos_similares' anteproyecto.id 1 %}">
+                                    {% else %}
+                                    <a href="{% url 'anteproyectos_similares' anteproyecto.id next_page %}">
+                                        {% endif %}
+                                        <button
+                                            class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                                            aria-label="Next">
+                                            <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                    clip-rule="evenodd" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>    
+</main>
+
+{% endblock %}

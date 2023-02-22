@@ -9,14 +9,14 @@
       <li>
         <a href="/">Inicio</a> /
         <a href="{% url 'anteproyectos' 1 0 0 %}"> Anteproyectos</a> /
-        <a class="text-blue-500" href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a> 
+        <a class="text-blue-500" href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a>
       </li>
     </ul>
     {% elif group == 'teacher'%}
     <ul>
       <li>
-        <a href="/">Inicio</a> /        
-        <a class="text-blue-500" href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a> 
+        <a href="/">Inicio</a> /
+        <a class="text-blue-500" href="{% url 'verAnteproyecto' anteproyecto.id %}"> Ver anteproyecto</a>
       </li>
     </ul>
     {% endif %}
@@ -151,7 +151,6 @@
             d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zM6 12a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75V12zm2.25 0a.75.75 0 01.75-.75h3.75a.75.75 0 010 1.5H9a.75.75 0 01-.75-.75zM6 15a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75V15zm2.25 0a.75.75 0 01.75-.75h3.75a.75.75 0 010 1.5H9a.75.75 0 01-.75-.75zM6 18a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75V18zm2.25 0a.75.75 0 01.75-.75h3.75a.75.75 0 010 1.5H9a.75.75 0 01-.75-.75z"
             clip-rule="evenodd" />
         </svg>
-
       </div>
       <div>
         <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -179,6 +178,25 @@
         </span>
         {% endif %}
       </div>
+    </div>
+    <div>
+      <a href="{% url 'anteproyectos_similares' anteproyecto.id 1 %}" target="_blank">
+        <div class="flex items-center p-4 bg-blue-500 rounded-lg shadow-xs">
+          <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path d="M8.25 10.875a2.625 2.625 0 115.25 0 2.625 2.625 0 01-5.25 0z" />
+              <path fill-rule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.125 4.5a4.125 4.125 0 102.338 7.524l2.007 2.006a.75.75 0 101.06-1.06l-2.006-2.007a4.125 4.125 0 00-3.399-6.463z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-lg font-semibold text-white">
+              Buscar anteproyectos similares
+            </p>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
 

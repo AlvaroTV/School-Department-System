@@ -66,6 +66,7 @@ urlpatterns = [
     path('verAnteproyecto/<uuid:pk>', verAnteproyecto, name='verAnteproyecto'),        
     path('editarAnteproyectoAdmin/<uuid:pk>', editarAnteproyectoAdmin, name='editarAnteproyectoAdmin'),        
     path('eliminarAnteproyecto/<uuid:pk>', eliminarAnteproyecto, name='eliminarAnteproyecto'),        
+    path('anteproyectos_similares/<uuid:pk>/<int:page>', anteproyectos_similares, name='anteproyectos_similares'),
     
     path('editarObservaciones/<uuid:pk>', editarObservaciones, name='editarObservaciones'),        
     path('eliminarObservacion/<uuid:pk>', eliminarObservacion, name='eliminarObservacion'),   

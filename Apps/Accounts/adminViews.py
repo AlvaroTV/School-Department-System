@@ -33,6 +33,7 @@ from .views import generarCodigo, obtenerCodigo, buscarCodigo
 
 import pandas as pd
 import csv
+from difflib import SequenceMatcher
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_only
@@ -915,9 +916,13 @@ def verResidencia(request, pk):
     asesorI = residencia.r_asesorInterno
     revisor = residencia.r_revisor
     dependencia = residencia.dependencia
+    if dependencia:
+        domicilio = dependencia.domicilio
+    else:
+        domicilio = None
     formR = ResidenciaViewForm(instance = residencia)                                
     formD = DependenciaViewForm(instance = dependencia)
-    formDom = DomicilioViewForm(instance = dependencia.domicilio)
+    formDom = DomicilioViewForm(instance = domicilio)
     formER = ResidenciaEstadoForm(instance = residencia)
     
     if request.method == 'POST':
@@ -1784,6 +1789,40 @@ def act_docente_residenciasH(request, pk, page1, page2, orderB1, orderB2, filter
     
     context = {'group': group, 'all_residenciasA': all_residenciasA, 'all_residenciasR': all_residenciasR, 'totalR1': totalR1, 'totalR2': totalR2, 'buttons1': buttons1, 'buttons2': buttons2, 'page1': page1, 'page2': page2, 'start1': start1+1, 'start2': start2+1, 'end1': end1, 'end2': end2, 'next_page1': next_page1, 'next_page2': next_page2, 'prev_page1': prev_page1, 'prev_page2': prev_page2, 'n_buttons1': n_buttons1, 'n_buttons2': n_buttons2, 'orderB1': orderB1, 'orderB2': orderB2, 'filter1': filter1, 'filter2': filter2, 'docente': docente, 'title': 'Residencias Historicas'}    
     return render(request, 'Admin/actividad_docente/actividad_residenciasH.html', context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_only
+def anteproyectos_similares(request, pk, page):
+    group = request.user.groups.all()[0].name
+    anteproyecto = Anteproyecto.objects.get(id = pk)
+    start = (page-1)*10    
+    end = page*10
+    a_nombre = anteproyecto.a_nombre    
+    all_anteproyectos = Anteproyecto.objects.exclude(id = pk)                
+    anteproyectos_sim = comparar_anteproyectos(a_nombre, all_anteproyectos)    
+    
+    anteproyectos = anteproyectos_sim[start:end]
+    if end != len(anteproyectos):
+        end = end-10+len(anteproyectos)
+    totalA = len(anteproyectos_sim)
+    n_buttons = math.ceil(totalA/10)
+    buttons = [item for item in range(1, n_buttons+1)]
+    next_page = page+1
+    prev_page = page-1            
+    context = {'group': group, 'title': 'Anteproyectos Similares', 'anteproyecto': anteproyecto, 'anteproyectos': anteproyectos, 'totalA': totalA, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
+    return render(request, 'Admin/anteproyectos_sim.html', context)
+
+#def comparar_anteproyectos(anteproyecto, anteproyectos_list, threshold=70):
+#    similares = [(anteproyecto_titulo, SequenceMatcher(None, anteproyecto, anteproyecto_titulo).ratio() * 100) for anteproyecto_titulo in anteproyectos_list]
+#    similar = [(anteproyecto_titulo, puntaje) for anteproyecto_titulo, puntaje in similares if puntaje >= threshold]
+#    similar.sort(key=lambda a: a[1], reverse = True)
+#    return similar
+
+def comparar_anteproyectos(anteproyecto_titulo, anteproyectos_list, threshold=70):    
+    similares = [(anteproyecto_similar, SequenceMatcher(None, anteproyecto_titulo, anteproyecto_similar.a_nombre).ratio() * 100) for anteproyecto_similar in anteproyectos_list]
+    similar = [(anteproyecto_similar, puntaje) for anteproyecto_similar, puntaje in similares if puntaje >= threshold]
+    similar.sort(key=lambda a: a[1], reverse = True)
+    return similar
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

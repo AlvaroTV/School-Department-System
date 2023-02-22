@@ -119,7 +119,7 @@ class PerfilAcademico(models.Model):
 
 
 class Docente(models.Model):
-    ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACIONES'), ('INACTIVO', 'INACTIVO'))
+    ESTATUS = (('ACTIVO', 'ACTIVO'), ('VACACIONES', 'VACACIONES'), ('INACTIVO', 'INACTIVO'))
     
     perfilAcademico = models.OneToOneField(PerfilAcademico, null=True, blank=True, on_delete=models.SET_NULL)
     
