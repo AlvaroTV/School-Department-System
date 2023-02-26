@@ -40,6 +40,7 @@ def enviar_email(asunto, mensaje, lista_destinos, tipo=None, estado=None):
         mensajes = {
             'COMPLETO': 'Su expediente esta completo. Solo falta que sus documentos sean revisados para verificar que no exista algun problema con ellos.',
             'FINALIZADO': 'Felicidades!. No se encontro ningun error con sus documentos. Ya puede pasar a la oficina de la jefa del departamento de vinculacion por su documento.',            
+            'PROCESO': 'El estado de su expediente cambio a PROCESO, debido a que se detectaron algunos errores con uno o más documentos de su expediente, por lo que fueron removidos. Por favor, verifique que su documento este correcto y vuelva a subirlo.',
         }
         mensaje = (mensajes.get(estado) + '\n' + '\n' + 'Atentamente' + '\n' + 'La Oficina de Proyectos de Vinculación del Depto. de Sistemas y Computación.')
                     

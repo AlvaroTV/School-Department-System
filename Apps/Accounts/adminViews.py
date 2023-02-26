@@ -1431,10 +1431,16 @@ def eliminar_dependencia(request, pk):
 
 @admin_only
 def eliminarDocExpediente(request, pk, file_name):    
-    expediente = Expediente.objects.get(id = pk)        
+    expediente = Expediente.objects.get(id = pk)         
     file_name = file_name.replace('id_', '')    
     archivo = getattr(expediente,file_name)
     archivo.delete()    
+    if expediente.estatus == 'COMPLETO':
+        estudiante = Estudiante.objects.get(expediente = expediente)       
+        expediente.estatus = 'PROCESO'
+        expediente.save()
+        enviar_email('Expediente en estado de, PROCESO', '', [estudiante.correoElectronico], 4, 'PROCESO')
+    
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 @admin_only
@@ -1811,12 +1817,6 @@ def anteproyectos_similares(request, pk, page):
     prev_page = page-1            
     context = {'group': group, 'title': 'Anteproyectos Similares', 'anteproyecto': anteproyecto, 'anteproyectos': anteproyectos, 'totalA': totalA, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
     return render(request, 'Admin/anteproyectos_sim.html', context)
-
-#def comparar_anteproyectos(anteproyecto, anteproyectos_list, threshold=70):
-#    similares = [(anteproyecto_titulo, SequenceMatcher(None, anteproyecto, anteproyecto_titulo).ratio() * 100) for anteproyecto_titulo in anteproyectos_list]
-#    similar = [(anteproyecto_titulo, puntaje) for anteproyecto_titulo, puntaje in similares if puntaje >= threshold]
-#    similar.sort(key=lambda a: a[1], reverse = True)
-#    return similar
 
 def comparar_anteproyectos(anteproyecto_titulo, anteproyectos_list, threshold=70):    
     similares = [(anteproyecto_similar, SequenceMatcher(None, anteproyecto_titulo, anteproyecto_similar.a_nombre).ratio() * 100) for anteproyecto_similar in anteproyectos_list]
