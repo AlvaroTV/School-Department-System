@@ -323,7 +323,7 @@ def verAnteproyecto(request, pk):
     fechaCorte = None
     fechaActual = date.today
     fechaObservacion = None
-    data = ['id_mision', 'id_codigoUnion', 'id_d_nombre', 'id_calle']        
+    data = ['id_mision', 'id_codigoUnion', 'id_d_nombre', 'id_calle', 'id_a_nombre', 'id_descripcion']        
     lista = ['ENVIADO', 'PENDIENTE', 'EN REVISION', 'REVISADO' ,'RECHAZADO']
     
     if observacion:
@@ -1802,10 +1802,9 @@ def anteproyectos_similares(request, pk, page):
     group = request.user.groups.all()[0].name
     anteproyecto = Anteproyecto.objects.get(id = pk)
     start = (page-1)*10    
-    end = page*10
-    a_nombre = anteproyecto.a_nombre    
+    end = page*10    
     all_anteproyectos = Anteproyecto.objects.exclude(id = pk)                
-    anteproyectos_sim = comparar_anteproyectos(a_nombre, all_anteproyectos)    
+    anteproyectos_sim = comparar_anteproyectos(anteproyecto, all_anteproyectos)        
     
     anteproyectos = anteproyectos_sim[start:end]
     if end != len(anteproyectos):
@@ -1818,11 +1817,18 @@ def anteproyectos_similares(request, pk, page):
     context = {'group': group, 'title': 'Anteproyectos Similares', 'anteproyecto': anteproyecto, 'anteproyectos': anteproyectos, 'totalA': totalA, 'buttons': buttons, 'page': page, 'start': start+1, 'end': end, 'next_page': next_page, 'prev_page': prev_page, 'n_buttons': n_buttons}
     return render(request, 'Admin/anteproyectos_sim.html', context)
 
-def comparar_anteproyectos(anteproyecto_titulo, anteproyectos_list, threshold=70):    
-    similares = [(anteproyecto_similar, SequenceMatcher(None, anteproyecto_titulo, anteproyecto_similar.a_nombre).ratio() * 100) for anteproyecto_similar in anteproyectos_list]
-    similar = [(anteproyecto_similar, puntaje) for anteproyecto_similar, puntaje in similares if puntaje >= threshold]
-    similar.sort(key=lambda a: a[1], reverse = True)
-    return similar
+def comparar_anteproyectos(anteproyecto, anteproyectos_list, threshold=70):
+    similares_titulo = [(anteproyecto_similar, SequenceMatcher(None, anteproyecto.a_nombre, anteproyecto_similar.a_nombre).ratio() * 100) for anteproyecto_similar in anteproyectos_list]
+    similar_titulo = [(anteproyecto_similar, puntaje) for anteproyecto_similar, puntaje in similares_titulo if puntaje >= threshold]
+    similares_desc = [(anteproyecto_similar, SequenceMatcher(None, anteproyecto.descripcion, anteproyecto_similar.descripcion).ratio() * 100) for anteproyecto_similar in anteproyectos_list]
+    similar_desc = [(anteproyecto_similar, puntaje) for anteproyecto_similar, puntaje in similares_desc if puntaje >= threshold]    
+    similar = similares_titulo + similares_desc
+            
+    desc_dict = dict(similares_desc)    
+    final_list = [(obj, titulo_score, desc_dict[obj], ((titulo_score+desc_dict[obj])*100)/200 ) for obj, titulo_score in similares_titulo for obj2, desc_score in similares_desc if obj == obj2 and (titulo_score>=70 or desc_score>=70) ]
+    final_list.sort(key=lambda a: a[3], reverse = True)    
+    
+    return final_list
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

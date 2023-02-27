@@ -243,7 +243,13 @@ class Anteproyecto(models.Model):
     estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')
     estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')    
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)    
-    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf']), validate_file_size], default=None)                        
+    descripcion = models.CharField(max_length=500, default= 'None')
+    anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf']), validate_file_size], default=None)                            
+    
+    def save(self, *args, **kwargs):        
+        self.a_nombre = unidecode(self.a_nombre.upper())        
+        self.descripcion = unidecode(self.descripcion.upper())                
+        super().save(*args, **kwargs)
 
 class Actualizacion_anteproyecto(models.Model):
     ESTADOS = (('NO LEIDO', 'NO LEIDO'), ('LEIDO', 'LEIDO'))

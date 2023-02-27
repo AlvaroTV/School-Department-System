@@ -735,7 +735,7 @@ def anteproyecto(request):
         
         if anteproyecto_materia:
             data.clear()
-            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle'])    
+            data.extend(['id_docentes', 'id_dependencia', 'id_asesorExterno', 'id_domicilio', 'id_titular', 'id_mision', 'id_d_nombre', 'id_calle', 'id_a_nombre', 'id_descripcion'])    
             estados = ['ENVIADO', 'PENDIENTE', 'EN REVISION']                                     
             actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')
             if anteproyecto.numIntegrantes == 1:            

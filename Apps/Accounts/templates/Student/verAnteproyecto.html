@@ -43,7 +43,7 @@
           <p id="messages" class="text-red-600">{{ formA.a_nombre.errors }}</p>
           <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
             {% for field in formA %}
-            {% if field.id_for_label != 'id_a_nombre' %}
+            {% if not field.id_for_label in data %}
             <div>
               <label class="block mt-4 text-sm">
                 <span class="text-gray-700 dark:text-gray-400">{{field.label_tag}}</span>
@@ -54,6 +54,10 @@
             {% endif %}
             {% endfor %}
           </div>
+          <label class="block mt-4 text-sm">
+            <span class="text-gray-700 dark:text-gray-400">Breve descripción del anteproyecto</span>
+            {{ formA.descripcion }}
+          </label>          
           <br>
 
         </form>

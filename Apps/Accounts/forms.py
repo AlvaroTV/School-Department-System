@@ -271,10 +271,7 @@ class DocenteForm(ModelForm):
             self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             
 class AnteproyectoEstForm(ModelForm):
-    class Meta:
-        today = date.today()
-        YEARSI= [x for x in range(today.year,today.year+1)]
-        YEARSF= [x for x in range(today.year,today.year+3)]
+    class Meta:                
         model = Anteproyecto
         fields = '__all__'
         exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion']   
@@ -282,24 +279,21 @@ class AnteproyectoEstForm(ModelForm):
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
             'fechaEntrega': 'Fecha de entrega',
-            'numIntegrantes': 'Numero de integrantes',            
-            'anteproyectoDoc': 'Documento del anteproyecto'
-        }
-        widgets = {
-            'periodoInicio': forms.SelectDateWidget(years=YEARSI),
-            #'periodoInicio': forms.DateField(widget=forms.SelectDateWidget(years=YEARS)),
-            'periodoFin': forms.SelectDateWidget(years=YEARSF),
-        }
+            'numIntegrantes': 'Número de integrantes',            
+            'anteproyectoDoc': 'Documento del anteproyecto',
+            'descripcion': 'Descripción breve del anteproyecto'
+        }        
                 
 
     def __init__(self, *args, **kwargs):
         super(AnteproyectoEstForm, self).__init__(*args, **kwargs)        
         for myField in self.fields:            
-            if myField == 'periodoInicio' or myField == 'periodoFin':                
-                self.fields[myField].widget.attrs['class'] = 'ml-4 mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'                
-            elif myField == 'anteproyectoDoc':
+            if myField == 'anteproyectoDoc':                
                 self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                 self.fields[myField].widget.attrs['accept'] = '.pdf'  
+            elif myField == 'descripcion':
+                self.fields[myField].widget = forms.Textarea()
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             else :
                 self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             
@@ -312,9 +306,10 @@ class AnteproyectoViewForm(ModelForm):
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',
             'fechaEntrega': 'Fecha de entrega',
-            'numIntegrantes': 'Numero de integrantes',            
+            'numIntegrantes': 'Número de integrantes',            
             'periodoInicio': 'Fecha inicio',            
-            'periodoFin': 'Fecha Fin',            
+            'periodoFin': 'Fecha Fin',   
+            'descripcion:': 'Breve descripción del anteproyecto',         
         }        
 
     def __init__(self, *args, **kwargs):
@@ -322,6 +317,9 @@ class AnteproyectoViewForm(ModelForm):
         for myField in self.fields:
             if myField == 'numIntegrantes':
                 self.fields[myField].widget.attrs['class'] = 'block w-12 mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
+            elif myField == 'descripcion':
+                self.fields[myField].widget = forms.Textarea()
+                self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
             else:
                 self.fields[myField].widget.attrs['class'] = 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'            
             self.fields[myField].widget.attrs['disabled'] = True

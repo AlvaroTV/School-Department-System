@@ -344,7 +344,7 @@ def anteproyectoA(request, pk):
     fechaObservacion = None
     formEstadoR1 = None
     formEstadoR2 = None
-    data = ['id_mision', 'id_codigoUnion', 'id_calle']                
+    data = ['id_mision', 'id_codigoUnion', 'id_calle', 'id_descripcion', 'id_a_nombre']                
     estadoR1 = anteproyecto.estatusR1    
     estadoR2 = anteproyecto.estatusR2        
     actualizaciones = Actualizacion_anteproyecto.objects.filter(anteproyecto = anteproyecto).order_by('-fecha')    
@@ -457,7 +457,7 @@ def anteproyectoH(request, pk):
     revisor2 = anteproyecto.revisor2                
     dependencia = anteproyecto.dependencia 
     observacion = anteproyecto.observacion
-    data = ['id_mision', 'id_codigoUnion', 'id_calle', 'id_d_nombre']     
+    data = ['id_mision', 'id_codigoUnion', 'id_calle', 'id_d_nombre', 'id_a_nombre', 'id_descripcion']     
     
     for i in estudiantes:
         anteproyecto_e = all_estudiantes.filter(estudiante = i)        
