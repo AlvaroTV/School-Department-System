@@ -352,27 +352,33 @@ def verAnteproyecto(request, pk):
     if request.method == 'POST':
         formEstado = AnteproyectoEstadoForm(request.POST, instance = anteproyecto)        
         if formEstado.is_valid():            
-            estadoFinal = formEstado['estatus'].value()        
+            estadoFinal = formEstado['estatus'].value()            
             estudiantes = [i.estudiante for i in all_estudiantes if i.estado == 'ACTIVO' ]                   
-            if estadoInicial in lista and estadoFinal == 'ACEPTADO':                
-                estudiante_resi = Estudiante_Residencia.objects.filter(estudiante = estudiantes[0], estado='ACTIVO')                
-                if not estudiante_resi:     
-                    residencia = Residencia(
-                        dependencia = dependencia,
-                        asesorExterno = anteproyecto.asesorExterno,                    
-                        nombre = anteproyecto.a_nombre,
-                        tipoProyecto = anteproyecto.tipoProyecto,
-                        numIntegrantes = anteproyecto.numIntegrantes                    
-                    )        
-                    residencia.save()   
-                    resi = True                                                                         
-                    
-                    for e in estudiantes:      
-                        estudiante_residencia = Estudiante_Residencia(
-                            estudiante = e,
-                            residencia = residencia
-                            )                      
-                        estudiante_residencia.save()                                
+            if estadoInicial in lista and estadoFinal == 'ACEPTADO':  
+                if dependencia:              
+                    estudiante_resi = Estudiante_Residencia.objects.filter(estudiante = estudiantes[0], estado='ACTIVO')                
+                    if not estudiante_resi:     
+                        residencia = Residencia(
+                            dependencia = dependencia,
+                            asesorExterno = anteproyecto.asesorExterno,                    
+                            nombre = anteproyecto.a_nombre,
+                            tipoProyecto = anteproyecto.tipoProyecto,
+                            numIntegrantes = anteproyecto.numIntegrantes                    
+                        )        
+                        residencia.save()   
+                        resi = True                                                                         
+
+                        for e in estudiantes:      
+                            estudiante_residencia = Estudiante_Residencia(
+                                estudiante = e,
+                                residencia = residencia
+                                )                      
+                            estudiante_residencia.save()                                
+                else:                    
+                    anteproyecto.estatus = estadoInicial
+                    mensaje = 'SE NECESITA UNA ORGANIZACIÓN O EMPRESA ASOCIADA AL ANTEPROYECTO PARA PODER SER ACEPTADO'
+                    context = {'group': group, 'anteproyecto': anteproyecto, 'estudiantes': estudiantes, 'dependencia': dependencia, 'revisor1': revisor1, 'revisor2': revisor2, 'formA': formA, 'formD': formD, 'formT': formT, 'formAE': formAE ,'formDom': formDom, 'formDoc': formDoc, 'fechaObservacion': fechaObservacion, 'observaciones': observaciones, 'formEstado': formEstado, 'data': data, 'actualizaciones': actualizaciones, 'historial_estudiantes': historial_estudiantes, 'title': 'Anteproyecto', 'mensaje': mensaje}
+                    return render(request, 'Admin/verAnteproyecto.html', context)           
             elif estadoFinal == 'CANCELADO':                                
                 for e in all_estudiantes:      
                     e.estado = 'INACTIVO'              

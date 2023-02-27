@@ -35,6 +35,18 @@
             class="px-4 py-2 text-sm absolute right-0 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Volver</button>
         </a>
     </div>
+  </div>  
+
+  <div
+    class="flex items-center justify-center w-full mt-2 mb-2 px-4 py-2 text-sm font-medium leading-5 text-orange-500 bg-orange-100 transition-colors duration-150 dark:text-orange-100 dark:bg-orange-500 border border-transparent rounded-lg">
+    <p class="text-sm">
+      {{mensaje}}
+    </p>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-4 w-6 h-6">
+      <path fill-rule="evenodd"
+        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+        clip-rule="evenodd" />
+    </svg>
   </div>
 
   <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
@@ -304,7 +316,7 @@
         <label class="block mt-4 text-sm">
           <span class="text-gray-700 dark:text-gray-400">Breve descripción del anteproyecto</span>
           {{ formA.descripcion }}
-        </label>          
+        </label>
         <br>
 
       </form>
