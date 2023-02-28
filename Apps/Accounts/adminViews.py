@@ -296,7 +296,7 @@ def verAnteproyecto(request, pk):
     historial_estudiantes = []  
     all_estudiantes_a = all_estudiantes.filter(estado = 'ACTIVO')              
     lista_correos = [i.estudiante.correoElectronico for i in all_estudiantes_a ]
-    resi = None
+    resi = None    
     
     for i in estudiantes:        
         anteproyecto_e = all_estudiantes.filter(estudiante = i)                
@@ -412,14 +412,14 @@ def editarAnteproyectoAdmin(request, pk):
     numIntegrantes = anteproyecto.numIntegrantes
     mensaje = ''    
     
-    formA = AnteproyectoEstForm(instance = anteproyecto)                                
+    formA = AnteproyectoEditForm(instance = anteproyecto)                                
     formD = DependenciaForm(instance = dependencia)
     formT = TitularForm(instance = titular)
     formDom = DomicilioForm(instance = domicilio)
     formAE = AsesorEForm(instance = asesorExterno)                 
     
     if request.method == 'POST':                        
-        formA = AnteproyectoEstForm(request.POST, instance = anteproyecto)                                
+        formA = AnteproyectoEditForm(request.POST, instance = anteproyecto)                                
         formD = DependenciaForm(request.POST, instance = dependencia)
         formT = TitularForm(request.POST, instance = titular)
         formDom = DomicilioForm(request.POST, instance = domicilio)
@@ -1810,7 +1810,44 @@ def anteproyectos_similares(request, pk, page):
     start = (page-1)*10    
     end = page*10    
     all_anteproyectos = Anteproyecto.objects.exclude(id = pk)                
-    anteproyectos_sim = comparar_anteproyectos(anteproyecto, all_anteproyectos)        
+    tags_list = [
+        'Sistema web',
+        'Aplicacion web',
+        'Sistema de administracion',
+        'Soporte de decisiones',
+        'Inteligencia artificial',
+        'Aplicacion de algoritmos',
+        'Sistema de votaciones',
+        'Aplicacion de modelo',
+        'Sistema de gestion de informacion',
+        'Analitica de datos',
+        'Analisis de datos',
+        'Deep learning',
+        'Analisis de imagenes',
+        'Prototipo de aplicacion movil',
+        'Aplicacion movil',
+        'Machine learning',
+        'Servicios de mantenimiento',
+        'Medicion de riesgo',
+        'Sistema de recoleccion',
+        'control de inventarios',
+        'control de inventario',
+        'plataforma web',
+        'gestion de proyectos',
+        'desarrollo de software',
+        'arquitectura basada en microservicios',
+        'gestion de tareas',
+        'seguimiento de errores',
+        'base de datos',
+        'gestion efectiva'
+    ]
+    tags_list = [x.upper() for x in tags_list]    
+    #anteproyectos_sim, tags = comparar_anteproyectos(anteproyecto, all_anteproyectos)        
+    anteproyectos_sim, tags = comparar_desc(anteproyecto, all_anteproyectos, tags_list)        
+    
+    for i in tags:
+        print(i)
+        print()
     
     anteproyectos = anteproyectos_sim[start:end]
     if end != len(anteproyectos):
@@ -1835,6 +1872,35 @@ def comparar_anteproyectos(anteproyecto, anteproyectos_list, threshold=70):
     final_list.sort(key=lambda a: a[3], reverse = True)    
     
     return final_list
+
+def comparar_desc(anteproyecto_principal, all_anteproyectos, tags_list):            
+    # Conjunto de las etiquetas que contiene la descripción principal
+    conjunto_1 = set([tag for tag in tags_list if tag in anteproyecto_principal.descripcion])
+    
+    # Calcula la similitud entre la descripción principal y cada descripción en la lista
+    similitud = []
+    for anteproyecto in all_anteproyectos:                        
+        # Conjunto de las etiquetas que contiene la descripción de la lista
+        conjunto_2 = set([tag for tag in tags_list if tag in anteproyecto.descripcion])
+        
+        interseccion = len(conjunto_1.intersection(conjunto_2))
+        union = len(conjunto_1.union(conjunto_2))
+        #jaccard_similarity = interseccion / union
+        try:
+            jaccard_similarity = interseccion / union
+        except:
+            jaccard_similarity = 0.0
+        score = round(jaccard_similarity * 100, 2)
+        similitud.append((anteproyecto, score))
+
+    similitud.sort(key=lambda a: a[1], reverse = True)    
+
+    # Cuenta el número de ocurrencias de cada etiqueta en cada descripción en la lista
+    tag_frecuencia = []
+    for s in similitud:
+        tag_frecuencia.append((s[0], {tag: s[0].descripcion.count(tag) for tag in tags_list if s[0].descripcion.count(tag) > 0}))
+
+    return similitud, tag_frecuencia
 
 def filtrar_anteproyectos(anteproyectos, filter):
     all_anteproyectos = anteproyectos

@@ -243,7 +243,7 @@ class Anteproyecto(models.Model):
     estatusR1 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')
     estatusR2 = models.CharField(max_length=15, choices=ESTADOSR, default='PENDIENTE')    
     codigoUnion = models.CharField(max_length=10, null=True, blank=True)    
-    descripcion = models.CharField(max_length=500)
+    descripcion = models.CharField(max_length=5000)
     anteproyectoDoc = models.FileField(upload_to='records/anteproyectoDoc/', validators=[FileExtensionValidator(['pdf']), validate_file_size], default=None)                            
     
     def save(self, *args, **kwargs):        

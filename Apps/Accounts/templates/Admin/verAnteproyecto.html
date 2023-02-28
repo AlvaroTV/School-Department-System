@@ -37,6 +37,7 @@
     </div>
   </div>  
 
+  {% if mensaje %}
   <div
     class="flex items-center justify-center w-full mt-2 mb-2 px-4 py-2 text-sm font-medium leading-5 text-orange-500 bg-orange-100 transition-colors duration-150 dark:text-orange-100 dark:bg-orange-500 border border-transparent rounded-lg">
     <p class="text-sm">
@@ -48,6 +49,7 @@
         clip-rule="evenodd" />
     </svg>
   </div>
+  {% endif %}
 
   <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
     <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
