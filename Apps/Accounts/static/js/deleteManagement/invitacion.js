@@ -15,12 +15,12 @@ window.onload = function() {
             }            
             
             Swal.fire({
-                title: 'Esta seguro que quiere rechazar la invitacion?',                
+                title: '¿Está seguro que quiere rechazar la invitación?',                
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, rechazar!',
+                confirmButtonText: '¡Sí, rechazar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {
@@ -48,12 +48,12 @@ window.onload = function() {
             }            
             
             Swal.fire({
-                title: 'Esta seguro que quiere aceptar la invitacion?',                
+                title: '¿Está seguro que quiere aceptar la invitación?',                
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, aceptar!',
+                confirmButtonText: '¡Sí, aceptar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

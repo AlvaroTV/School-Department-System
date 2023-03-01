@@ -1,6 +1,6 @@
 
 Swal.fire({
-    title: 'Se termino el tiempo para hacer correcciones.',    
+    title: 'Se terminó el tiempo para hacer correcciones.',    
     icon: 'warning',
     width: 600,
     padding: '3em',

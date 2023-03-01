@@ -16,13 +16,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Desea eliminar este elemento de la Residencia?',
+                title: '¿Desea eliminar este elemento de la Residencia?',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, eliminar!',
+                confirmButtonText: '¡Sí, eliminar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {
@@ -50,13 +50,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Desea cancelar la Residencia para este estudiante?' + '\n(Su anteproyecto también será cancelado)',
+                title: '¿Desea cancelar la Residencia para este estudiante?' + '\n(Su anteproyecto también será cancelado)',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, cancelar la residencia al estudiante!',
+                confirmButtonText: '¡Sí, cancelar la residencia al estudiante!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

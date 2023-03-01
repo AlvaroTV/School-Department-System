@@ -15,13 +15,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Eliminar esta Materia?...' + '\n(No se podra revertir)',
+                title: '¿Eliminar esta Materia?...' + '\n(No se podra revertir)',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, eliminar!',
+                confirmButtonText: '¡Sí, eliminar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

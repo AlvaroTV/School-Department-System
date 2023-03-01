@@ -14,13 +14,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Desea eliminar el aviso',
+                title: '¿Desea eliminar el aviso?',
                 text: 'No se podra revertir esta accion',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, eliminar!',
+                confirmButtonText: '¡Sí, eliminar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

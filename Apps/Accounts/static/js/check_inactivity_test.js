@@ -38,7 +38,7 @@ function refreshCheck() {
     if (refresh_rate - last_user_action === 20) {
         let timerInterval;
         Swal.fire({
-            title: 'Tu sesión esta por expirar, deseas continuar?',
+            title: 'Tu sesión está por expirar, ¿deseas continuar?',
             html: 'La sesión se cerrara en <b></b> segundos.',
             icon: 'warning',
             timer: 20000,
@@ -60,7 +60,7 @@ function refreshCheck() {
             preConfirm: () => {
                 Swal.fire(
                     'Entendido!',
-                    'Su sesion continua.',
+                    'Su sesión continua.',
                     'success'
                 )
                 //last_user_action = refresh_rate              

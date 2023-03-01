@@ -1,6 +1,6 @@
 
 Swal.fire({
-    title: 'Seleccione aquellas materias que esten mas relacionadas a su perfil academico.',    
+    title: 'Seleccione aquellas materias que estén más relacionadas con su perfil académico.',    
     width: 600,
     padding: '3em',
     color: '#716add',

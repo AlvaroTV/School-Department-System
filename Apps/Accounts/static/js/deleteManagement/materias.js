@@ -17,13 +17,13 @@ window.onload = function() {
             }                                                      
             
             Swal.fire({
-                title: 'Desea remover esta materia de su perfil academico?',
+                title: '¿Desea remover esta materia de su perfil académico?',
                 text: elementValue2.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, remover!',
+                confirmButtonText: '¡Sí, remover!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {
@@ -51,13 +51,13 @@ window.onload = function() {
             }                                                      
             
             Swal.fire({
-                title: 'Desea agregar esta materia a su perfil academico?',
+                title: '¿Desea agregar esta materia de su perfil académico?',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, agregar!',
+                confirmButtonText: '¡Sí, agregar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

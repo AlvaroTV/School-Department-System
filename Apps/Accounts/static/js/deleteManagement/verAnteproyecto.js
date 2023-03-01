@@ -16,13 +16,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Desea eliminar este elemento del Anteproyecto?',
+                title: '¿Desea eliminar este elemento del Anteproyecto?',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, eliminar!',
+                confirmButtonText: '¡Sí, eliminar!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {
@@ -50,13 +50,13 @@ window.onload = function() {
             }            
 
             Swal.fire({
-                title: 'Desea cancelar el Anteproyecto para este estudiante?',
+                title: '¿Desea cancelar el Anteproyecto para este estudiante?',
                 text: elementValue.item(index).textContent,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, cancelar el Anteproyecto del estudiante!',
+                confirmButtonText: '¡Sí, cancelar el Anteproyecto del estudiante!',
                 allowOutsideClick: () => false,
                 allowEscapeKey: () => false,
                 preConfirm: () => {

@@ -47,10 +47,16 @@ class Domicilio(models.Model):
     codigoPostal = models.CharField(max_length=5, null=True, blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Oaxaca')
     
-    def save(self, *args, **kwargs):        
-        self.calle = unidecode(self.calle.upper())        
-        self.colonia = unidecode(self.colonia.upper())        
-        self.municipio = unidecode(self.municipio.upper())        
+    def save(self, *args, **kwargs):    
+        if self.calle:
+            self.calle = unidecode(self.calle.upper())        
+            
+        if self.colonia:
+            self.colonia = unidecode(self.colonia.upper())        
+        
+        if self.municipio:
+            self.municipio = unidecode(self.municipio.upper())
+                
         super().save(*args, **kwargs)
 
 class TitularDependencia(models.Model):

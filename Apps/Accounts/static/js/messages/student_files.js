@@ -8,7 +8,7 @@ Swal.fire({
     showCloseButton: true,    
     focusConfirm: false,
     confirmButtonText:
-        '<i class="fa fa-thumbs-up"></i> Enterado!',
+        '<i class="fa fa-thumbs-up"></i> ¡Enterado!',
     confirmButtonAriaLabel: 'Thumbs up, great!',
     
 })

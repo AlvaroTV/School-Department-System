@@ -3,7 +3,7 @@ const elementValue2 = document.querySelectorAll('.elementValue2');
 
 
 Swal.fire({
-  title: 'Finalizar o agregar mas materias?',  
+  title: '¿Finalizar o agregar más materias?',  
   width: 600,
   padding: '3em',
   color: '#716add',
@@ -17,11 +17,11 @@ Swal.fire({
   cancelButtonColor: '#28a745',
   confirmButtonColor: '#3085d6',  
   cancelButtonText: 'Agregar materia',
-  confirmButtonText: 'Finalizar!'
+  confirmButtonText: '¡Finalizar!'
 }).then((result) => {
   if (result.isConfirmed) {
     Swal.fire(
-      'Guardado!',
+      '¡Guardado!',
       'Las materias han sido guardadas.',
       'success'
     )
@@ -42,18 +42,18 @@ btnDelete.forEach((btn, index) => {
       }                                                      
       
       Swal.fire({
-          title: 'Desea remover esta materia?',
+          title: '¿Desea remover esta materia?',
           text: elementValue2.item(index).textContent,
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Si, remover!',
+          confirmButtonText: '¡Sí, remover!',
           allowOutsideClick: () => false,
           allowEscapeKey: () => false,
           preConfirm: () => {
               Swal.fire(
-                  'Eliminado!',
+                  '¡Eliminado!',
                   'El elemento ha sido removido.',
                   'success'
               )                    

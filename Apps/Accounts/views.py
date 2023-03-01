@@ -182,8 +182,8 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            #messages.info(request, 'Número de control o contraseña incorrecta')    
-            messages.info(request, 'Invalid username or password')    
+            messages.info(request, 'Número de control o contraseña incorrecta')    
+            #messages.info(request, 'Invalid username or password')    
 
     context = {}
     return render(request, 'Global/login.html', context)
