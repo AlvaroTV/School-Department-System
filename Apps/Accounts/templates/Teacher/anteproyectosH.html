@@ -31,22 +31,16 @@
                     {% elif orderB1 == 2 %}
                     <option selected>Nombre Anteproyecto Z - A</option>
                     {% elif orderB1 == 3 %}
-                    <option selected>Periodo Inicio (Menor a Mayor)</option>
+                    <option selected>Fecha Entrega (Mas reciente)</option>
                     {% elif orderB1 == 4 %}
-                    <option selected>Periodo Inicio (Mayor a Menor)</option>
-                    {% elif orderB1 == 5 %}
-                    <option selected>Periodo Fin (Menor a Mayor)</option>
-                    {% elif orderB1 == 6 %}
-                    <option selected>Periodo Fin (Mayor a Menor)</option>
+                    <option selected>Fecha Entrega (Mas antigua)</option>                    
                     {% else %}
                     <option selected>Seleccionar</option>
                     {% endif %}
                     <option value="{% url 'anteproyectosH' page1 page2 1 orderB2 filter1 filter2 %}">Nombre Anteproyecto A - Z</option>
                     <option value="{% url 'anteproyectosH' page1 page2 2 orderB2 filter1 filter2 %}">Nombre Anteproyecto Z - A</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 3 orderB2 filter1 filter2 %}">Periodo Inicio (Menor a Mayor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 4 orderB2 filter1 filter2 %}">Periodo Inicio (Mayor a Menor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 5 orderB2 filter1 filter2 %}">Periodo Fin (Menor a Mayor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 6 orderB2 filter1 filter2 %}">Periodo Fin (Mayor a Menor)</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 3 orderB2 filter1 filter2 %}">Fecha Entrega (Mas reciente)</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 4 orderB2 filter1 filter2 %}">Fecha Entrega (Mas antigua)</option>                    
                 </select>
 
                 <select id="s2"
@@ -56,22 +50,14 @@
                     <option selected="">Filtrar por estatus</option>
 
                     <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 1 filter2 %}">ACEPTADO </option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 2 filter2 %}">ENVIADO </option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 3 filter2 %}">PENDIENTE</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 4 filter2 %}">EN REVISION</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 5 filter2 %}">REVISADO</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 6 filter2 %}">RECHAZADO</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 7 filter2 %}">TODOS</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 6 filter2 %}">CANCELADO</option>                    >                                        
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 7 filter2 %}">RECHAZADO</option>                    
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 0 filter2 %}">TODOS</option>
                 </select>
             </div>
         </div>
         {% endif %}
-        <div class="absolute inset-y-0 right-0 ">
-            <button @click="openModal"
-                class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                Buscar Anteproyecto
-            </button>
-        </div>
+        
     </div>
 
     <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
@@ -258,22 +244,16 @@
                     {% elif orderB2 == 2 %}
                     <option selected>Nombre Anteproyecto Z - A</option>
                     {% elif orderB2 == 3 %}
-                    <option selected>Periodo Inicio (Menor a Mayor)</option>
+                    <option selected>Fecha Entrega (Mas reciente)</option>
                     {% elif orderB2 == 4 %}
-                    <option selected>Periodo Inicio (Mayor a Menor)</option>
-                    {% elif orderB2 == 5 %}
-                    <option selected>Periodo Fin (Menor a Mayor)</option>
-                    {% elif orderB2 == 6 %}
-                    <option selected>Periodo Fin (Mayor a Menor)</option>
+                    <option selected>Fecha Entrega (Mas antigua)</option>                    
                     {% else %}
                     <option selected>Seleccionar</option>
                     {% endif %}
                     <option value="{% url 'anteproyectosH' page1 page2 orderB1 1 filter1 filter2 %}">Nombre Anteproyecto A - Z</option>
                     <option value="{% url 'anteproyectosH' page1 page2 orderB1 2 filter1 filter2 %}">Nombre Anteproyecto Z - A</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 3 filter1 filter2 %}">Periodo Inicio (Menor a Mayor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 4 filter1 filter2 %}">Periodo Inicio (Mayor a Menor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 5 filter1 filter2 %}">Periodo Fin (Menor a Mayor)</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 6 filter1 filter2 %}">Periodo Fin (Mayor a Menor)</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 3 filter1 filter2 %}">Fecha Entrega (Mas reciente)</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 4 filter1 filter2 %}">Fecha Entrega (Mas aniguo)</option>                    
                 </select>
 
                 <select id="s2"
@@ -282,23 +262,14 @@
 
                     <option selected="">Filtrar por estatus</option>
 
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 1 %}">ACEPTADO </option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 2 %}">ENVIADO </option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 3 %}">PENDIENTE</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 4 %}">EN REVISION</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 5 %}">REVISADO</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 6 %}">RECHAZADO</option>
-                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 7 %}">TODOS</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 1 %}">ACEPTADO </option>>                    
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 6 %}">CANCELADO</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 7 %}">RECHAZADO</option>
+                    <option value="{% url 'anteproyectosH' page1 page2 orderB1 orderB2 filter1 0 %}">TODOS</option>
                 </select>
             </div>
         </div>
-        {% endif %}
-        <div class="absolute inset-y-0 right-0 ">
-            <button @click="openModal"
-                class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                Buscar Anteproyecto
-            </button>
-        </div>
+        {% endif %}        
     </div>
 
     <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">

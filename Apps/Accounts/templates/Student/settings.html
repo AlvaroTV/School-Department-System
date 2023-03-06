@@ -9,7 +9,8 @@
     <div class="section-content my-6 text-sm font-semibold text-gray-600 dark:text-gray-300">
       {% if group == 'sutdent' %}
       <ul>
-        <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'studentSettings' %}"> Configuracion</a> </li>
+        <li><a href="/">Inicio</a> / <a class="text-blue-500" href="{% url 'studentSettings' %}"> Configuracion</a>
+        </li>
       </ul>
       {% else %}
       <ul>
@@ -22,7 +23,7 @@
       </ul>
       {% endif %}
     </div>
-    <div class="grid gap-7 mb-9 md:grid-cols-2">      
+    <div class="grid gap-7 mb-9 md:grid-cols-2">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Información de usuario
       </h2>
@@ -120,8 +121,6 @@
               <span class="text-gray-700 dark:text-gray-400">Número de seguro social:</span>
               {{formE.numSeguridadSocial}}
             </label>
-
-
           </div>
 
         </div>
@@ -130,12 +129,8 @@
             Información escolar
           </h4>
           <label class="block text-sm items-center ">
-
             <img src="{% static 'images/itologo.png' %}" alt="user-avatar" class="mx-auto d-block " height="150"
               width="150" id="imageschool" />
-
-
-
           </label>
           <br>
           <div>
@@ -147,7 +142,7 @@
             <br>
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400">Carrera:</span>
-              {{formE.carrera}}
+              Ing. en Sistemas Computaciones
             </label>
             <br>
             <label class="block text-sm">
@@ -169,25 +164,27 @@
               {{formD.calle}}
             </label>
             <br>
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Colonia:</span>
-              {{formD.colonia}}
-            </label>
-            <br>
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Codigo postal</span>
-              {{formD.codigoPostal}}
-            </label>
-            <br>
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Municipio:</span>
-              {{formD.municipio}}
-            </label>
-            <br>
-            <label class="block text-sm">
-              <span class="text-gray-700 dark:text-gray-400">Estado:</span>
-              {{formD.estado}}
-            </label>
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Colonia:</span>
+                {{formD.colonia}}
+              </label>
+              
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Codigo postal</span>
+                {{formD.codigoPostal}}
+              </label>
+              
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Municipio:</span>
+                {{formD.municipio}}
+              </label>
+              
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Estado:</span>
+                {{formD.estado}}
+              </label>
+            </div>
           </div>
 
         </div>
