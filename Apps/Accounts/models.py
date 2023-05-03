@@ -11,6 +11,18 @@ import uuid
 from unidecode import unidecode
 
 # Create your models here.
+class Etiqueta(models.Model):
+    
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)    
+    nombre = models.CharField(max_length=100, unique=True)
+    
+    def save(self, *args, **kwargs):        
+        self.nombre = unidecode(self.nombre.upper())  
+        super().save(*args, **kwargs)      
+    
+    def __str__(self):
+        return f'{self.nombre}'        
+
 class Estudiante_Autorizado(models.Model):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     nombre_completo = models.CharField(max_length=150, null=True)
@@ -239,6 +251,7 @@ class Anteproyecto(models.Model):
     dependencia = models.ForeignKey(Dependencia, on_delete=models.SET_NULL, null=True, blank=True)
     asesorExterno = models.ForeignKey(AsesorExterno, on_delete=models.SET_NULL, null=True, blank=True)
     observacion = models.OneToOneField(Observacion, on_delete=models.SET_NULL, null=True, blank=True)
+    etiquetas = models.ManyToManyField( Etiqueta, blank=True)
     
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,unique=True)
     a_nombre = models.CharField(max_length=300)
@@ -254,8 +267,15 @@ class Anteproyecto(models.Model):
     
     def save(self, *args, **kwargs):        
         self.a_nombre = unidecode(self.a_nombre.upper())        
-        self.descripcion = unidecode(self.descripcion.upper())                
+        self.descripcion = unidecode(self.descripcion.upper())       
+                 
+        all_etiquetas = Etiqueta.objects.all()        
         super().save(*args, **kwargs)
+        self.etiquetas.clear()
+        for tag in all_etiquetas:
+            if tag.nombre in self.descripcion:                
+                self.etiquetas.add(tag)
+        
 
 class Actualizacion_anteproyecto(models.Model):
     ESTADOS = (('NO LEIDO', 'NO LEIDO'), ('LEIDO', 'LEIDO'))
@@ -378,4 +398,4 @@ class MyViewModel(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'testview' # your view name
+        db_table = 'testview' # your view name        

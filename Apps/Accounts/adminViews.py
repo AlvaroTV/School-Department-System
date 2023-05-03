@@ -1810,44 +1810,9 @@ def anteproyectos_similares(request, pk, page):
     start = (page-1)*10    
     end = page*10    
     all_anteproyectos = Anteproyecto.objects.exclude(id = pk)                
-    tags_list = [
-        'Sistema web',
-        'Aplicacion web',
-        'Sistema de administracion',
-        'Soporte de decisiones',
-        'Inteligencia artificial',
-        'Aplicacion de algoritmos',
-        'Sistema de votaciones',
-        'Aplicacion de modelo',
-        'Sistema de gestion de informacion',
-        'Analitica de datos',
-        'Analisis de datos',
-        'Deep learning',
-        'Analisis de imagenes',
-        'Prototipo de aplicacion movil',
-        'Aplicacion movil',
-        'Machine learning',
-        'Servicios de mantenimiento',
-        'Medicion de riesgo',
-        'Sistema de recoleccion',
-        'control de inventarios',
-        'control de inventario',
-        'plataforma web',
-        'gestion de proyectos',
-        'desarrollo de software',
-        'arquitectura basada en microservicios',
-        'gestion de tareas',
-        'seguimiento de errores',
-        'base de datos',
-        'gestion efectiva'
-    ]
-    tags_list = [x.upper() for x in tags_list]    
+    tags_list = Etiqueta.objects.values_list('nombre', flat=True)        
     #anteproyectos_sim, tags = comparar_anteproyectos(anteproyecto, all_anteproyectos)        
-    anteproyectos_sim, tags = comparar_desc(anteproyecto, all_anteproyectos, tags_list)        
-    
-    for i in tags:
-        print(i)
-        print()
+    anteproyectos_sim, tags = comparar_desc(anteproyecto, all_anteproyectos, tags_list)                
     
     anteproyectos = anteproyectos_sim[start:end]
     if end != len(anteproyectos):
@@ -1874,14 +1839,14 @@ def comparar_anteproyectos(anteproyecto, anteproyectos_list, threshold=70):
     return final_list
 
 def comparar_desc(anteproyecto_principal, all_anteproyectos, tags_list):            
-    # Conjunto de las etiquetas que contiene la descripción principal
-    conjunto_1 = set([tag for tag in tags_list if tag in anteproyecto_principal.descripcion])
+    # Conjunto de las etiquetas que contiene la descripción principal    
+    conjunto_1 = set(anteproyecto_principal.etiquetas.all().values_list('nombre' ,flat=True))
     
     # Calcula la similitud entre la descripción principal y cada descripción en la lista
     similitud = []
     for anteproyecto in all_anteproyectos:                        
-        # Conjunto de las etiquetas que contiene la descripción de la lista
-        conjunto_2 = set([tag for tag in tags_list if tag in anteproyecto.descripcion])
+        # Conjunto de las etiquetas que contiene la descripción de la lista        
+        conjunto_2 = set(anteproyecto.etiquetas.all().values_list('nombre' ,flat=True))
         
         interseccion = len(conjunto_1.intersection(conjunto_2))
         union = len(conjunto_1.union(conjunto_2))

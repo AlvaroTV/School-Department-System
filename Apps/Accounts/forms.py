@@ -342,7 +342,7 @@ class AnteproyectoEditForm(ModelForm):
     class Meta:        
         model = Anteproyecto
         fields = '__all__'
-        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion', 'anteproyectoDoc']   
+        exclude = ['revisor1', 'revisor2', 'dependencia', 'asesorExterno', 'observacion', 'estatusR1', 'estatusR2', 'id', 'fechaEntrega', 'estatus', 'codigoUnion', 'anteproyectoDoc', 'etiquetas']   
         labels = {
             'a_nombre': 'Nombre del Anteproyecto',
             'tipoProyecto': 'Tipo de Proyecto',

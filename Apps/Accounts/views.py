@@ -726,7 +726,8 @@ def anteproyecto(request):
         invitaciones = Invitacion.objects.filter(anteproyecto = anteproyecto)
         num_invitaciones = invitaciones.count()
         num_integrantes = estudiantes_anteproyecto + num_invitaciones
-        
+        etiquetas = anteproyecto.etiquetas.all().values_list('nombre' ,flat=True)  
+        print(etiquetas)      
         
         if anteproyecto.numIntegrantes > num_integrantes:            
             invitar = True
