@@ -264,7 +264,7 @@ def createStudent(request):
                 str_email = formU.cleaned_data['email'].split('@')[0]                
                 pattern = r'^\D*{}$'.format(re.escape(str_numControl))
                                 
-                email_is_valid = re.match(pattern, str_email) is not None and str_email.endswith(str_numControl)
+                email_is_valid = re.match(pattern, str_email) is not None and str_email.endswith(str_numControl)                
                 
                 if email_is_valid:
                     student = formE.save()
@@ -294,11 +294,16 @@ def createStudent(request):
 			        'protocol': 'http',
 			        }                        
 
-                    email = render_to_string(email_template_name, c)
-                    try:
-                        send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
+                    #! Delete this:
+                    user.is_active = True
+                    user.save()            
+                    
+                    #! Uncomment these lines
+                    #email = render_to_string(email_template_name, c)
+                    #try:
+                    #    send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+                    #except BadHeaderError:
+                    #    return HttpResponse('Invalid header found.')
 
                     return redirect('email_verification', student.id)
                 else:
@@ -1236,8 +1241,7 @@ def activate_user(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
                 
-    if user and default_token_generator.check_token(user, token):
-        
+    if user and default_token_generator.check_token(user, token):    
         if user.is_active:
             return redirect('404')
         
